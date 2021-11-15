@@ -15,6 +15,7 @@ MERGED from [:image_picker] D:\Arsalan\Projects\ak\homelyy\build\image_picker\in
 MERGED from [:flutter_plugin_android_lifecycle] D:\Arsalan\Projects\ak\homelyy\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:shared_preferences] D:\Arsalan\Projects\ak\homelyy\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:flutter_local_notifications] D:\Arsalan\Projects\ak\homelyy\build\flutter_local_notifications\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-23:12
+MERGED from [:flutter_share] D:\Arsalan\Projects\ak\homelyy\build\flutter_share\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:in_app_review] D:\Arsalan\Projects\ak\homelyy\build\in_app_review\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:path_provider] D:\Arsalan\Projects\ak\homelyy\build\path_provider\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:geocoder] D:\Arsalan\Projects\ak\homelyy\build\geocoder\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
@@ -316,6 +317,8 @@ MERGED from [:shared_preferences] D:\Arsalan\Projects\ak\homelyy\build\shared_pr
 MERGED from [:shared_preferences] D:\Arsalan\Projects\ak\homelyy\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_local_notifications] D:\Arsalan\Projects\ak\homelyy\build\flutter_local_notifications\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_local_notifications] D:\Arsalan\Projects\ak\homelyy\build\flutter_local_notifications\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:flutter_share] D:\Arsalan\Projects\ak\homelyy\build\flutter_share\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:flutter_share] D:\Arsalan\Projects\ak\homelyy\build\flutter_share\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:in_app_review] D:\Arsalan\Projects\ak\homelyy\build\in_app_review\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:in_app_review] D:\Arsalan\Projects\ak\homelyy\build\in_app_review\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:path_provider] D:\Arsalan\Projects\ak\homelyy\build\path_provider\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44

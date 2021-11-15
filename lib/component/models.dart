@@ -83,6 +83,7 @@ class  UserModel {
   String phone;
   String token;
   String wallet;
+  String refFrom;
 
   UserModel(
       {
@@ -95,7 +96,8 @@ class  UserModel {
         this.member,
         this.phone,
         this.token,
-        this.wallet
+        this.wallet,
+        this.refFrom
       });
 
   fromJson(Map<String, dynamic> json) {
@@ -125,6 +127,7 @@ class  UserModel {
       token : json['token'],
 
       wallet : json['wallet'],
+      refFrom: json["refForm"]
 
     );
 
@@ -143,6 +146,7 @@ class  UserModel {
     data['token'] = this.token;
     data['wallet'] = this.wallet;
     data['email'] = this.email;
+     data["refForm"] =refFrom;
     print("jsonUser ${json.encode(data)}");
     return json.encode(data);
   }

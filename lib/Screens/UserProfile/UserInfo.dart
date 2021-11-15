@@ -3,13 +3,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/Screens/homepage/homepage.dart';
+import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
+import 'package:homelyy/component/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 class UserInfoScreen extends StatefulWidget {
+  final String phone;
+
+  const UserInfoScreen({Key key, this.phone}) : super(key: key);
   @override
   _UserInfoScreenState createState() => _UserInfoScreenState();
 }
@@ -18,12 +25,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   var _formKey = GlobalKey<FormState>();
   final _emailRegExp = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  var userEmail = "FormModel()";
+  var userEmail = "";
   var userName = "";
   var userDOB = DateTime.now();
   var isloggedin = false ;
+  var refercode = "" ;
 
-  addBoolToSF() async {
+  Future addBoolToSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('loggedin', true).then((value) {
       prefs.setBool("token", true);
@@ -58,7 +66,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 margin: EdgeInsets.symmetric(horizontal: 15),
                 decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.red
+                      color: Colors.green,
+                          width: 10
                     ),
                     borderRadius: BorderRadius.all(Radius.circular(20))),
                 child: Column(
@@ -89,13 +98,23 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           // errorText: isdiscountAvailable ? erroText : null
                         ),
                         validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter an email address';
+                          if (value.isEmpty || !value.isEmail) {
+                            return 'Please enter Correct email address';
                           }
                           return null;
                         },
                         onSaved: (value) {
-                          userEmail = value;
+                          setState(() {
+                            userEmail = value;
+                          });
+
+                        },
+
+                        onChanged: (value) {
+                          setState(() {
+                            userEmail = value;
+                          });
+
                         },
                       ),
                     ),
@@ -124,10 +143,56 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           return null;
                         },
                         onSaved: (value) {
-                          userName = value;
+                          setState(() {
+                            userName = value;
+                          });
+
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            userName = value;
+                          });
+
                         },
                       ),
                     ),
+
+                    Container(
+                      margin: EdgeInsets.all(15),
+                      child: TextFormField(
+                        // The validator receives the text that the user has entered.
+                        decoration: InputDecoration(
+                          hintText: "Referral Code",
+                          labelText: "Referral Code",
+                          // hintStyle: TextStyle(color: Colors.white30),
+                          labelStyle: TextStyle(color: kgreen),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: kgreen),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: kgreen),
+                          ),
+
+                          // errorText: isdiscountAvailable ? erroText : null
+                        ),
+                        validator: (value) {
+                          return null;
+                        },
+                        onSaved: (value) {
+                          setState(() {
+                            refercode = value;
+                          });
+
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            refercode = value;
+                          });
+
+                        },
+                      ),
+                    ),
+
                     Text("ENTER YOUR DATE OF BIRTH"),
                     SizedBox(
                       height: 5,
@@ -155,9 +220,45 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         onPressed: () {
                           // Validate returns true if the form is valid, or false otherwise.
                           if (_formKey.currentState.validate()) {
+                            print("Got all text = user = $userName ref = $refercode email = $userEmail ");
+
+                            AllApi().postUser(UserModel(
+                                name:userName ?? "",
+                                address:"",
+                                ref:widget.phone?? "",
+                                email:userEmail?? "",
+                                dob:userDOB.toLocal().toString().split(' ')[0]?? "",
+                                member:"",
+                                phone:widget.phone?? "",
+                                token:"",
+                                wallet:"0",
+                              refFrom: refercode
+                            )).then((value) async {
+                              if(value == "\"Success\""){
+
+
+                                 AllApi().getUser(widget.phone).then((value) {
+                                   print("UserError ${widget.phone}  ${value}}");
+
+                                        AllApi().updateLocalUsers(value).then((value) {
+
+                                          addBoolToSF().then((value) {
+                                            Get.offAll(Homepage());
+                                          });
+
+
+                                        });
+
+                                });
+                              }else{
+                                Fluttertoast.showToast(msg: "Something Went Wrong");
+                              }
+
+                            });
 
                           }
                         },
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(kdarkgreen)),
                         child: Text('Submit'),
                       ),
                     ),

@@ -42,32 +42,22 @@ class _PhoneLoginState extends State<PhoneLogin> {
           print("Login Success UID: ${userCredential.user?.uid}");
 
             AllApi().getUser(widget.phoneNumber).then((value) {
-              if(value == "User Not Exist"){
+              if(value == "\"User Not Exist\""){
+
                 print("no user");
-                Get.to(UserInfoScreen());
+
+                Get.to(UserInfoScreen(phone:widget.phoneNumber));
               }else{
                 UserModel users = UserModel().fromJson(value);
+
                 print("getting user ${users.name}");
+
                 Get.off(Homepage());
               }
 
             });
 
-            AllApi().postUser(UserModel(
-                 name:"Arsalan",
-                 address:"Arsalan",
-                 ref:"Arsalan",
-                 email:"Arsalan",
-                 dob:"Arsalan",
-                 location: {
-                "name": "type",
 
-          },
-                 member:"Arsalan",
-                 phone:"Arsalan",
-                 token:"Arsalan",
-                 wallet:"Arsalan"
-            ));
 
 
 
