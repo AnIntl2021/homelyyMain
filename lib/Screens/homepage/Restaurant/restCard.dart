@@ -17,6 +17,7 @@ class RestaurentListCard extends StatelessWidget {
   final List<dynamic> cuisine;
   final Function press;
   final int numReview;
+  final List category;
   const   RestaurentListCard({
      Key key,
      this.title,
@@ -29,7 +30,7 @@ class RestaurentListCard extends StatelessWidget {
      this.rating,
      this.img,
      this.tagVisibility,
-     this.discountVisibility,  this.shopid,  this.opentiming,  this.closetiming,  this.badgeVisibility,  this.status,  this.numReview, this.type,
+     this.discountVisibility,  this.shopid,  this.opentiming,  this.closetiming,  this.badgeVisibility,  this.status,  this.numReview, this.type, this.category,
   }) : super(key: key);
 
   @override
@@ -54,6 +55,7 @@ class RestaurentListCard extends StatelessWidget {
           onTap: () {
             Get.to(
                   DetailsScreen(
+                    category:category,
                   type:type,
                   shoptitle: title,
                   cuisine: cuisine,

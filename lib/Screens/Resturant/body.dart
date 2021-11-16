@@ -9,7 +9,8 @@ class Body extends StatefulWidget {
   final id,opentiming,closetiming,shopname;
   final List<dynamic> cuisine;
   final int numReviews;
-  const Body({ Key key,  this.title,  this.rating,  this.cuisine,  this.id,  this.opentiming,  this.closetiming,  this.shopname,  this.numReviews, this.type})
+  final List category;
+  const Body({ Key key,  this.title,  this.rating,  this.cuisine,  this.id,  this.opentiming,  this.closetiming,  this.shopname,  this.numReviews, this.type, this.category})
       : super(key: key);
   @override
   _BodyState createState() => _BodyState();
@@ -19,6 +20,7 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return ItemInfo(
+      category: widget.category,
       type: widget.type,
       title: widget.title,
       rating: widget.rating,

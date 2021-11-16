@@ -4,15 +4,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:homelyy/Screens/homepage/Restaurant/restCard.dart';
+import 'package:homelyy/component/models.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
 class PopularRestaurantList extends StatefulWidget {
   final String type;
-  final String category;
+  final List category;
   final GeoPoint userGeoPoint;
   final bool status;
-  const PopularRestaurantList({Key key, this.category, this.userGeoPoint, this.status, this.type}) : super(key: key);
+  final List listofRestaurant;
+  const PopularRestaurantList({Key key, this.category, this.userGeoPoint, this.status, this.type, this.listofRestaurant}) : super(key: key);
 
   @override
   _PopularRestaurantListState createState() => _PopularRestaurantListState();
@@ -24,6 +26,7 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
 
   @override
   Widget build(BuildContext context) {
+
   //
   // var uid = FirebaseAuth.instance.currentUser.uid;
   //   final geo = Geoflutterfire();
@@ -35,32 +38,55 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
     return  ListView.builder(
           physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-      itemCount: 10,
+      itemCount: widget.listofRestaurant.length,
       itemBuilder: (context,index) {
+
       return  Padding(
+
             padding:  EdgeInsets.all(8.0),
+
             child: RestaurentListCard(
-              title: widget.category == "0" ? "Burger Adda" : "Puma Store",
-              type: widget.type,
+              category:widget.category,
+              title: widget.listofRestaurant[index]["name"],
+
+              type:widget.listofRestaurant[index]["type"],
+
               img:
-              widget.category == "0" ?"https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/Restaurant-logo-design-webp.webp?alt=media&token=847033e4-0e4b-4987-ac99-253736f10487"
+              widget.type == "0" ?"https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/Restaurant-logo-design-webp.webp?alt=media&token=847033e4-0e4b-4987-ac99-253736f10487"
                   : "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2Fpuma.jpg?alt=media&token=7790fda5-ee3c-4898-801c-f8a46ef93baa",
+
               discount: "15",
+
               cuisine: widget.category == "0" ? ["Italian", "Mughlai", "Chinese"] : ["Half Tshirts","Full Tshirts,""Jeans"],
-              area: "Farwania",
+
+              area: widget.listofRestaurant[index]["address"],
+
               deliveryTime: "15-20",
+
               tag: "",
-              rating: "3",
+
+              rating: widget.listofRestaurant[index]["rating"],
+
               discountVisibility: true,
+
               tagVisibility: false,
+
               shopid: "shopUid",
+
               press: () {},
+
               key: Key("resto1"),
+
               closetiming: "10",
+
               opentiming: "10",
-              badgeVisibility: true,
+
+              badgeVisibility: widget.listofRestaurant[index]["inPromotion"] == "1" ? true : false,
+
               status: true,
+
               numReview: 12,
+
             )
         );
       }

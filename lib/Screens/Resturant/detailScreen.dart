@@ -13,13 +13,14 @@ class DetailsScreen extends StatefulWidget {
   final List<dynamic> cuisine;
   final String shopUid,opentiming,closetiming;
   final int numReview;
+  final List category;
 
   const DetailsScreen({
      Key key,
      this.rating,
      this.shoptitle,
      this.cuisine,
-     this.shopUid,  this.opentiming,  this.closetiming,  this.numReview, this.type,
+     this.shopUid,  this.opentiming,  this.closetiming,  this.numReview, this.type, this.category,
   }) : super(key: key);
   @override
   _DetailsScreenState createState() => _DetailsScreenState();
@@ -35,6 +36,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     //     .collection("cart")
     //     .snapshots();
     return Body(
+        category:widget.category,
         type: widget.type,
         title: widget.shoptitle,
         rating: widget.rating,

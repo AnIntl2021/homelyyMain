@@ -10,8 +10,8 @@ import 'package:homelyy/component/homeAppbar.dart';
 import 'package:homelyy/component/models.dart';
 
 class Homepage extends StatefulWidget {
-
-  const Homepage({Key key}) : super(key: key);
+  final String userRef;
+  const Homepage({Key key, this.userRef}) : super(key: key);
 
   @override
   _HomepageState createState() => _HomepageState();
@@ -21,29 +21,19 @@ class _HomepageState extends State<Homepage> {
   var currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    // AllApi().postUser(UserModel(
-    //     name:"Arsalan",
-    //     address:"Arsalan",
-    //     ref:"Arsalan",
-    //     email:"Arsalan",
-    //     dob:"Arsalan",
-    //     location:[{
-    //       "type":"Point",
-    //       "point":[1,1]
-    //     }],
-    //     member:"Arsalan",
-    //     phone:"Arsalan",
-    //     token:"Arsalan",
-    //     wallet:"Arsalan"
-    // ));
 
     final List<Widget> viewContainer = [
+
       Body(
         key: Key("Bodyhome"),
         fromMap:  false,
+        userref: widget.userRef,
       ),
+
       OrderPage(),
+
       UserProfile(),
+
       Container(),
 
     ];

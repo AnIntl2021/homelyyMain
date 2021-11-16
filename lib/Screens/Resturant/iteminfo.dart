@@ -19,11 +19,12 @@ class ItemInfo extends StatefulWidget {
   final String id,opentiming,closetiming,shopname;
   final List<dynamic> cuisine;
   final int numReview;
+  final List category;
   const ItemInfo({
      Key key,
      this.rating,
      this.title,
-     this.cuisine,  this.id,  this.opentiming,  this.closetiming,  this.shopname,  this.numReview, this.type,
+     this.cuisine,  this.id,  this.opentiming,  this.closetiming,  this.shopname,  this.numReview, this.type, this.category,
   }) : super(key: key);
 
   @override
@@ -108,7 +109,7 @@ class _ItemInfoState extends State<ItemInfo> {
             Divider(),
 
             ExpansionTile(
-              title:widget.type == "0"? Text("Recommended Foods") : Text('Recommended Products'),
+              title:widget.type == "restro"? Text("Recommended Foods") : Text('Recommended Products'),
               onExpansionChanged: (result) {
                 if (result == true) {
                   setState(() {});
@@ -119,18 +120,21 @@ class _ItemInfoState extends State<ItemInfo> {
 
               ],
             ),
-                widget.type == "1" ?    Container(
+                widget.type == "lifestyle" ?    Container(
                   margin: EdgeInsets.only(left: 8, right: 8, bottom: 15),
                   child: Text(
+
                     "Shop By Category",
+
                     style: GoogleFonts.basic(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                         color: Colors.black),
+
                   ),
                 ) : SizedBox(),
 
-           widget.type == "0" ? ItemList(streamTitle: '', callback: (){}, key: Key("productList"), id: widget.id, shopname: widget.shopname,)
+           widget.type == "restro" ? ItemList(category:widget.category,streamTitle: '', callback: (){}, key: Key("productList"), id: widget.id, shopname: widget.shopname,)
                 :  LifestylePage()
           ]),
         ),

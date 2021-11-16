@@ -138,7 +138,9 @@ class _RegisterationState extends State<Registeration> {
                     ),
                     InkWell(
                       onTap: (){
+
                         _selectstartDate(context);
+
                       },
                       child: Container(
                         margin: EdgeInsets.all(15),
@@ -210,7 +212,7 @@ class _RegisterationState extends State<Registeration> {
                           //   // //     SnackBar(content: Text('Processing Data')));
                           //
                           // }
-                          Get.to(Homepage());
+
                         },
                         child: Text('Submit'),
                       ),

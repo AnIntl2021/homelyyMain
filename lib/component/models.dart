@@ -11,6 +11,7 @@ class restaurantModel {
   String inPromotion;
   String description;
   String email;
+  var location;
 
   restaurantModel(
       {
@@ -23,7 +24,7 @@ class restaurantModel {
         this.vendorid,
         this.inPromotion,
         this.description,
-        this.email});
+        this.email,this.location});
 
   fromJson(Map<String, dynamic> json) {
 
@@ -50,6 +51,7 @@ class restaurantModel {
         inPromotion : json['inPromotion'],
 
         description : json['description'],
+      location: json['location']
 
     );
 
@@ -102,7 +104,7 @@ class  UserModel {
 
   fromJson(Map<String, dynamic> json) {
 
-
+    print("Take jsonj ${json['name']}");
     email = json['email'];
 
     return UserModel(

@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home:  currentUser == null ? LoginScreen() : isloggedin ? Homepage() : UserInfoScreen(phone: currentUser.phoneNumber,)
+        home:  currentUser == null ? LoginScreen() : isloggedin ? Homepage(userRef: currentUser.phoneNumber,) : UserInfoScreen(phone: currentUser.phoneNumber,)
       ),
     );
   }

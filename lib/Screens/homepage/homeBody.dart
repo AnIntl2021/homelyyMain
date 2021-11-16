@@ -13,6 +13,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/discountCard.dart';
+import 'package:homelyy/component/models.dart';
 import 'package:homelyy/component/searchBoxx.dart';
 import 'package:homelyy/component/typecard.dart';
 import 'package:location/location.dart';
@@ -24,7 +25,8 @@ import 'Restaurant/popularRestaurant.dart';
 
 class Body extends StatefulWidget {
   final bool fromMap ;
-  const Body({ Key key, this.fromMap}) : super(key: key);
+  final String userref;
+  const Body({ Key key, this.fromMap, this.userref}) : super(key: key);
   @override
   _BodyState createState() => _BodyState();
 }
@@ -271,174 +273,198 @@ class _BodyState extends State<Body> {
 
 
     print("location $myLocation $userAddress");
-    return FutureBuilder<Object>(
-      future: AllApi().getRestaurant(),
+
+    return FutureBuilder(
+      future:Future.wait([getLocation(),]),
+
       builder: (context, snapshot) {
+
         if(!snapshot.hasData){
           return Center(
             child:CircularProgressIndicator()
           );
         }
 
+        AllApi().getcatfood("VENDOR74836", "CAT480");
+        LocationData latlng =  snapshot.requireData[0];
+        print("lat = $latlng.latitude long = $latlng.longitude");
+
+        return FutureBuilder(
+          future:  AllApi().getRestaurant(),
+          builder: (context, snapshot1) {
+            // var restoModel = snapshot.requireData[0];
+
+            if(!snapshot1.hasData){
+              return Center(
+                  child:CircularProgressIndicator()
+              );
+            }
 
 
-        return ListView(
-              children: [
+            var restomodel = snapshot1.requireData;
 
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  child: SearchBox(
-                    onChanged: (value) {}, key: Key("searchBox"),
-                  ),
-                ),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-
-                      Opacity(
-                        opacity:selectedType ==0 ? 1 : 0.4,
-                        child: Card(
-                          child: Stack(
-                            children: [
-
-                              Align(
-                                alignment: Alignment.topCenter,
-                                child: Text(
-                                  "              Food Store",
-                                  style: GoogleFonts.cabin(
-                                      color: Colors.black, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedType = 0;
-                                  });
+            // print("resto ${restomodel[0]}");
 
 
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TypeCard(
-                                      img: "assets/foodshop.png", key: Key("typeCard"),),
-                                ),
-                              ),
+            return ListView(
+                  children: [
 
-                            ],
-                          ),
-                        ),
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
+                      child: SearchBox(
+                        onChanged: (value) {}, key: Key("searchBox"),
                       ),
-                      Opacity(
-                        opacity: selectedType == 1 ? 1 : 0.4,
-                        child: Card(
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment.topCenter,
-                                child: Text(
-                                  "           Lifestyle Store",
-                                  style: GoogleFonts.cabin(
-                                      color: Colors.black, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedType = 1;
-                                  });
+                    ),
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+
+                          Opacity(
+                            opacity:selectedType ==0 ? 1 : 0.4,
+                            child: Card(
+                              child: Stack(
+                                children: [
+
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Text(
+                                      "              Food Store",
+                                      style: GoogleFonts.cabin(
+                                          color: Colors.black, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedType = 0;
+                                      });
 
 
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TypeCard(
-                                    img: "assets/lifeshop.png", key: Key("typeCard"),),
-                                ),
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TypeCard(
+                                          img: "assets/foodshop.png", key: Key("typeCard"),),
+                                    ),
+                                  ),
+
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
+                          Opacity(
+                            opacity: selectedType == 1 ? 1 : 0.4,
+                            child: Card(
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Text(
+                                      "           Lifestyle Store",
+                                      style: GoogleFonts.cabin(
+                                          color: Colors.black, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedType = 1;
+                                      });
+
+
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TypeCard(
+                                        img: "assets/lifeshop.png", key: Key("typeCard"),),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
 
-                AnimatedContainer(
-                    duration: Duration(milliseconds: 200), child: Divider()),
+                    AnimatedContainer(
+                        duration: Duration(milliseconds: 200), child: Divider()),
 
-                DiscountCard(key: Key("catRow"), title: 'Slider',snapshot: selectedType == 0 ? [
-                  "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2Ffood_banner.webp?alt=media&token=b54e6725-4af0-4783-84d8-e2bcf21e20d3",
-                  "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2F5fe3266f03a46_json_image_1608722031.webp?alt=media&token=5791a1c2-e50a-44b9-a593-eb2f342f78de"
-                ] : [
-                      "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2FSP_Offers_Block02DEC06.jpg?alt=media&token=17873f3c-2001-4443-ab09-02665092e3fb",
-                  "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2Funnamed.jpg?alt=media&token=10ee0306-c5c7-4ac3-a99a-ca9cbb2ffc34"
+                    DiscountCard(key: Key("catRow"), title: 'Slider',snapshot: selectedType == 0 ? [
+                      "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2Ffood_banner.webp?alt=media&token=b54e6725-4af0-4783-84d8-e2bcf21e20d3",
+                      "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2F5fe3266f03a46_json_image_1608722031.webp?alt=media&token=5791a1c2-e50a-44b9-a593-eb2f342f78de"
+                    ] : [
+                          "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2FSP_Offers_Block02DEC06.jpg?alt=media&token=17873f3c-2001-4443-ab09-02665092e3fb",
+                      "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2Funnamed.jpg?alt=media&token=10ee0306-c5c7-4ac3-a99a-ca9cbb2ffc34"
 
-                  ]
-                ,),
+                      ]
+                    ,),
 
-                Container(
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    height: 190,
-                    child: Column(
-                      children: [
-                        Text(
-                        selectedType == 0 ?  "BROWSE FOOD CATEGORIES" : "BROWSE LIFESTYLE CATEGORIES",
-                          style: GoogleFonts.basic(
-                              fontWeight: FontWeight.bold, fontSize: 18,),
-                        ),
-                        Divider(),
-                        Expanded(
-                          child: CatList(
-                            streamTitle: selectedType == 0 ? catTitle : "Jeans", key: Key("catList"),
-                          ),
-                        ),
-                      ],
-                    )),
-                // // Restaurentist(key: Key(""), controller: ScrollController(), streamTitle: '',),
-                Container(
-
-                    child: Column(
-                      children: [
-                        Divider(),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 30),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 5,
+                    Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        height: 190,
+                        child: Column(
+                          children: [
+                            Text(
+                            selectedType == 0 ?  "BROWSE FOOD CATEGORIES" : "BROWSE LIFESTYLE CATEGORIES",
+                              style: GoogleFonts.basic(
+                                  fontWeight: FontWeight.bold, fontSize: 18,),
+                            ),
+                            Divider(),
+                            Expanded(
+                              child: CatList(
+                                streamTitle: selectedType == 0 ? catTitle : "Jeans", key: Key("catList"),
                               ),
-                              Opacity(
-                                opacity: 0.6,
-                                child: Image(
-                                  image: AssetImage("assets/greentick.png"),
-                                  width: 30,
-                                  height: 30,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                              selectedType == 0 ?  "POPULAR RESTAURANT NEAR YOU" : "POPULAR SHOP NEAR YOU",
-                                style: GoogleFonts.basic(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          ],
+                        )),
+                    // // Restaurentist(key: Key(""), controller: ScrollController(), streamTitle: '',),
+                    Container(
 
-                      ],
-                    )
-                ),
-                PopularRestaurantList(type:selectedType.toString(),category:selectedType.toString(),userGeoPoint : userGeoPoint,status: true,) ,
-                // Divider(thickness: 2,),
-                // Expanded(child: RestroList(userGeoPoint : userGeoPoint,status: true,)),
-                // Expanded(child: RestroList(userGeoPoint : userGeoPoint,status: false,)),
-              ],
-            );
+                        child: Column(
+                          children: [
+                            Divider(),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 30),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Opacity(
+                                    opacity: 0.6,
+                                    child: Image(
+                                      image: AssetImage("assets/greentick.png"),
+                                      width: 30,
+                                      height: 30,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                  selectedType == 0 ?  "POPULAR RESTAURANT NEAR YOU" : "POPULAR SHOP NEAR YOU",
+                                    style: GoogleFonts.basic(
+                                        fontWeight: FontWeight.bold, fontSize: 18),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        )
+                    ),
+                              PopularRestaurantList(type:selectedType.toString(),category:["CAT84","CAT480"],userGeoPoint : userGeoPoint,status: true,listofRestaurant :restomodel)
+                    // Divider(thickness: 2,),
+                    // Expanded(child: RestroList(userGeoPoint : userGeoPoint,status: true,)),
+                    // Expanded(child: RestroList(userGeoPoint : userGeoPoint,status: false,)),
+                  ],
+                );
+          }
+        );
       }
     );
   }

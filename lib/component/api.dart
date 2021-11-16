@@ -21,6 +21,7 @@ class AllApi {
     // String user = jsonEncode(UserModel().fromJson(json));
 
     await pref.setString('userData', jsonString);
+    await pref.setBool('loggedin', true);
 
 
     return getLocalUsers();
@@ -33,7 +34,9 @@ class AllApi {
     var a = pref.getString("userData");
       print("Get Lcocal User ${a}");
 
-    Map jsonid = await jsonDecode(a);
+    var jsonid = await jsonDecode(a);
+    Map json = jsonDecode(jsonid);
+    print("converted ${json["name"]}");
 
 
 
@@ -41,7 +44,7 @@ class AllApi {
 
     List<UserModel> newList = [];
 
-    UserModel userid = await UserModel().fromJson(jsonid);
+    UserModel userid = await UserModel().fromJson(json);
 
 
     //
@@ -52,23 +55,27 @@ class AllApi {
 
   Future getRestaurant() async {
 
-    var userGetURL = Uri.parse("${conurl}restroget");
+    var userGetURL = Uri.parse("${conurl}restrogetnearme?lat=19.219305858205278&lng=72.980145824379");
 
     var response = await http.get(userGetURL);
 
     var list = json.decode(response.body);
-    //
-    print("list ${
-    response.body
-    }");
 
+    //
+    // print("list ${
+    // response.body
+    // }");
+    // print("listconvertedd ${
+    //     list
+    // }");
     // Map json = jsonDecode(jsonString);
     //
     // String user = jsonEncode(UserModel().fromJson(json));
 
 
 
-    return response.body;
+    return list;
+
   }
 
   Future postUser(UserModel usermodel) async {
@@ -90,9 +97,10 @@ class AllApi {
 
     // var list = json.decode(response.body);
     //
-    print(
 
-        "response for userpost ${response.body}");
+    // print(
+    //
+    //     "response for userpost ${response.body}");
 
 
 
@@ -120,6 +128,45 @@ class AllApi {
 
     return response.body;
   }
+
+  Future getcat(String catid ) async {
+    var userGetURL = Uri.parse("${conurl}categorynameget?catid=$catid");
+    var response = await http.get(userGetURL);
+
+
+
+    print(response.body);
+
+
+     // List list = json.decode(response.body);
+     print("listofcat ${jsonDecode(response.body)}");
+    //
+    // Iterable<VenueModel> newList = list.map((e) {
+    //   return VenueModel().fromJson(e);
+    // });
+    //
+    // return newList.toList();
+    return jsonDecode(response.body);
+  }
+
+  Future getcatfood(String vendorid , String catid) async {
+    var userGetURL = Uri.parse("${conurl}getcatfood?vendorid=$vendorid&catid=$catid");
+    var response = await http.get(userGetURL);
+
+    // List list = json.decode(response.body);
+
+    // print(response.body);
+    //
+    // Iterable<VenueModel> newList = list.map((e) {
+    //   return VenueModel().fromJson(e);
+    // });
+    //
+    // return newList.toList();
+
+  }
+
+
+
 
 
 }

@@ -1,4 +1,6 @@
 // @dart=2.9
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -234,24 +236,32 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 wallet:"0",
                               refFrom: refercode
                             )).then((value) async {
-                              if(value == "\"Success\""){
+                              if(value == "\"User Not Exist\"" || value == "\"User Already Exist\""){
 
+                                Fluttertoast.showToast(msg: "User Already Exist");
+                                Get.snackbar("User Already Exist", "Use another number",snackPosition: SnackPosition.BOTTOM,colorText: Colors.red);
 
-                                 AllApi().getUser(widget.phone).then((value) {
-                                   print("UserError ${widget.phone}  ${value}}");
-
-                                        AllApi().updateLocalUsers(value).then((value) {
-
-                                          addBoolToSF().then((value) {
-                                            Get.offAll(Homepage());
-                                          });
-
-
-                                        });
-
-                                });
+                                //  AllApi().getUser(widget.phone).then((value) {
+                                //    print("UserError ${widget.phone}  ${value}}");
+                                //
+                                //         AllApi().updateLocalUsers(value).then((value) {
+                                //
+                                //           addBoolToSF().then((value) {
+                                //             Get.offAll(Homepage());
+                                //           });
+                                //
+                                //
+                                //         });
+                                //
+                                // });
                               }else{
-                                Fluttertoast.showToast(msg: "Something Went Wrong");
+                                var result = jsonDecode(value);
+                                UserModel users = UserModel().fromJson(result);
+
+                                AllApi().updateLocalUsers(jsonEncode(users));
+                                print("getting user ${users.name}");
+
+                                Get.off(Homepage(userRef: users.phone,));
                               }
 
                             });

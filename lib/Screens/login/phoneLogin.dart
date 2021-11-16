@@ -52,7 +52,7 @@ class _PhoneLoginState extends State<PhoneLogin> {
 
                 print("getting user ${users.name}");
 
-                Get.off(Homepage());
+                Get.off(Homepage(userRef: users.phone,));
               }
 
             });
