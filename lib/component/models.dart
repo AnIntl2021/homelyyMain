@@ -154,3 +154,117 @@ class  UserModel {
   }
 }
 
+class BannerModel {
+  String bannerid;
+  String name;
+  String image;
+  String type;
+
+  BannerModel({ this.bannerid, this.name, this.image, this.type});
+
+  fromJson(Map<String, dynamic> json) {
+    return BannerModel(
+        bannerid : json['bannerid'],
+        name : json['name'],
+        image : json['image'],
+    type : json['type'],
+    );
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['bannerid'] = this.bannerid;
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['type'] = this.type;
+    return data;
+  }
+}
+
+class CatModel {
+  String name;
+  String image;
+  String type;
+  String catid;
+
+  CatModel({ this.name, this.image, this.type, this.catid});
+
+  fromJson(Map<String, dynamic> json) {
+    return CatModel(
+        name : json['name'],
+        image : json['image'],
+        type : json['type'],
+    catid : json['catid'],
+    );
+
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['type'] = this.type;
+    data['catid'] = this.catid;
+    return data;
+  }
+}
+
+class ProductModel {
+
+  String description;
+  String vendorid;
+  String foodid;
+  String name;
+  String image;
+  String price;
+  String category;
+  String subcategory;
+
+  ProductModel(
+      {
+        this.description,
+        this.vendorid,
+        this.foodid,
+        this.name,
+        this.image,
+        this.price,
+        this.category,
+        this.subcategory});
+
+  fromJson(Map<String, dynamic> json) {
+ return ProductModel(
+     description : json['description'],
+     vendorid : json['vendorid'],
+     foodid : json['foodid'],
+ name : json['name'],
+ image : json['image'],
+ price : json['price'],
+ category : json['category'],
+ subcategory : json['subcategory'],
+   
+ );
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['description'] = this.description;
+    data['vendorid'] = this.vendorid;
+    data['foodid'] = this.foodid;
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['price'] = this.price;
+    data['category'] = this.category;
+    data['subcategory'] = this.subcategory;
+    return data;
+  }
+}
+
+
+
+
+
+

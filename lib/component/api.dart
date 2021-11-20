@@ -78,6 +78,31 @@ class AllApi {
 
   }
 
+  Future getLifestyle() async {
+
+    var userGetURL = Uri.parse("${conurl}lifestylegetnearme?lat=19.219305858205278&lng=72.980145824379");
+
+    var response = await http.get(userGetURL);
+
+    var list = json.decode(response.body);
+
+    //
+    // print("list ${
+    // response.body
+    // }");
+    // print("listconvertedd ${
+    //     list
+    // }");
+    // Map json = jsonDecode(jsonString);
+    //
+    // String user = jsonEncode(UserModel().fromJson(json));
+
+
+
+    return list;
+
+  }
+
   Future postUser(UserModel usermodel) async {
 
     var userGetURL = Uri.parse("${conurl}userpost?ref=${usermodel.phone}");
@@ -153,20 +178,73 @@ class AllApi {
     var userGetURL = Uri.parse("${conurl}getcatfood?vendorid=$vendorid&catid=$catid");
     var response = await http.get(userGetURL);
 
-    // List list = json.decode(response.body);
+    List list = json.decode(response.body);
 
-    // print(response.body);
-    //
-    // Iterable<VenueModel> newList = list.map((e) {
-    //   return VenueModel().fromJson(e);
-    // });
-    //
-    // return newList.toList();
+    print(response.body);
+
+    Iterable<ProductModel> newList = list.map((e) {
+      return ProductModel().fromJson(e);
+    });
+
+    return newList.toList();
 
   }
 
+  Future getBanner(String type) async {
+    var userGetURL = Uri.parse("${conurl}bannergetapp?type=$type");
+    var response = await http.get(userGetURL);
 
+    List list = json.decode(response.body);
 
+     print(response.body);
+    //
 
+    Iterable<BannerModel> newList = list.map((e) {
+      return BannerModel().fromJson(e);
+    });
+
+    print("bannerList = $newList");
+    //
+     return newList.toList();
+
+  }
+
+  Future getRestoCat() async {
+    var userGetURL = Uri.parse("${conurl}categoryrestro");
+    var response = await http.get(userGetURL);
+
+    List list = json.decode(response.body);
+
+    print(response.body);
+    //
+
+    Iterable<CatModel> newList = list.map((e) {
+      return CatModel().fromJson(e);
+    });
+
+    print("bannerList = $newList");
+    //
+    return newList.toList();
+
+  }
+
+  Future getLifeCat() async {
+    var userGetURL = Uri.parse("${conurl}categorylifestyle");
+    var response = await http.get(userGetURL);
+
+    List list = json.decode(response.body);
+
+    print(response.body);
+    //
+
+    Iterable<CatModel> newList = list.map((e) {
+      return CatModel().fromJson(e);
+    });
+
+    print("bannerList = $newList");
+    //
+    return newList.toList();
+
+  }
 
 }

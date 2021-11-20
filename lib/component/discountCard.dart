@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:homelyy/component/constants.dart';
+import 'package:homelyy/component/models.dart';
 
 
 class DiscountCard extends StatefulWidget {
   final String title;
-  final List snapshot;
+  final List<BannerModel> snapshot;
   const DiscountCard({
      Key key,  this.title, this.snapshot,
   }) : super(key: key);
@@ -50,7 +51,7 @@ class _DiscountCardState extends State<DiscountCard> {
                 slideBuilder: (index){
                   var sliderimage = widget.snapshot[index];
                   return Container(
-                    child: Image.network(sliderimage, loadingBuilder: (BuildContext context,
+                    child: Image.network("https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2Ffood_banner.webp?alt=media&token=b54e6725-4af0-4783-84d8-e2bcf21e20d3", loadingBuilder: (BuildContext context,
                         Widget child,
                         ImageChunkEvent loadingProgress) {
                       if (loadingProgress == null) {

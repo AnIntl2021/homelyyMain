@@ -4,15 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:homelyy/component/constants.dart';
+import 'package:homelyy/component/models.dart';
 
 class CatCard extends StatelessWidget {
   final String title, shopName, svgSrc, price;
+  final List catList;
   const CatCard({
      Key key,
      this.title,
      this.shopName,
      this.svgSrc,
-     this.price,
+     this.price, this.catList,
   }) : super(key: key);
 
   @override
@@ -78,9 +80,10 @@ class CatCard extends StatelessWidget {
 
 class CatList extends StatefulWidget {
   final String streamTitle;
+  final List<CatModel> catList;
   const CatList({
      Key key,
-     this.streamTitle,
+     this.streamTitle, this.catList,
   }) : super(key: key);
 
   @override
@@ -99,7 +102,7 @@ class _CatListState extends State<CatList> {
     return ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: 10,
+        itemCount: widget.catList.length,
         itemBuilder: (context, index) {
           var title = widget.streamTitle;
           // var catogry = product[index]["catogry"];
@@ -110,7 +113,7 @@ class _CatListState extends State<CatList> {
          : "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2Fjeans-svgrepo-com.png?alt=media&token=33fbc767-0c5c-46f5-8883-bd00636aa3dc";
           // var price = product[index]["price"];
           return CatCard(
-            title: title,
+            title: widget.catList[index].name,
             svgSrc: img, price: '', shopName: '', key: Key("cartList"),
             // price: "\â‚¹ $price",
           );

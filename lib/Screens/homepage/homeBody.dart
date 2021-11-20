@@ -275,7 +275,7 @@ class _BodyState extends State<Body> {
     print("location $myLocation $userAddress");
 
     return FutureBuilder(
-      future:Future.wait([getLocation(),]),
+      future:Future.wait([getLocation(),AllApi().getBanner(selectedType == 0 ? "restro" : "lifestyle"),selectedType == 0 ? AllApi().getRestoCat() : AllApi().getLifeCat()] ),
 
       builder: (context, snapshot) {
 
@@ -285,12 +285,20 @@ class _BodyState extends State<Body> {
           );
         }
 
-        AllApi().getcatfood("VENDOR74836", "CAT480");
+
+
         LocationData latlng =  snapshot.requireData[0];
+
+        List<BannerModel> banners =  snapshot.requireData[1];
+
+        List<CatModel> catList =  snapshot.requireData[2];
+
         print("lat = $latlng.latitude long = $latlng.longitude");
+        print("banners = ${banners[0].name}");
+        print("cat = ${catList[0].name}");
 
         return FutureBuilder(
-          future:  AllApi().getRestaurant(),
+          future: selectedType == 0 ? AllApi().getRestaurant() :AllApi().getLifestyle() ,
           builder: (context, snapshot1) {
             // var restoModel = snapshot.requireData[0];
 
@@ -393,14 +401,15 @@ class _BodyState extends State<Body> {
                     AnimatedContainer(
                         duration: Duration(milliseconds: 200), child: Divider()),
 
-                    DiscountCard(key: Key("catRow"), title: 'Slider',snapshot: selectedType == 0 ? [
-                      "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2Ffood_banner.webp?alt=media&token=b54e6725-4af0-4783-84d8-e2bcf21e20d3",
-                      "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2F5fe3266f03a46_json_image_1608722031.webp?alt=media&token=5791a1c2-e50a-44b9-a593-eb2f342f78de"
-                    ] : [
-                          "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2FSP_Offers_Block02DEC06.jpg?alt=media&token=17873f3c-2001-4443-ab09-02665092e3fb",
-                      "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2Funnamed.jpg?alt=media&token=10ee0306-c5c7-4ac3-a99a-ca9cbb2ffc34"
-
-                      ]
+                    DiscountCard(key: Key("catRow"), title: 'Slider',snapshot: banners
+                    // selectedType == 0 ? [
+                    //   "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2Ffood_banner.webp?alt=media&token=b54e6725-4af0-4783-84d8-e2bcf21e20d3",
+                    //   "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2F5fe3266f03a46_json_image_1608722031.webp?alt=media&token=5791a1c2-e50a-44b9-a593-eb2f342f78de"
+                    // ] : [
+                    //       "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2FSP_Offers_Block02DEC06.jpg?alt=media&token=17873f3c-2001-4443-ab09-02665092e3fb",
+                    //   "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2Funnamed.jpg?alt=media&token=10ee0306-c5c7-4ac3-a99a-ca9cbb2ffc34"
+                    //
+                    //   ]
                     ,),
 
                     Container(
@@ -416,6 +425,7 @@ class _BodyState extends State<Body> {
                             Divider(),
                             Expanded(
                               child: CatList(
+                                catList: catList,
                                 streamTitle: selectedType == 0 ? catTitle : "Jeans", key: Key("catList"),
                               ),
                             ),
