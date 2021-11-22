@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/Screens/Resturant/prodlistcard.dart';
 import 'package:homelyy/component/api.dart';
+import 'package:homelyy/component/models.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
@@ -82,8 +83,23 @@ class _ItemListState extends State<ItemList> {
                           title: Text(catList),
                           children: [
                             FutureBuilder(
-                              future: AllApi().getcatfood( , catid),
-                              builder: (context, snapshot) {
+                              future: AllApi().getcatfood( widget.id, widget.category[index]),
+                              builder: (context, snapshot1) {
+
+
+                                if(!snapshot1.hasData){
+
+                                  return Center(
+                                    child: CircularProgressIndicator(color: Colors.white,),
+                                  );
+
+                                }
+
+                                List<ProductModel> foodList = snapshot1.requireData;
+                                print("foodList lenght = ${foodList}");
+
+
+
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
@@ -93,22 +109,28 @@ class _ItemListState extends State<ItemList> {
                                             refreshChangeListener2.refreshed = true;
                                             print("Refreshed");
                                           },
-                                          child: ProductListCard(
-                                            title: "Mayo Burger",
-                                            totalorders: 1,
-                                            price: "100",
-                                            recipe: "Mayo,Cheese,Patty,Mayo,Cheese,Patty",
-                                            stock: true,
-                                            tagVisibility: true,
-                                            img: "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/pizza_combo.webp?alt=media&token=ab1aa2b7-d1f3-4c30-8015-9c8d70161d37",
-                                            key: Key("prodlistcard"),
-                                            press: () {},
-                                            discount: (int.parse("100") - int.parse("80"))
-                                                .toString(),
-                                            discountVisibility: true,
-                                            uid: "uid",
-                                            shopName: widget.shopname,
-                                            cutprice: "80",
+                                          child: ListView.builder(
+                                            itemCount: foodList.length,
+                                            shrinkWrap: true,
+                                            itemBuilder: (context, index) {
+                                              return ProductListCard(
+                                                title: foodList[index].name,
+                                                totalorders: 1,
+                                                price: foodList[index].price,
+                                                recipe: foodList[index].description,
+                                                stock: true,
+                                                tagVisibility: true,
+                                                img: "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/pizza_combo.webp?alt=media&token=ab1aa2b7-d1f3-4c30-8015-9c8d70161d37",
+                                                key: Key("prodlistcard"),
+                                                press: () {},
+                                                discount: (int.parse("100") - int.parse("80"))
+                                                    .toString(),
+                                                discountVisibility: true,
+                                                uid: "uid",
+                                                shopName: widget.shopname,
+                                                cutprice: "80",
+                                              );
+                                            }
                                           )
 
                                           // PaginateFirestore(

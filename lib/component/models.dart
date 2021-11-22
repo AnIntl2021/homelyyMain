@@ -13,6 +13,7 @@ class restaurantModel {
   String email;
   var location;
 
+
   restaurantModel(
       {
         this.name,
@@ -261,6 +262,92 @@ class ProductModel {
     data['subcategory'] = this.subcategory;
     return data;
   }
+}
+
+class CartModel {
+  String img;
+  String price;
+  String title;
+  String recipe;
+  String quantity;
+  String requirement;
+  String itemnumber;
+  String cutprice;
+  String ogprice;
+  String ogcutprice;
+  String discount;
+  String shop;
+  String ref;
+  String date;
+  String time;
+  String vendorid;
+  String foodid;
+
+
+  CartModel(
+      {
+        this.img,
+        this.price,
+        this.title,
+        this.recipe,
+        this.quantity,
+        this.requirement,
+        this.itemnumber,
+        this.cutprice,
+        this.ogprice,
+        this.ogcutprice,
+        this.discount,
+        this.shop,
+        this.date,
+        this.time,
+        this.ref,
+        this.vendorid,
+        this.foodid
+      });
+
+  CartModel.fromJson(Map<String, dynamic> json) {
+    img = json['img'];
+    price = json['price'];
+    title = json['title'];
+    recipe = json['recipe'];
+    quantity = json['quantity'];
+    requirement = json['requirement'];
+    itemnumber = json['itemnumber'];
+    cutprice = json['cutprice'];
+    ogprice = json['ogprice'];
+    ogcutprice = json['ogcutprice'];
+    discount = json['discount'];
+    shop = json['shop'];
+    date = json['date'];
+    time = json['time'];
+    ref = json['ref'];
+    vendorid = json['vendorid'];
+    foodid = json["foodid"];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['img'] = this.img;
+    data['price'] = this.price;
+    data['title'] = this.title;
+    data['recipe'] = this.recipe;
+    data['quantity'] = this.quantity;
+    data['requirement'] = this.requirement;
+    data['itemnumber'] = this.itemnumber;
+    data['cutprice'] = this.cutprice;
+    data['ogprice'] = this.ogprice;
+    data['ogcutprice'] = this.ogcutprice;
+    data['discount'] = this.discount;
+    data['shop'] = this.shop;
+    data['date'] = this.date;
+    data['time'] = this.time;
+    data['ref'] = this.ref;
+    data['vendorid'] = this.vendorid;
+    data["foodid"] = this.foodid;
+    return data;
+  }
+
 }
 
 

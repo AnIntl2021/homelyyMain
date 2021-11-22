@@ -71,7 +71,7 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
 
               tagVisibility: false,
 
-              shopid: "shopUid",
+              shopid: widget.listofRestaurant[index]["vendorid"],
 
               press: () {},
 

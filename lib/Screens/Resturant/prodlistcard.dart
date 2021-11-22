@@ -5,8 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/counterNumber.dart';
+import 'package:homelyy/component/models.dart';
+import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 
 class ProductListCard extends StatefulWidget {
@@ -162,7 +166,11 @@ class _ProductListCardState extends State<ProductListCard> {
                     bottom: 0,
                     right: 0,
                     child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          var uuid = Uuid();
+                          var newUid = uuid.v1().toString().split("-");
+
+
                           var itemInitoal = DateTime
                               .now()
                               .millisecond
@@ -170,41 +178,25 @@ class _ProductListCardState extends State<ProductListCard> {
                           setState(() {
                             _defaultvalue = 1;
                           });
-                          var img = widget.img;
-                          var price = widget.price;
-                          var title = widget.title;
-                          var recipe = widget.recipe;
-                          var quantity = _defaultvalue;
-                          var cutprice = widget.cutprice;
-                          var requirement = "";
-                          Map<String, dynamic> items = new Map();
-                          items['img'] = img;
-                          items['price'] = price;
-                          items['title'] = title;
-                          items['recipe'] = recipe;
-                          items['quantity'] = quantity.toString();
-                          items['requirement'] = requirement;
-                          items['itemnumber'] = itemInitoal;
-                          items['cutprice'] = cutprice;
-                          items['ogprice'] = price;
-                          items['ogcutprice'] = cutprice;
-                          items['discount'] = widget.discount;
-                          items['shop'] = widget.shopName;
-                          items["totalorders"] = widget.totalorders;
-                          FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(widget.uid)
-                              .collection("cart")
-                              .doc(widget.shopName).collection("products")
-                              .doc(widget.title)
-                              .set(items)
-                              .then((value) {
-                            FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(widget.uid)
-                                .collection("cart")
-                                .doc(widget.shopName)
-                                .set({"title": widget.shopName});
+                          await AllApi().postCart(CartModel(
+    img : widget.img,
+    price : widget.price,
+    title : widget.title,
+    recipe : widget.recipe,
+    quantity : _defaultvalue.toString(),
+    requirement : "",
+    itemnumber : newUid.toString(),
+    cutprice : widget.cutprice,
+    ogprice : widget.price,
+    ogcutprice : widget.cutprice,
+    discount : widget.discount,
+    shop : widget.shopName,
+    date :  DateFormat('dd-MM-yyyy').format(DateTime.now()),
+    time : DateFormat('hh-MM-yyyy').format(DateTime.now()),
+    ref : 'ref',
+    vendorid : 'vendorid',
+    foodid : "foodid",
+    ));
                             setState(() {
 
                               final snackBar = SnackBar(
@@ -217,13 +209,10 @@ class _ProductListCardState extends State<ProductListCard> {
                               print("addedto cart");
                               _defaultvalue = 1;
                             });
-                          }
-                          );
                         },
                         child: Text("ADD"),
                         style:
-                        ElevatedButton.styleFrom(primary: Colors.pink))),
-              ),
+                        ElevatedButton.styleFrom(primary: Colors.pink)))),
               Visibility(
                 visible: _defaultvalue < 1 ? false : true,
                 child: Positioned(

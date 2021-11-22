@@ -247,4 +247,44 @@ class AllApi {
 
   }
 
+  Future postCart(CartModel cartModel) async {
+
+    var userGetURL = Uri.parse("${conurl}addCart?ref=${cartModel.ref}&vendorid=${cartModel.shop}&foodid=${cartModel.foodid}");
+
+    var response = await http.post(userGetURL,body: {
+
+      "img" : cartModel.img,
+      "price" : cartModel.price,
+      "ref" : cartModel.ref,
+      "title" : cartModel.title,
+      // "location" : json.encode({"j":"k"}),
+      "recipe" : cartModel.recipe ,
+      "quantity" : cartModel.quantity,
+      "requirement" : cartModel.requirement,
+      "itemnumber" : cartModel.itemnumber,
+      "cutprice" : cartModel.cutprice,
+      "ogprice" : cartModel.ogprice,
+      "ogcutprice" : cartModel.ogcutprice,
+      "discount" : cartModel.discount,
+      "shop" : cartModel.shop,
+
+    });
+    print("response of ccart ${response.body}");
+    // var list = json.decode(response.body);
+    //
+
+    // print(
+    //
+    //     "response for userpost ${response.body}");
+
+
+
+    // Map json = jsonDecode(jsonString);
+    //
+    // String user = jsonEncode(UserModel().fromJson(json));
+
+
+    return response.body;
+  }
+
 }
