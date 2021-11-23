@@ -10,6 +10,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/discountCard.dart';
@@ -271,11 +272,11 @@ class _BodyState extends State<Body> {
       //   });
       // });
 
-
+    print("userGetttinghomwebody ${widget.userref.replaceAll("+", "").removeAllWhitespace}");
     print("location $myLocation $userAddress");
 
     return FutureBuilder(
-      future:Future.wait([getLocation(),AllApi().getBanner(selectedType == 0 ? "restro" : "lifestyle"),selectedType == 0 ? AllApi().getRestoCat() : AllApi().getLifeCat()] ),
+      future:Future.wait([getLocation(),AllApi().getBanner(selectedType == 0 ? "restro" : "lifestyle"),selectedType == 0 ? AllApi().getRestoCat() : AllApi().getLifeCat(),AllApi().getLocalUsers()] ),
 
       builder: (context, snapshot) {
 
@@ -293,9 +294,12 @@ class _BodyState extends State<Body> {
 
         List<CatModel> catList =  snapshot.requireData[2];
 
+        UserModel usersList =  snapshot.requireData[3];
+
         print("lat = $latlng.latitude long = $latlng.longitude");
         print("banners = ${banners[0].name}");
         print("cat = ${catList[0].name}");
+        print("users,${usersList.name}");
 
         return FutureBuilder(
           future: selectedType == 0 ? AllApi().getRestaurant() :AllApi().getLifestyle() ,
@@ -467,7 +471,7 @@ class _BodyState extends State<Body> {
                           ],
                         )
                     ),
-                              PopularRestaurantList(type:selectedType.toString(),category:["CAT84","CAT480"],userGeoPoint : userGeoPoint,status: true,listofRestaurant :restomodel)
+                              PopularRestaurantList(type:selectedType.toString(),category:["CAT84","CAT480"],userGeoPoint : userGeoPoint,status: true,listofRestaurant :restomodel,uid: usersList.ref.replaceAll("+", "").removeAllWhitespace,)
                     // Divider(thickness: 2,),
                     // Expanded(child: RestroList(userGeoPoint : userGeoPoint,status: true,)),
                     // Expanded(child: RestroList(userGeoPoint : userGeoPoint,status: false,)),

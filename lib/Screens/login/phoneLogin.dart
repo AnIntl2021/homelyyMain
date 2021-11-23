@@ -46,7 +46,7 @@ class _PhoneLoginState extends State<PhoneLogin> {
 
                 print("no user");
 
-                Get.to(UserInfoScreen(phone:widget.phoneNumber));
+                Get.to(UserInfoScreen(phone:widget.phoneNumber.replaceAll("+", "").removeAllWhitespace));
               }else{
                 UserModel users = UserModel().fromJson(value);
 

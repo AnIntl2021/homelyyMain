@@ -12,7 +12,8 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 
 class UserWallet extends StatefulWidget {
-  const UserWallet({Key key}) : super(key: key);
+  final String id;
+  const UserWallet({Key key, this.id}) : super(key: key);
 
   @override
   _UserWalletState createState() => _UserWalletState();
@@ -118,7 +119,7 @@ class _UserWalletState extends State<UserWallet> {
     updateWallet(String amount) {}
 
     return Scaffold(
-      appBar: homeAppBar(context, "Wallet", "stream"),
+      appBar: homeAppBar(context, "Wallet", widget.id),
       body: SingleChildScrollView(
         child: Column(
           children: [

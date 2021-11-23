@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/Screens/Resturant/recommendedlist.dart';
 import 'package:homelyy/Screens/Resturant/titlepricerating.dart';
@@ -16,7 +17,7 @@ class ItemInfo extends StatefulWidget {
   final String type;
   final String rating;
   final String title;
-  final String id,opentiming,closetiming,shopname;
+  final String id,opentiming,closetiming,shopname,uid;
   final List<dynamic> cuisine;
   final int numReview;
   final List category;
@@ -24,7 +25,7 @@ class ItemInfo extends StatefulWidget {
      Key key,
      this.rating,
      this.title,
-     this.cuisine,  this.id,  this.opentiming,  this.closetiming,  this.shopname,  this.numReview, this.type, this.category,
+     this.cuisine,  this.id,  this.opentiming,  this.closetiming,  this.shopname,  this.numReview, this.type, this.category, this.uid,
   }) : super(key: key);
 
   @override
@@ -68,7 +69,7 @@ class _ItemInfoState extends State<ItemInfo> {
     // }
 
     return Scaffold(
-      appBar: homeAppBar(context,widget.title,""),
+      appBar: homeAppBar(context,widget.title,widget.uid.replaceAll("+", "").removeAllWhitespace),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(20),
@@ -134,8 +135,8 @@ class _ItemInfoState extends State<ItemInfo> {
                   ),
                 ) : SizedBox(),
 
-           widget.type == "restro" ? ItemList(category:widget.category,streamTitle: '', callback: (){}, key: Key("productList"), id: widget.id, shopname: widget.shopname,)
-                :  LifestylePage()
+           widget.type == "restro" ? ItemList(category:widget.category,streamTitle: '', callback: (){}, key: Key("productList"), id: widget.id, shopname: widget.shopname,uid:widget.uid ,)
+                :  LifestylePage(id: widget.id,)
           ]),
         ),
       ),

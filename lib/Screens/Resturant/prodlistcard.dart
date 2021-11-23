@@ -1,9 +1,8 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
@@ -12,25 +11,40 @@ import 'package:homelyy/component/models.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-
 class ProductListCard extends StatefulWidget {
-  final String title, shopName, price, uid,img,cutprice,recipe,discount;
+  final String title,
+      shopName,
+      price,
+      uid,
+      img,
+      cutprice,
+      recipe,
+      discount,
+      vid,
+      foodid;
   final Function press;
   final bool tagVisibility;
   final bool stock;
   final bool discountVisibility;
   final int totalorders;
+
   const ProductListCard({
-     Key key,
-     this.title,
-     this.press,
-     this.discount,
-     this.img,
-     this.tagVisibility,
-     this.discountVisibility,
-     this.recipe,
-     this.price,
-      this.stock,  this.shopName,  this.uid,  this.cutprice,  this.totalorders,
+    Key key,
+    this.title,
+    this.press,
+    this.discount,
+    this.img,
+    this.tagVisibility,
+    this.discountVisibility,
+    this.recipe,
+    this.price,
+    this.stock,
+    this.shopName,
+    this.uid,
+    this.cutprice,
+    this.totalorders,
+    this.vid,
+    this.foodid,
   }) : super(key: key);
 
   @override
@@ -39,11 +53,14 @@ class ProductListCard extends StatefulWidget {
 
 class _ProductListCardState extends State<ProductListCard> {
   var _defaultvalue = 0;
+
   // var uid = FirebaseAuth.instance.currentUser.uid.toString();
   var requirementController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    var uuid = Uuid();
+    var newUid = uuid.v1().toString().split("-");
     // var stream = FirebaseFirestore.instance
     //     .collection("users")
     //     .doc(uid)
@@ -52,9 +69,7 @@ class _ProductListCardState extends State<ProductListCard> {
     Size size = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
-
         borderRadius: BorderRadius.circular(10),
-
       ),
       child: Material(
         color: Colors.transparent,
@@ -116,15 +131,14 @@ class _ProductListCardState extends State<ProductListCard> {
                             ],
                           ),
                         ),
-
                         SizedBox(height: 5),
                         Container(
                           margin: EdgeInsets.only(right: 100),
                           child: Text(
                             widget.recipe,
                             maxLines: 4,
-                            style: TextStyle(
-                                color: Colors.black.withOpacity(0.5)),
+                            style:
+                                TextStyle(color: Colors.black.withOpacity(0.5)),
                           ),
                         ),
                         SizedBox(height: 5),
@@ -134,23 +148,24 @@ class _ProductListCardState extends State<ProductListCard> {
                             Visibility(
                               visible: widget.cutprice == "" ? false : true,
                               child: Text(
-                                widget.cutprice == "" ? "" : "Rs.${widget
-                                    .cutprice}",
-                                style:
-                                TextStyle(
-                                    fontSize: 16, color: kgreen),
+                                widget.cutprice == ""
+                                    ? ""
+                                    : "Rs.${widget.cutprice}",
+                                style: TextStyle(fontSize: 16, color: kgreen),
                               ),
                             ),
-                            SizedBox(width: 10,),
+                            SizedBox(
+                              width: 10,
+                            ),
                             Text(
                               "Rs.${widget.price}",
-                              style:
-                              widget.discountVisibility
-                                  ? TextStyle(fontSize: 14,
-                                color: Colors.blueGrey,
-                                decoration: TextDecoration.lineThrough,)
-                                  : TextStyle(
-                                  fontSize: 16, color: kgreen),
+                              style: widget.discountVisibility
+                                  ? TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.blueGrey,
+                                      decoration: TextDecoration.lineThrough,
+                                    )
+                                  : TextStyle(fontSize: 16, color: kgreen),
                             ),
                           ],
                         ),
@@ -161,44 +176,45 @@ class _ProductListCardState extends State<ProductListCard> {
                 ],
               ),
               Visibility(
-                visible: _defaultvalue < 1 && widget.stock ? true : false,
-                child: Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          var uuid = Uuid();
-                          var newUid = uuid.v1().toString().split("-");
-
-
-                          var itemInitoal = DateTime
-                              .now()
-                              .millisecond
-                              .toString();
-                          setState(() {
-                            _defaultvalue = 1;
-                          });
-                          await AllApi().postCart(CartModel(
-    img : widget.img,
-    price : widget.price,
-    title : widget.title,
-    recipe : widget.recipe,
-    quantity : _defaultvalue.toString(),
-    requirement : "",
-    itemnumber : newUid.toString(),
-    cutprice : widget.cutprice,
-    ogprice : widget.price,
-    ogcutprice : widget.cutprice,
-    discount : widget.discount,
-    shop : widget.shopName,
-    date :  DateFormat('dd-MM-yyyy').format(DateTime.now()),
-    time : DateFormat('hh-MM-yyyy').format(DateTime.now()),
-    ref : 'ref',
-    vendorid : 'vendorid',
-    foodid : "foodid",
-    ));
+                  visible: _defaultvalue < 1 && widget.stock ? true : false,
+                  child: Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            var itemInitoal =
+                                DateTime.now().millisecond.toString();
                             setState(() {
+                              _defaultvalue = 1;
+                            });
+                            await AllApi().postCart(CartModel(
+                              img: widget.img,
+                              price: widget.price,
+                              title: widget.title,
+                              recipe: widget.recipe,
+                              quantity: _defaultvalue.toString(),
+                              requirement: "",
+                              itemnumber: newUid[0] + newUid[4],
+                              cutprice: widget.cutprice,
+                              ogprice: widget.price,
+                              ogcutprice: widget.cutprice,
+                              discount: widget.discount,
+                              shop: widget.shopName,
+                              date: DateFormat('dd-MM-yyyy')
+                                  .format(DateTime.now()),
+                              time: DateFormat('hh-MM-yyyy')
+                                  .format(DateTime.now()),
+                              ref: widget.uid.toString().replaceAll(" ", ""),
+                              vendorid: widget.vid.toString().replaceAll(" ", ""),
+                              foodid: widget.foodid.toString().replaceAll(" ", ""),
+                            ));
+                            await AllApi().postShopCart(CartModel(
+                              shop: widget.shopName,
+                              ref: widget.uid.toString().replaceAll(" ", ""),
+                              vendorid: widget.vid.toString().replaceAll(" ", ""),
+                            ));
 
+                            setState(() {
                               final snackBar = SnackBar(
                                 content: Text('Product Added To Cart'),
                                 backgroundColor: Colors.green,
@@ -209,10 +225,10 @@ class _ProductListCardState extends State<ProductListCard> {
                               print("addedto cart");
                               _defaultvalue = 1;
                             });
-                        },
-                        child: Text("ADD"),
-                        style:
-                        ElevatedButton.styleFrom(primary: Colors.pink)))),
+                          },
+                          child: Text("ADD"),
+                          style:
+                              ElevatedButton.styleFrom(primary: Colors.pink)))),
               Visibility(
                 visible: _defaultvalue < 1 ? false : true,
                 child: Positioned(
@@ -223,55 +239,74 @@ class _ProductListCardState extends State<ProductListCard> {
                     minValue: 0,
                     maxValue: 10,
                     step: 1,
-                    onChanged: (value) {
-
-                      print(value);
-                      if (value < 1) {
-        //                 print("lesthnone");
-        //                 FirebaseFirestore.instance
-        // .collection("users")
-        // .doc(widget.uid)
-        // .collection("cart")
-        // .doc(widget.shopName).collection("products").doc(widget.title)
-        // .delete().then((value) {
-        //                   FirebaseFirestore.instance .collection("users")
-        //                       .doc(widget.uid)
-        //                       .collection("cart")
-        //                       .doc(widget.shopName).collection("products").get().then((value) {
-        //                         value.size == 0 ?  FirebaseFirestore.instance .collection("users")
-        //                             .doc(widget.uid)
-        //                             .collection("cart")
-        //                             .doc(widget.shopName).delete() : print("hasdata");
-        //                   });
-        //                 });
-
-                      }
-
+                    onChanged: (value) async {
                       setState(() {
                         _defaultvalue = int.parse(value.toString());
                       });
-                      Map<String, String> updateQuantity = new Map();
-                      updateQuantity['quantity'] = value.toString();
-                      var changedprice = value * int.parse(widget.price);
-                      var changedcutprice = widget.cutprice == "" ? "" : value * int.parse(widget.cutprice);
-                      updateQuantity['price'] = changedprice.toString();
-                      updateQuantity['cutprice'] = changedcutprice.toString();
-                      FirebaseFirestore.instance
-                          .collection("users")
-                          .doc(widget.uid)
-                          .collection("cart").doc(widget.shopName).collection("products")
-                          .doc(widget.title)
-                          .update(updateQuantity).then((it) {
-                        setState(() {
+                      print(value);
+                      if (_defaultvalue < 1) {
+                        //                 print("lesthnone");
+                        //                 FirebaseFirestore.instance
+                        // .collection("users")
+                        // .doc(widget.uid)
+                        // .collection("cart")
+                        // .doc(widget.shopName).collection("products").doc(widget.title)
+                        // .delete().then((value) {
+                        //                   FirebaseFirestore.instance .collection("users")
+                        //                       .doc(widget.uid)
+                        //                       .collection("cart")
+                        //                       .doc(widget.shopName).collection("products").get().then((value) {
+                        //                         value.size == 0 ?  FirebaseFirestore.instance .collection("users")
+                        //                             .doc(widget.uid)
+                        //                             .collection("cart")
+                        //                             .doc(widget.shopName).delete() : print("hasdata");
+                        //                   });
+                        //                 });
+                        await AllApi()
+                            .removeCart(widget.uid, widget.vid, widget.foodid);
+                        await AllApi()
+                            .removeShopCart(widget.uid, widget.vid);
+                        setState(() {});
+                        Fluttertoast.showToast(msg: "Removed From Cart");
+                      } else {
+                        Map<String, String> updateQuantity = new Map();
+                        updateQuantity['quantity'] = value.toString();
+                        var changedprice = value * int.parse(widget.price);
+                        var changedcutprice = widget.cutprice == ""
+                            ? ""
+                            : value * int.parse(widget.cutprice);
 
-                        });
-                      });
+                        var quantity = value.toString();
+
+                        await AllApi().postCart(CartModel(
+                          img: widget.img,
+                          price: changedprice.toString(),
+                          title: widget.title,
+                          recipe: widget.recipe,
+                          quantity: quantity.toString(),
+                          requirement: "",
+                          itemnumber: newUid[0] + newUid[4],
+                          cutprice: changedcutprice.toString(),
+                          ogprice: widget.price,
+                          ogcutprice: widget.cutprice,
+                          discount: widget.discount,
+                          shop: widget.shopName,
+                          date: DateFormat('dd-MM-yyyy').format(DateTime.now()),
+                          time: DateFormat('hh-MM-yyyy').format(DateTime.now()),
+                          ref: widget.uid,
+                          vendorid: widget.vid,
+                          foodid: widget.foodid,
+                        )
+                        );
+                        setState(() {});
+                      }
                     },
                     decimalPlaces: 0,
                     color: kgreen,
                     buttonSizeHeight: 30,
                     buttonSizeWidth: 30,
-                    textStyle: TextStyle(fontSize: 18, color: Colors.white), key: Key(""),
+                    textStyle: TextStyle(fontSize: 18, color: Colors.white),
+                    key: Key(""),
                   ),
                 ),
               ),
@@ -283,12 +318,16 @@ class _ProductListCardState extends State<ProductListCard> {
                     child: Container(
                       width: 60,
                       height: 25,
-                      child: Center(child: Text("₹ ${widget.discount} OFF",
-                        style: GoogleFonts.arvo(
-                            fontSize: 12, color: Colors.white),)),
+                      child: Center(
+                          child: Text(
+                        "₹ ${widget.discount} OFF",
+                        style:
+                            GoogleFonts.arvo(fontSize: 12, color: Colors.white),
+                      )),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(6)),
-                        color: Colors.green,),
+                        color: Colors.green,
+                      ),
                     )),
               ),
               Visibility(
@@ -299,12 +338,16 @@ class _ProductListCardState extends State<ProductListCard> {
                     child: Container(
                       width: 100,
                       height: 40,
-                      child: Center(child: Text("OUT OF STOCK",
-                        style: GoogleFonts.arvo(
-                            fontSize: 10, color: Colors.white),)),
+                      child: Center(
+                          child: Text(
+                        "OUT OF STOCK",
+                        style:
+                            GoogleFonts.arvo(fontSize: 10, color: Colors.white),
+                      )),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(6)),
-                        color: Colors.grey,),
+                        color: Colors.grey,
+                      ),
                     )),
               )
             ],

@@ -305,24 +305,27 @@ class CartModel {
         this.foodid
       });
 
-  CartModel.fromJson(Map<String, dynamic> json) {
-    img = json['img'];
-    price = json['price'];
-    title = json['title'];
-    recipe = json['recipe'];
-    quantity = json['quantity'];
-    requirement = json['requirement'];
-    itemnumber = json['itemnumber'];
-    cutprice = json['cutprice'];
-    ogprice = json['ogprice'];
-    ogcutprice = json['ogcutprice'];
-    discount = json['discount'];
-    shop = json['shop'];
-    date = json['date'];
-    time = json['time'];
-    ref = json['ref'];
-    vendorid = json['vendorid'];
-    foodid = json["foodid"];
+  fromJson(Map<String, dynamic> json) {
+    return CartModel(
+        img : json['img'],
+        price : json['price'],
+        title : json['title'],
+        recipe : json['recipe'],
+        quantity : json['quantity'],
+        requirement : json['requirement'],
+        itemnumber : json['itemnumber'],
+        cutprice : json['cutprice'],
+        ogprice : json['ogprice'],
+        ogcutprice : json['ogcutprice'],
+        discount : json['discount'],
+        shop : json['shop'],
+        date : json['date'],
+    time : json['time'],
+    ref : json['ref'],
+    vendorid : json['vendorid'],
+    foodid : json["foodid"],
+    );
+   
   }
 
   Map<String, dynamic> toJson() {

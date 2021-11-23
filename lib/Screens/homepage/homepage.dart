@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:homelyy/Screens/UserProfile/userProfile.dart';
 import 'package:homelyy/Screens/homepage/homeBody.dart';
 import 'package:homelyy/Screens/orders/orderpage.dart';
@@ -25,14 +26,16 @@ class _HomepageState extends State<Homepage> {
     final List<Widget> viewContainer = [
 
       Body(
+
         key: Key("Bodyhome"),
         fromMap:  false,
-        userref: widget.userRef,
+        userref: widget.userRef.replaceAll("+", "").removeAllWhitespace,
+
       ),
 
       OrderPage(),
 
-      UserProfile(),
+      UserProfile(id: widget.userRef.replaceAll("+", "").removeAllWhitespace,),
 
       Container(),
 
@@ -42,7 +45,7 @@ class _HomepageState extends State<Homepage> {
     return SafeArea(
       child: Scaffold(
         body:   Scaffold(
-                appBar: homeAppBar(context,"GROPOD",""),
+                appBar: homeAppBar(context,"Homelyy",widget.userRef.replaceAll("+", "").removeAllWhitespace),
                 bottomNavigationBar: buildBNB(),
                 body: IndexedStack(
                   index: currentIndex,

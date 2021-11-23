@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:homelyy/Screens/Resturant/body.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
@@ -11,7 +12,7 @@ class DetailsScreen extends StatefulWidget {
   final String rating;
   final String shoptitle;
   final List<dynamic> cuisine;
-  final String shopUid,opentiming,closetiming;
+  final String shopUid,opentiming,closetiming,uid;
   final int numReview;
   final List category;
 
@@ -20,7 +21,7 @@ class DetailsScreen extends StatefulWidget {
      this.rating,
      this.shoptitle,
      this.cuisine,
-     this.shopUid,  this.opentiming,  this.closetiming,  this.numReview, this.type, this.category,
+     this.shopUid,  this.opentiming,  this.closetiming,  this.numReview, this.type, this.category, this.uid,
   }) : super(key: key);
   @override
   _DetailsScreenState createState() => _DetailsScreenState();
@@ -42,6 +43,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         rating: widget.rating,
         numReviews: widget.numReview,
         cuisine: widget.cuisine, key: Key("shopBody"),id: widget.shopUid, opentiming: widget.opentiming, closetiming: widget.closetiming, shopname: widget.shoptitle ,
+      uid:widget.uid.replaceAll("+", "").removeAllWhitespace
       );
   }
 }

@@ -301,8 +301,15 @@ int string common_google_play_services_wear_update_text 0x7f0b000e
 int string common_open_on_phone 0x7f0b000f
 int string common_signin_button_text 0x7f0b0010
 int string common_signin_button_text_long 0x7f0b0011
-int string fcm_fallback_notification_channel_label 0x7f0b0012
-int string status_bar_notification_info_overflow 0x7f0b0013
+int string default_web_client_id 0x7f0b0012
+int string fcm_fallback_notification_channel_label 0x7f0b0013
+int string gcm_defaultSenderId 0x7f0b0014
+int string google_api_key 0x7f0b0015
+int string google_app_id 0x7f0b0016
+int string google_crash_reporting_api_key 0x7f0b0017
+int string google_storage_bucket 0x7f0b0018
+int string project_id 0x7f0b0019
+int string status_bar_notification_info_overflow 0x7f0b001a
 int style CheckoutTheme 0x7f0c0000
 int style LaunchTheme 0x7f0c0001
 int style NormalTheme 0x7f0c0002

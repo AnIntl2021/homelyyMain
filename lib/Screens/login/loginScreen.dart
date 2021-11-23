@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 10,
                 ),
 
-                buildTextField("Enter Phone Number","Phone",phoneText),
+                buildTextField("Enter Phone Number with country code","Phone",phoneText),
 
                 SizedBox(
                   height: 30,
@@ -58,14 +58,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     backgroundColor: MaterialStateProperty.all(kdarkgreen)
                   ),
                     onPressed: () {
-                      print("+91${phoneText.text}");
+                      print("+${phoneText.text}");
 
                       if (phoneText.text.length == 10) {
                         Navigator.pushAndRemoveUntil<dynamic>(
                           context,
                           MaterialPageRoute(
                               builder: (context) => PhoneLogin(
-                                phoneNumber: "+91${phoneText.text}", key: Key("1223"),
+                                phoneNumber: "+${phoneText.text}", key: Key("1223"),
+                                // phoneNumber: "+91${phoneText.text}", key: Key("1223"),
                               )),
                               (route) =>
                           false, //if you want to disable back feature set to false
@@ -73,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       } else {
                         setState(() {
                           phoneError = true;
-                          phoneerrorText = "Enter Correct Mobile Number";
+                          phoneerrorText = "Enter Correct Mobile Number with country code";
                         });
                       }
                     },

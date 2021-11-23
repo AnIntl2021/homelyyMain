@@ -11,7 +11,7 @@ import 'package:homelyy/Screens/Resturant/detailScreen.dart';
 import 'package:homelyy/component/constants.dart';
 
 class RestaurentListCard extends StatelessWidget {
-  final String type,title, area, discount, deliveryTime, tag, rating, img,shopid,opentiming,closetiming;
+  final String type,title, area, discount, deliveryTime, tag, rating, img,shopid,opentiming,closetiming,uid;
   final bool tagVisibility,badgeVisibility;
   final bool discountVisibility,status;
   final List<dynamic> cuisine;
@@ -30,7 +30,7 @@ class RestaurentListCard extends StatelessWidget {
      this.rating,
      this.img,
      this.tagVisibility,
-     this.discountVisibility,  this.shopid,  this.opentiming,  this.closetiming,  this.badgeVisibility,  this.status,  this.numReview, this.type, this.category,
+     this.discountVisibility,  this.shopid,  this.opentiming,  this.closetiming,  this.badgeVisibility,  this.status,  this.numReview, this.type, this.category, this.uid,
   }) : super(key: key);
 
   @override
@@ -62,6 +62,7 @@ class RestaurentListCard extends StatelessWidget {
                   rating: rating,
                   numReview: numReview,
                   shopUid: shopid, key: Key("shopDetailPage"), opentiming:opentiming, closetiming: closetiming,
+                    uid:uid.replaceAll("+", "").removeAllWhitespace
             )
             );
       // status ? Get.to(DetailsScreen(

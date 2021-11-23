@@ -12,6 +12,9 @@ import 'package:homelyy/Screens/login/loginScreen.dart';
 import 'package:homelyy/component/constants.dart';
 
 class UserProfile extends StatefulWidget {
+  final String id;
+
+  const UserProfile({Key key, this.id}) : super(key: key);
   @override
   _UserProfileState createState() => _UserProfileState();
 }
@@ -39,7 +42,9 @@ class _UserProfileState extends State<UserProfile> {
             }
             ),
             buildListTile("WALLET", FontAwesomeIcons.wallet, () {
-              Get.to(UserWallet());
+
+              Get.to(UserWallet(id: widget.id,));
+
             }
             ),
             buildListTile("REFER & EARN", FontAwesomeIcons.share, () {

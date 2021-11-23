@@ -5,7 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'lifeproductpage.dart';
 
 class LifestylePage extends StatefulWidget {
-  const LifestylePage({Key key}) : super(key: key);
+  final String id;
+  const LifestylePage({Key key, this.id}) : super(key: key);
 
   @override
   _LifestylePageState createState() => _LifestylePageState();
@@ -17,7 +18,7 @@ class _LifestylePageState extends State<LifestylePage> {
     return  InkWell(
       onTap: () {
         Get.to(LifeProductPage(
-
+                  id: widget.id,
         ));
       },
       child: GridView.count(

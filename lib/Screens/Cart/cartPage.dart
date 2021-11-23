@@ -5,17 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/counterNumber.dart';
+import 'package:homelyy/component/models.dart';
 import 'checkout.dart';
 import 'customTextStyle.dart';
 import 'emptCart.dart';
 
 class CartPage extends StatefulWidget {
-  final String shopname,shopaddress,shopnumber;
+  final String shopname,shopaddress,shopnumber,uid;
   final bool shopstatus;
   // final GeoFirePoint shoplocation;
-  const CartPage({ Key key, this.shopname, this.shopaddress, this.shopnumber, this.shopstatus}) : super(key: key);
+  const CartPage({ Key key, this.shopname, this.shopaddress, this.shopnumber, this.shopstatus, this.uid}) : super(key: key);
   @override
   _CartPageState createState() => _CartPageState();
 }
@@ -664,25 +666,46 @@ class _CartPageState extends State<CartPage> {
 
   cartListNew(streamCart, controller) {
 
-    return Container(
-        margin: EdgeInsets.only(top: 10, bottom: 10),
+    return FutureBuilder(
+      future: AllApi().getCart(widget.uid, widget.shopname),
+      builder: (context, snapshot) {
 
-        child: createCartListItem(
-          "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2Fpizza-png-free-download-20.png?alt=media&token=5dd88c43-5798-4413-bd29-d2b8089b3e30",
-          "title",
-          "requirement",
-          "150",
-          "1",
-          "document.id",
-          true,
-          "100",
-          "50",
-          "200",
-          "50",
-            0,
-          "recipe",
-          context,
-        )
+
+        if(!snapshot.hasData){
+          return Center(child:CircularProgressIndicator(color: kgreen,));
+        }
+
+        List<CartModel> cartList = snapshot.requireData;
+        print("cartList in $cartList ${widget.uid} ${widget.shopname}");
+
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: cartList.length,
+          itemBuilder: (context, index) {
+
+            return Container(
+                margin: EdgeInsets.only(top: 10, bottom: 10),
+
+                child: createCartListItem(
+                  "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2Fpizza-png-free-download-20.png?alt=media&token=5dd88c43-5798-4413-bd29-d2b8089b3e30",
+                  cartList[index].title,
+                  "requirement",
+                  cartList[index].price,
+                  cartList[index].quantity,
+                  "document.id",
+                  true,
+                  cartList[index].cutprice,
+                  cartList[index].discount,
+                  cartList[index].ogprice,
+                  cartList[index].cutprice,
+                    index,
+                  cartList[index].recipe,
+                  context,
+                )
+            );
+          }
+        );
+      }
     );
 
      /* StreamBuilder<QuerySnapshot>(

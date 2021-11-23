@@ -227,11 +227,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             AllApi().postUser(UserModel(
                                 name:userName ?? "",
                                 address:"",
-                                ref:widget.phone?? "",
+                                ref:widget.phone.replaceAll("+", "").removeAllWhitespace?? "",
                                 email:userEmail?? "",
                                 dob:userDOB.toLocal().toString().split(' ')[0]?? "",
                                 member:"",
-                                phone:widget.phone?? "",
+                                phone:widget.phone.replaceAll("+", "").removeAllWhitespace,
                                 token:"",
                                 wallet:"0",
                               refFrom: refercode
@@ -255,13 +255,17 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 //
                                 // });
                               }else{
+
                                 var result = jsonDecode(value);
+
                                 UserModel users = UserModel().fromJson(result);
 
                                 AllApi().updateLocalUsers(jsonEncode(users));
-                                print("getting user ${users.name}");
 
-                                Get.off(Homepage(userRef: users.phone,));
+                                print("getting user ${users.phone.replaceAll("+", "")}");
+
+                                Get.off(Homepage(userRef: users.phone.replaceAll("+", "").removeAllWhitespace,));
+
                               }
 
                             });

@@ -249,7 +249,7 @@ class AllApi {
 
   Future postCart(CartModel cartModel) async {
 
-    var userGetURL = Uri.parse("${conurl}addCart?ref=${cartModel.ref}&vendorid=${cartModel.shop}&foodid=${cartModel.foodid}");
+    var userGetURL = Uri.parse("${conurl}addCart?ref=${cartModel.ref}&vendorid=${cartModel.vendorid}&foodid=${cartModel.foodid}");
 
     var response = await http.post(userGetURL,body: {
 
@@ -285,6 +285,146 @@ class AllApi {
 
 
     return response.body;
+  }
+
+  Future postShopCart(CartModel cartModel) async {
+
+    var userGetURL = Uri.parse("${conurl}addShopCart?ref=${cartModel.ref}&vendorid=${cartModel.vendorid}}");
+
+    var response = await http.post(userGetURL,body: {
+      "shop" : cartModel.shop,
+    });
+
+    print("response of Shopccart ${response.body}");
+
+    // var list = json.decode(response.body);
+    //
+
+    // print(
+    //
+    //     "response for userpost ${response.body}");
+
+
+
+    // Map json = jsonDecode(jsonString);
+    //
+    // String user = jsonEncode(UserModel().fromJson(json));
+
+
+    return response.body;
+  }
+
+  Future removeCart(String ref,String vendorid,String foodid) async {
+
+    var userGetURL = Uri.parse("${conurl}removecart?ref=$ref&vendorid=$vendorid&foodid=$foodid");
+
+    var response = await http.get(userGetURL);
+    print("response of deleteccart ${response.body}");
+    // var list = json.decode(response.body);
+    //
+
+    // print(
+    //
+    //     "response for userpost ${response.body}");
+
+
+
+    // Map json = jsonDecode(jsonString);
+    //
+    // String user = jsonEncode(UserModel().fromJson(json));
+
+
+    return response.body;
+  }
+
+  Future getCart(String ref,String vendorid) async {
+
+    var userGetURL = Uri.parse("${conurl}getCart?ref=$ref&vendorid=$vendorid");
+      print("uri $userGetURL");
+    var response = await http.get(userGetURL);
+    print("response of gotccart ${response.body} $ref $vendorid");
+
+    List list = json.decode(response.body);
+
+    print(response.body);
+    //
+
+    Iterable<CartModel> newList = list.map((e) {
+      return CartModel().fromJson(e);
+    });
+
+    print("CartList = $newList");
+    //
+    return newList.toList();
+
+
+    return response.body;
+  }
+
+  Future removeShopCart(String ref,String vendorid) async {
+
+    var userGetURL = Uri.parse("${conurl}removecart?ref=$ref&vendorid=$vendorid");
+
+    var response = await http.get(userGetURL);
+    print("response of delteShopccart ${response.body}");
+    // var list = json.decode(response.body);
+    //
+
+    // print(
+    //
+    //     "response for userpost ${response.body}");
+
+
+
+    // Map json = jsonDecode(jsonString);
+    //
+    // String user = jsonEncode(UserModel().fromJson(json));
+
+
+    return response.body;
+  }
+
+  Future getShopCart(String ref) async {
+
+    var userGetURL = Uri.parse("${conurl}getShopCart?ref=$ref");
+
+    var response = await http.get(userGetURL);
+    print("response of gotShopccart ${response.body}");
+
+    List list = json.decode(response.body);
+
+    print(response.body);
+    //
+
+    print("CartList = $list");
+    //
+    return list.toList();
+
+    return response.body;
+  }
+
+
+  Future  getCartCount(String ref) async {
+
+    var userGetURL = Uri.parse("${conurl}getCartCount?ref=$ref");
+
+    var response = await http.get(userGetURL);
+    print("response of gotShopccart ${response.body}");
+    // var list = json.decode(response.body);
+    //
+
+    // print(
+    //
+    //     "response for userpost ${response.body}");
+
+
+
+    // Map json = jsonDecode(jsonString);
+    //
+    // String user = jsonEncode(UserModel().fromJson(json));
+
+
+    return jsonDecode(response.body);
   }
 
 }

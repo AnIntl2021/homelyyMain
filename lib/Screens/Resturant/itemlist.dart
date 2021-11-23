@@ -10,7 +10,7 @@ import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
 class ItemList extends StatefulWidget {
-  final String streamTitle, id, shopname;
+  final String streamTitle, id, shopname,uid,foodid;
   final Function callback;
   final List category;
 
@@ -20,7 +20,7 @@ class ItemList extends StatefulWidget {
     this.callback,
     this.id,
     this.shopname,
-    this.category,
+    this.category, this.uid, this.foodid,
   }) : super(key: key);
 
   @override
@@ -126,58 +126,15 @@ class _ItemListState extends State<ItemList> {
                                                 discount: (int.parse("100") - int.parse("80"))
                                                     .toString(),
                                                 discountVisibility: true,
-                                                uid: "uid",
+                                                uid: widget.uid,
+                                                foodid: foodList[index].foodid,
                                                 shopName: widget.shopname,
+                                                vid: widget.id,
                                                 cutprice: "80",
                                               );
                                             }
                                           )
 
-                                          // PaginateFirestore(
-                                          //   itemsPerPage: 3,
-                                          //   shrinkWrap: true,
-                                          //   physics:
-                                          //   NeverScrollableScrollPhysics(),
-                                          //   itemBuilderType:
-                                          //   PaginateBuilderType.listView,
-                                          //   itemBuilder:
-                                          //       (index, context, document) {
-                                          //     var prodtitle =
-                                          //     document["title"];
-                                          //     var prodprice =
-                                          //     document["price"];
-                                          //     var prodcutprice =
-                                          //     document["cutprice"];
-                                          //     var proding =
-                                          //     document["img"];
-                                          //     var prodstock =
-                                          //     document["instock"];
-                                          //     var prodrecipe =
-                                          //     document["recipe"];
-                                          //     var totalorders = document["totalorders"];
-                                          //     return ProductListCard(
-                                          //       title: prodtitle,
-                                          //       totalorders : totalorders,
-                                          //       price: prodprice,
-                                          //       recipe: prodrecipe, stock: prodstock,
-                                          //       tagVisibility: true, img: proding, key: Key("prodlistcard"),
-                                          //       press: (){}, discount: prodcutprice ==  "" ? "" : (int.parse(prodprice) - int.parse(prodcutprice)).toString(),
-                                          //       discountVisibility: prodcutprice ==  "" ? false : true ,
-                                          //       uid: uid, shopName: widget.shopname, cutprice: prodcutprice == "" ? "" : prodcutprice,
-                                          //
-                                          //
-                                          //     );
-                                          //   },
-                                          //   query: FirebaseFirestore.instance
-                                          //       .collection("Restaurant")
-                                          //       .doc(widget.id)
-                                          //       .collection("products")
-                                          //       .where("category",isEqualTo: cattitle)
-                                          //       .orderBy("title"),
-                                          //   listeners: [
-                                          //     refreshChangeListener2
-                                          //   ],
-                                          // ),
                                           ),
                                     ],
                                   ),
@@ -194,223 +151,10 @@ class _ItemListState extends State<ItemList> {
 
               })
 
-                  // PaginateFirestore(
-                  //   itemsPerPage: 3,
-                  //   shrinkWrap: true,
-                  //   physics: NeverScrollableScrollPhysics(),
-                  //   itemBuilderType: PaginateBuilderType.listView,
-                  //   itemBuilder: (index, context, document) {
-                  //     var cattitle = "name";
-                  //     // var catogry = product[index]["catogry"];
-                  //     // var collection = product[index]["collection"];
-                  //     // var recipe = product[index]["recipe"];
-                  //     // var img = product[index]["img"];
-                  //     // var price = product[index]["price"];
-                  //     return Column(
-                  //       children: [
-                  //         ExpansionTile(
-                  //           onExpansionChanged: (result) {
-                  //             if (result == true) {
-                  //               setState(() {});
-                  //             }
-                  //           },
-                  //           title: Text(cattitle),
-                  //           children: [
-                  //             Padding(
-                  //               padding: const EdgeInsets.all(8.0),
-                  //               child: Column(
-                  //                 children: [
-                  //                   RefreshIndicator(
-                  //                     onRefresh: () async {
-                  //                       refreshChangeListener2.refreshed =
-                  //                       true;
-                  //                       print("Refreshed");
-                  //                     },
-                  //                     child: PaginateFirestore(
-                  //                       itemsPerPage: 3,
-                  //                       shrinkWrap: true,
-                  //                       physics:
-                  //                       NeverScrollableScrollPhysics(),
-                  //                       itemBuilderType:
-                  //                       PaginateBuilderType.listView,
-                  //                       itemBuilder:
-                  //                           (index, context, document) {
-                  //                         var prodtitle =
-                  //                         document["title"];
-                  //                         var prodprice =
-                  //                         document["price"];
-                  //                         var prodcutprice =
-                  //                         document["cutprice"];
-                  //                         var proding =
-                  //                         document["img"];
-                  //                         var prodstock =
-                  //                         document["instock"];
-                  //                         var prodrecipe =
-                  //                         document["recipe"];
-                  //                         var totalorders = document["totalorders"];
-                  //                         return ProductListCard(
-                  //                           title: prodtitle,
-                  //                           totalorders : totalorders,
-                  //                           price: prodprice,
-                  //                           recipe: prodrecipe, stock: prodstock,
-                  //                           tagVisibility: true, img: proding, key: Key("prodlistcard"),
-                  //                           press: (){}, discount: prodcutprice ==  "" ? "" : (int.parse(prodprice) - int.parse(prodcutprice)).toString(),
-                  //                           discountVisibility: prodcutprice ==  "" ? false : true ,
-                  //                           uid: uid, shopName: widget.shopname, cutprice: prodcutprice == "" ? "" : prodcutprice,
-                  //
-                  //
-                  //                         );
-                  //                       },
-                  //                       query: FirebaseFirestore.instance
-                  //                           .collection("Restaurant")
-                  //                           .doc(widget.id)
-                  //                           .collection("products")
-                  //                           .where("category",isEqualTo: cattitle)
-                  //                           .orderBy("title"),
-                  //                       listeners: [
-                  //                         refreshChangeListener2
-                  //                       ],
-                  //                     ),
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //             )
-                  //           ],
-                  //         ),
-                  //         Divider()
-                  //       ],
-                  //     );
-                  //   },
-                  //   query: FirebaseFirestore.instance
-                  //       .collection("Restaurant")
-                  //       .doc(widget.id)
-                  //       .collection("Category")
-                  //       .orderBy("index"),
-                  //   listeners: [refreshChangeListener],
-                  // ),
                   ),
             ],
           ),
         );
 
-    // StreamBuilder<QuerySnapshot>(
-    //   stream: catStream,
-    //   builder: (context, snapshot) {
-    //     if (!snapshot.hasData) {
-    //       return Center(
-    //         child: CircularProgressIndicator(
-    //           backgroundColor: Colors.green,
-    //         ),
-    //       );
-    //     }
-    //     var product = snapshot.data.docs;
-    //     return Padding(
-    //       padding: const EdgeInsets.all(8.0),
-    //       child: Column(
-    //         children: [
-    //           RefreshIndicator(
-    //             onRefresh: () async {
-    //               refreshChangeListener.refreshed = true;
-    //               print("Refreshed");
-    //             },
-    //             child: PaginateFirestore(
-    //               itemsPerPage: 3,
-    //               shrinkWrap: true,
-    //               physics: NeverScrollableScrollPhysics(),
-    //               itemBuilderType: PaginateBuilderType.listView,
-    //               itemBuilder: (index, context, document) {
-    //                 var cattitle = product[index]["name"];
-    //                 // var catogry = product[index]["catogry"];
-    //                 // var collection = product[index]["collection"];
-    //                 // var recipe = product[index]["recipe"];
-    //                 // var img = product[index]["img"];
-    //                 // var price = product[index]["price"];
-    //                 return Column(
-    //                   children: [
-    //                     ExpansionTile(
-    //                       onExpansionChanged: (result) {
-    //                         if (result == true) {
-    //                           setState(() {});
-    //                         }
-    //                       },
-    //                       title: Text(cattitle),
-    //                       children: [
-    //                                Padding(
-    //                                 padding: const EdgeInsets.all(8.0),
-    //                                 child: Column(
-    //                                   children: [
-    //                                     RefreshIndicator(
-    //                                       onRefresh: () async {
-    //                                         refreshChangeListener2.refreshed =
-    //                                         true;
-    //                                         print("Refreshed");
-    //                                       },
-    //                                       child: PaginateFirestore(
-    //                                         itemsPerPage: 3,
-    //                                         shrinkWrap: true,
-    //                                         physics:
-    //                                         NeverScrollableScrollPhysics(),
-    //                                         itemBuilderType:
-    //                                         PaginateBuilderType.listView,
-    //                                         itemBuilder:
-    //                                             (index, context, document) {
-    //                                           var prodtitle =
-    //                                           document["title"];
-    //                                           var prodprice =
-    //                                           document["price"];
-    //                                           var prodcutprice =
-    //                                           document["cutprice"];
-    //                                           var proding =
-    //                                           document["img"];
-    //                                           var prodstock =
-    //                                           document["instock"];
-    //                                           var prodrecipe =
-    //                                           document["recipe"];
-    //                                           var totalorders = document["totalorders"];
-    //                                           return ProductListCard(
-    //                                             title: prodtitle,
-    //                                             totalorders : totalorders,
-    //                                             price: prodprice,
-    //                                             recipe: prodrecipe, stock: prodstock,
-    //                                             tagVisibility: true, img: proding, key: Key("prodlistcard"),
-    //                                             press: (){}, discount: prodcutprice ==  "" ? "" : (int.parse(prodprice) - int.parse(prodcutprice)).toString(),
-    //                                             discountVisibility: prodcutprice ==  "" ? false : true ,
-    //                                             uid: uid, shopName: widget.shopname, cutprice: prodcutprice == "" ? "" : prodcutprice,
-    //
-    //
-    //                                           );
-    //                                         },
-    //                                         query: FirebaseFirestore.instance
-    //                                             .collection("Restaurant")
-    //                                             .doc(widget.id)
-    //                                             .collection("products")
-    //                                             .where("category",isEqualTo: cattitle)
-    //                                             .orderBy("title"),
-    //                                         listeners: [
-    //                                           refreshChangeListener2
-    //                                         ],
-    //                                       ),
-    //                                     ),
-    //                                   ],
-    //                                 ),
-    //                               )
-    //                       ],
-    //                     ),
-    //                     Divider()
-    //                   ],
-    //                 );
-    //               },
-    //               query: FirebaseFirestore.instance
-    //                   .collection("Restaurant")
-    //                   .doc(widget.id)
-    //                   .collection("Category")
-    //                   .orderBy("index"),
-    //               listeners: [refreshChangeListener],
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     );
-    //   });
   }
 }

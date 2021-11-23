@@ -3,18 +3,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:homelyy/Screens/homepage/Restaurant/restCard.dart';
 import 'package:homelyy/component/models.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
 class PopularRestaurantList extends StatefulWidget {
-  final String type;
+  final String type,uid;
   final List category;
   final GeoPoint userGeoPoint;
   final bool status;
   final List listofRestaurant;
-  const PopularRestaurantList({Key key, this.category, this.userGeoPoint, this.status, this.type, this.listofRestaurant}) : super(key: key);
+  const PopularRestaurantList({Key key, this.category, this.userGeoPoint, this.status, this.type, this.listofRestaurant, this.uid}) : super(key: key);
 
   @override
   _PopularRestaurantListState createState() => _PopularRestaurantListState();
@@ -86,6 +87,7 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
               status: true,
 
               numReview: 12,
+              uid: widget.uid.replaceAll("+", "").removeAllWhitespace,
 
             )
         );
