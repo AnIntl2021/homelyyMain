@@ -207,7 +207,7 @@ class _ProductListCardState extends State<ProductListCard> {
                               ref: widget.uid.toString().replaceAll(" ", ""),
                               vendorid: widget.vid.toString().replaceAll(" ", ""),
                               foodid: widget.foodid.toString().replaceAll(" ", ""),
-                            ));
+                            ),"Add");
                             await AllApi().postShopCart(CartModel(
                               shop: widget.shopName,
                               ref: widget.uid.toString().replaceAll(" ", ""),
@@ -245,23 +245,6 @@ class _ProductListCardState extends State<ProductListCard> {
                       });
                       print(value);
                       if (_defaultvalue < 1) {
-                        //                 print("lesthnone");
-                        //                 FirebaseFirestore.instance
-                        // .collection("users")
-                        // .doc(widget.uid)
-                        // .collection("cart")
-                        // .doc(widget.shopName).collection("products").doc(widget.title)
-                        // .delete().then((value) {
-                        //                   FirebaseFirestore.instance .collection("users")
-                        //                       .doc(widget.uid)
-                        //                       .collection("cart")
-                        //                       .doc(widget.shopName).collection("products").get().then((value) {
-                        //                         value.size == 0 ?  FirebaseFirestore.instance .collection("users")
-                        //                             .doc(widget.uid)
-                        //                             .collection("cart")
-                        //                             .doc(widget.shopName).delete() : print("hasdata");
-                        //                   });
-                        //                 });
                         await AllApi()
                             .removeCart(widget.uid, widget.vid, widget.foodid);
                         await AllApi()
@@ -296,7 +279,7 @@ class _ProductListCardState extends State<ProductListCard> {
                           ref: widget.uid,
                           vendorid: widget.vid,
                           foodid: widget.foodid,
-                        )
+                        ),"Update"
                         );
                         setState(() {});
                       }

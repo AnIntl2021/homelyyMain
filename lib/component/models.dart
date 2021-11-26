@@ -354,6 +354,48 @@ class CartModel {
 }
 
 
+class CartTotalModel {
+
+  String discount;
+  String subTotal;
+  String total;
+  String savings;
+  String ref;
+
+  CartTotalModel(
+      {
+        this.discount,
+        this.subTotal,
+        this.total,
+        this.savings,
+        this.ref,
+        });
+
+  fromJson(Map<String, dynamic> json) {
+    return CartTotalModel(
+      discount : json['discount'],
+      subTotal : json['subTotal'],
+      total : json['total'],
+      savings : json['savings'],
+        ref:json['ref']
+    );
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['discount'] = this.discount;
+    data['subTotal'] = this.subTotal;
+    data['total'] = this.total;
+    data['savings'] = this.savings;
+    data['ref'] = this.ref;
+
+    return data;
+  }
+}
+
+
 
 
 

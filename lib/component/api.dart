@@ -247,11 +247,11 @@ class AllApi {
 
   }
 
-  Future postCart(CartModel cartModel) async {
+  Future postCart(CartModel cartModel,String type) async {
 
     var userGetURL = Uri.parse("${conurl}addCart?ref=${cartModel.ref}&vendorid=${cartModel.vendorid}&foodid=${cartModel.foodid}");
 
-    var response = await http.post(userGetURL,body: {
+    var response = type == "Add" ?await http.put(userGetURL,body: {
 
       "img" : cartModel.img,
       "price" : cartModel.price,
@@ -268,7 +268,19 @@ class AllApi {
       "discount" : cartModel.discount,
       "shop" : cartModel.shop,
 
+    })  : await http.put(userGetURL,body: {
+
+      "price" : cartModel.price,
+      // "location" : json.encode({"j":"k"}),
+
+      "quantity" : cartModel.quantity,
+
+
+      "cutprice" : cartModel.cutprice,
+      "discount" : cartModel.discount,
+
     });
+
     print("response of ccart ${response.body}");
     // var list = json.decode(response.body);
     //
@@ -289,7 +301,7 @@ class AllApi {
 
   Future postShopCart(CartModel cartModel) async {
 
-    var userGetURL = Uri.parse("${conurl}addShopCart?ref=${cartModel.ref}&vendorid=${cartModel.vendorid}}");
+    var userGetURL = Uri.parse("${conurl}addShopCart?ref=${cartModel.ref}&vendorid=${cartModel.vendorid}");
 
     var response = await http.post(userGetURL,body: {
       "shop" : cartModel.shop,
@@ -363,7 +375,7 @@ class AllApi {
 
   Future removeShopCart(String ref,String vendorid) async {
 
-    var userGetURL = Uri.parse("${conurl}removecart?ref=$ref&vendorid=$vendorid");
+    var userGetURL = Uri.parse("${conurl}removeShopCart?ref=$ref&vendorid=$vendorid");
 
     var response = await http.get(userGetURL);
     print("response of delteShopccart ${response.body}");
@@ -426,5 +438,65 @@ class AllApi {
 
     return jsonDecode(response.body);
   }
+
+
+  Future  getCountShopCart(String ref,String vid) async {
+
+    var userGetURL = Uri.parse("${conurl}getCountShopCart?ref=$ref&vendorid=$vid");
+
+    var response = await http.get(userGetURL);
+    print("response of gotShopcCountcart ${response.body}");
+    // var list = json.decode(response.body);
+    //
+
+    // print(
+    //
+    //     "response for userpost ${response.body}");
+
+
+
+    // Map json = jsonDecode(jsonString);
+    //
+    // String user = jsonEncode(UserModel().fromJson(json));
+
+
+    return jsonDecode(response.body);
+  }
+
+
+  Future postCartTotal(CartTotalModel cartModel) async {
+
+    var userGetURL = Uri.parse("${conurl}addCartTotal?ref=${cartModel.ref}");
+
+    var response = await http.put(userGetURL,body: {
+
+      "total" : cartModel.total,
+      "subTotal" : cartModel.subTotal,
+      "ref" : cartModel.ref,
+      "savings" : cartModel.savings,
+      // "location" : json.encode({"j":"k"}),
+      "discount" : cartModel.discount ,
+
+
+    });
+
+    print("response of ccart ${response.body}");
+    // var list = json.decode(response.body);
+    //
+
+    // print(
+    //
+    //     "response for userpost ${response.body}");
+
+
+
+    // Map json = jsonDecode(jsonString);
+    //
+    // String user = jsonEncode(UserModel().fromJson(json));
+
+
+    return response.body;
+  }
+
 
 }

@@ -3,12 +3,15 @@ import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/Screens/Cart/cartshop.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/counterNumber.dart';
 import 'package:homelyy/component/models.dart';
+import 'package:intl/intl.dart';
 import 'checkout.dart';
 import 'customTextStyle.dart';
 import 'emptCart.dart';
@@ -47,6 +50,7 @@ class _CartPageState extends State<CartPage> {
   //     .doc("uid")
   //     .collection("cart")
   //     .snapshots();
+  bool loading = false;
 
   @override
   void initState() {
@@ -116,8 +120,8 @@ class _CartPageState extends State<CartPage> {
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.blueGrey.shade100,
-        body: ListView(
+        backgroundColor: Colors.white,
+        body: loading ? Center(child: Image.asset("assets/preloader.gif"),) : ListView(
           children: [
             Container(
                 margin: EdgeInsets.symmetric(horizontal: 8),
@@ -675,13 +679,19 @@ class _CartPageState extends State<CartPage> {
           return Center(child:CircularProgressIndicator(color: kgreen,));
         }
 
+
         List<CartModel> cartList = snapshot.requireData;
         print("cartList in $cartList ${widget.uid} ${widget.shopname}");
+
+
+
 
         return ListView.builder(
           shrinkWrap: true,
           itemCount: cartList.length,
           itemBuilder: (context, index) {
+
+
 
             return Container(
                 margin: EdgeInsets.only(top: 10, bottom: 10),
@@ -692,14 +702,17 @@ class _CartPageState extends State<CartPage> {
                   "requirement",
                   cartList[index].price,
                   cartList[index].quantity,
-                  "document.id",
+                  cartList[index].itemnumber,
                   true,
                   cartList[index].cutprice,
                   cartList[index].discount,
                   cartList[index].ogprice,
-                  cartList[index].cutprice,
+                  cartList[index].ogcutprice,
                     index,
                   cartList[index].recipe,
+                  widget.uid,
+                  cartList[index].vendorid,
+                  cartList[index].foodid,
                   context,
                 )
             );
@@ -789,7 +802,7 @@ class _CartPageState extends State<CartPage> {
       String ogcutprice,
       int index,
       // AsyncSnapshot<QuerySnapshot> prodDocument,
-      String recipe,
+      String recipe,String uid,String vid, String fid,
       BuildContext context) {
 
       _defaultvalue = int.parse(quantity);
@@ -820,6 +833,7 @@ class _CartPageState extends State<CartPage> {
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+
                         Container(
                           padding: EdgeInsets.only(right: 8, top: 4),
                           child: Text(
@@ -830,7 +844,9 @@ class _CartPageState extends State<CartPage> {
                                 .copyWith(fontSize: 14,color: Colors.blueGrey),
                           ),
                         ),
+
                         SizedBox(height: 6, width: 0),
+
                         Container(
                           padding: EdgeInsets.only(right: 8, top: 4),
                           child: Text(
@@ -841,13 +857,17 @@ class _CartPageState extends State<CartPage> {
                                 .copyWith(fontSize: 14,color: Colors.blueGrey),
                           ),
                         ),
+
                         SizedBox(height: 6, width: 0),
+
                         Text(
                           "Special Requirement: $requirement",
                           style: CustomTextStyle.textFormFieldRegular
                               .copyWith(color: Colors.grey, fontSize: 14),
                         ),
+
                         SizedBox(height: 10,),
+
                         Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -862,12 +882,15 @@ class _CartPageState extends State<CartPage> {
                                         style:
                                         TextStyle(fontSize: 16, color: Colors.purple.shade400),
                                       ),
+
                                       SizedBox(width: 10,),
+
                                       Text(
                                         "Rs.${price}",
                                         style:
                                         discountVisibility ? TextStyle(fontSize: 14, color: Colors.blueGrey,decoration: TextDecoration.lineThrough,) : TextStyle(fontSize: 16, color: Colors.purple.shade400),
                                       ),
+
                                     ],
                                   ),
                                   Padding(
@@ -877,76 +900,60 @@ class _CartPageState extends State<CartPage> {
                                       minValue: 0,
                                       maxValue: 10,
                                       step: 1,
-                                      onChanged: (value) {
-
-                                        // get the latest value from here
+                                      onChanged: (value) async {
+                                        setState(() {
+                                          loading = true;
+                                        });
+                                        setState(() {
+                                          _defaultvalue = int.parse(value.toString());
+                                        });
 
                                         print(value);
-                                        if(value < 1){
-                                      /*    print("lesthnone");
-                                          print(quantity);
-                                        widget.shopname == "Pharmacy"  || widget.shopname == "Grocery" ? FirebaseFirestore.instance
-                                              .collection("users")
-                                              .doc(uid)
-                                              .collection("cart").doc(widget.shopname).collection("products")
-                                              .doc(title)
-                                              .delete().then((value) {
-                                            FirebaseFirestore.instance .collection("users")
-                                                .doc(uid)
-                                                .collection("cart")
-                                                .doc(widget.shopname).collection("products").get().then((value) {
-                                              value.size == 0 ?  FirebaseFirestore.instance .collection("users")
-                                                  .doc(uid)
-                                                  .collection("cart")
-                                                  .doc(widget.shopname).delete().then((value) {
-                                                    Get.offAll(HomeScreen());
-                                              }) : print("hasdata");
-                                            });
-                                          })
-                                            : FirebaseFirestore.instance
-                                            .collection("users")
-                                            .doc(uid)
-                                            .collection("cart").doc(widget.shopname).collection("products")
-                                            .doc("$title $recipe")
-                                            .delete().then((value) {
-                                          FirebaseFirestore.instance .collection("users")
-                                              .doc(uid)
-                                              .collection("cart")
-                                              .doc(widget.shopname).collection("products").get().then((value) {
-                                            value.size == 0 ?  FirebaseFirestore.instance .collection("users")
-                                                .doc(uid)
-                                                .collection("cart")
-                                                .doc(widget.shopname).delete().then((value) {
-                                              Get.offAll(HomeScreen());
-                                            }) : print("hasdata");
-                                          });
-                                        });*/
-                                        }
-                                        /*Map<String, String> updateQuantity = new Map();
-                                        updateQuantity['quantity'] = value.toString();
-                                        var changedprice = value * int.parse(ogprice);
-                                        var changedcutprice = ogcutprice == "" ? "" : value * int.parse(ogcutprice);
-                                        updateQuantity['price'] = changedprice.toString();
-                                        updateQuantity['cutprice'] = changedcutprice.toString();
-                                        FirebaseFirestore.instance
-                                            .collection("users")
-                                            .doc(uid)
-                                            .collection("cart").doc(widget.shopname).collection("products")
-                                            .doc("$title $recipe")
-                                            .update(updateQuantity).then((it) {
+
+                                        if (_defaultvalue < 1) {
+
+                                          await AllApi()
+                                              .removeCart(uid,  vid, fid);
+                                          await AllApi()
+                                              .removeShopCart(uid, vid);
                                           setState(() {
-                                            listener.refreshed = true;
-                                            discountfinal = 0;
-                                            discountApplied = true;
-                                            print("removedCart $discountfinal");
-                                            print("removedCart $discountApplied");
-                                            walletfinal = 0;
-                                            walletApplied = true;
-                                            print("removedCart $walletfinal");
-                                            print("removedCart $walletApplied");
+                                            loading = false;
                                           });
-                                          voucherQuery.update({kdiscount: "0",kwallet: "0"});
-                                        });*/
+                                          Fluttertoast.showToast(msg: "Removed From Cart");
+                                        } else {
+                                            print("ogprice = $_defaultvalue $ogprice $ogcutprice");
+                                          var changedprice = _defaultvalue * int.parse(ogprice);
+                                          var changedcutprice =cutprice == ""
+                                              ? ""
+                                              : _defaultvalue * int.parse(ogcutprice);
+
+                                          var quantity = _defaultvalue.toString();
+
+                                          await AllApi().postCart(CartModel(
+                                            img: img,
+                                            price: changedprice.toString(),
+                                            title: title,
+                                            recipe: recipe,
+                                            quantity: quantity.toString(),
+                                            requirement: "",
+                                            itemnumber: "u",
+                                            cutprice: changedcutprice.toString(),
+                                            // ogprice:  price,
+                                            // ogcutprice: cutprice,
+                                            discount: discount,
+                                            shop: widget.shopname,
+                                            date: DateFormat('dd-MM-yyyy').format(DateTime.now()),
+                                            time: DateFormat('hh-MM-yyyy').format(DateTime.now()),
+                                            ref: uid,
+                                            vendorid: vid,
+                                            foodid: fid,
+                                          ),"Update"
+                                          );
+                                          setState(() {
+                                            loading = false;
+                                          });
+                                        }
+
 
 
 
@@ -976,7 +983,23 @@ class _CartPageState extends State<CartPage> {
             alignment: Alignment.topRight,
             child: GestureDetector(
               onTap: () {
-                // removeCart(index, prodDocument, context);
+                setState(() {
+                      loading = true;
+                });
+                AllApi().removeCart(uid, vid,fid).then((value) {
+                  AllApi().getCountShopCart(uid, vid).then((value) {
+                    print("ShopCount ${value}");
+                    if(double.parse(value.toString()) == 0){
+                      AllApi().removeShopCart(uid, vid).then((value) {
+                       Get.off(CartShopPage(ref: uid,));
+                      });
+                    }else{
+                      setState(() {
+                        loading = false;
+                      });
+                    }
+                  });
+                });
               },
               child: Container(
                 width: 24,

@@ -29,178 +29,183 @@ class _CartShopPageState extends State<CartShopPage> {
     //     .doc(uid)
     //     .collection("cart")
     //     .snapshots();
-    return Scaffold(
-      appBar: AppBar(title: Text("Shop Cart"),backgroundColor: kgreen,),
-      body: FutureBuilder(
-        future: AllApi().getShopCart(widget.ref),
-        builder: (context, snapshot) {
-          if(!snapshot.hasData){
-            return Center(child:CircularProgressIndicator(color: kgreen,));
-          }
+    return WillPopScope(
+      onWillPop: () {
+        Get.back();
+      },
+      child: Scaffold(
+        appBar: AppBar(title: Text("Shop Cart"),backgroundColor: kgreen,),
+        body: FutureBuilder(
+          future: AllApi().getShopCart(widget.ref),
+          builder: (context, snapshot) {
+            if(!snapshot.hasData){
+              return Center(child:CircularProgressIndicator(color: kgreen,));
+            }
 
-          List shopList = snapshot.requireData;
-          print("shopList in $shopList");
+            List shopList = snapshot.requireData;
+            print("shopList in $shopList");
 
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-                elevation: 2,
-                child: ListView.builder(
-                  itemCount: shopList.length,
-                  itemBuilder: (context,index){
-                    return Column(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Get.to(CartPage(
-                              shopname: shopList[index]["vendorid"].toString().replaceAll("}", ""),
-                              uid: widget.ref,
-                              // shopaddress: shopaddress,
-                              // shopnumber: shopnumber,
-                              // shoplocation:shopGeoFirePoint,
-                              // shopstatus:shopstatus
-                            ));
-                          },
-                          child: Container(
-                            height: 100,
-                            child: Center(
-                              child: Text(
-                                "Products Added to \n  ${shopList[index]["shop"]}",
-                                style: GoogleFonts.arvo(
-                                    color: Colors.blueGrey,
-                                    fontWeight: FontWeight.bold),
+            return shopList.length == 0 ? EmptyShoppingCartScreen(text: "Empty Cart",)  :Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                  elevation: 2,
+                  child: ListView.builder(
+                    itemCount: shopList.length,
+                    itemBuilder: (context,index){
+                      return Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Get.to(CartPage(
+                                shopname: shopList[index]["vendorid"].toString().replaceAll("}", ""),
+                                uid: widget.ref,
+                                // shopaddress: shopaddress,
+                                // shopnumber: shopnumber,
+                                // shoplocation:shopGeoFirePoint,
+                                // shopstatus:shopstatus
+                              ));
+                            },
+                            child: Container(
+                              height: 100,
+                              child: Center(
+                                child: Text(
+                                  "Products Added to \n  ${shopList[index]["shop"]}",
+                                  style: GoogleFonts.arvo(
+                                      color: Colors.blueGrey,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Divider(
-                          thickness: 3,
-                        )
-                      ],
-                    );
-                  },
+                          Divider(
+                            thickness: 3,
+                          )
+                        ],
+                      );
+                    },
 
-                  // children: [
-                  //   Column(
-                  //     children: [
-                  //       InkWell(
-                  //         onTap: () {
-                  //           Get.to(CartPage(
-                  //             shopname: "Lifestyle",
-                  //             // shopaddress: shopaddress,
-                  //             // shopnumber: shopnumber,
-                  //             // shoplocation:shopGeoFirePoint,
-                  //             // shopstatus:shopstatus
-                  //           ));
-                  //         },
-                  //         child: Container(
-                  //           height: 100,
-                  //           child: Center(
-                  //             child: Text(
-                  //               "Products Added to \n Restaurant",
-                  //               style: GoogleFonts.arvo(
-                  //                   color: Colors.blueGrey,
-                  //                   fontWeight: FontWeight.bold),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Divider(
-                  //         thickness: 3,
-                  //       )
-                  //     ],
-                  //   ),
-                  //   Column(
-                  //     children: [
-                  //       InkWell(
-                  //         onTap: () {
-                  //           Get.to(CartPage(
-                  //             shopname: "Lifestyle",
-                  //             // shopaddress: shopaddress,
-                  //             // shopnumber: shopnumber,
-                  //             // shoplocation:shopGeoFirePoint,
-                  //             // shopstatus:shopstatus
-                  //           ));
-                  //         },
-                  //         child: Container(
-                  //           height: 100,
-                  //           child: Center(
-                  //             child: Text(
-                  //               "Products Added to \n Lifestyle",
-                  //               style: GoogleFonts.arvo(
-                  //                   color: Colors.blueGrey,
-                  //                   fontWeight: FontWeight.bold),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Divider(
-                  //         thickness: 3,
-                  //       )
-                  //     ],
-                  //   ),
-                  // ],
-                )
-
-                /* ListView.builder(
-                  itemCount: 2,
-                  itemBuilder: (context,index){
-                    var shopname = "Lifestyle";
-
-
-                    // var future = FirebaseFirestore.instance
-                    //     .collection("Restaurant").doc(shopname).get();
-                    //
-                    // print("shopname $shopname");
-
-                    return
-                    //
-                    //
-                    //   FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                    //   future: future,
-                    //   builder: (BuildContext context, snapshot) {
-                    //     if(!snapshot.hasData){
-                    //       return Center(child: CircularProgressIndicator(),);
-                    //     }
-                    //     var shopnumber = snapshot.requireData.get("number");
-                    //     GeoPoint shoplocation = snapshot.requireData.get("location.geopoint");
-                    //     var shopLatitude = shoplocation.latitude;
-                    //     var shopLongitude = shoplocation.longitude;
-                    //     GeoFirePoint shopGeoFirePoint = GeoFirePoint(shopLatitude, shopLongitude);
-                    //     var shopstatus = snapshot.requireData.get("status");
-                    //     var shopaddress = snapshot.requireData.get("address");
-                    //
-                    //     return Column(
-                    //       children: [
-                    //         InkWell(
-                    //           onTap: (){
-                    //             Get.to(CartPage(shopname: shopname,
-                    //                 shopaddress: shopaddress,
-                    //                 shopnumber: shopnumber,
-                    //                 shoplocation:shopGeoFirePoint,
-                    //                 shopstatus:shopstatus
-                    //             ));
-                    //           },
-                    //           child: Container(
-                    //             height: 100,
-                    //             child: Center(
-                    //               child: Text(
-                    //                 "Products Added to \n $shopname",
-                    //                 style: GoogleFonts.arvo(color: Colors.blueGrey,fontWeight: FontWeight.bold),
-                    //               ),
+                    // children: [
+                    //   Column(
+                    //     children: [
+                    //       InkWell(
+                    //         onTap: () {
+                    //           Get.to(CartPage(
+                    //             shopname: "Lifestyle",
+                    //             // shopaddress: shopaddress,
+                    //             // shopnumber: shopnumber,
+                    //             // shoplocation:shopGeoFirePoint,
+                    //             // shopstatus:shopstatus
+                    //           ));
+                    //         },
+                    //         child: Container(
+                    //           height: 100,
+                    //           child: Center(
+                    //             child: Text(
+                    //               "Products Added to \n Restaurant",
+                    //               style: GoogleFonts.arvo(
+                    //                   color: Colors.blueGrey,
+                    //                   fontWeight: FontWeight.bold),
                     //             ),
                     //           ),
                     //         ),
-                    //         Divider(thickness: 3,)
-                    //       ],
-                    //     );
-                    //   },
-                    // );
-                  }
-              ),*/
-                ),
-          );
-        }
+                    //       ),
+                    //       Divider(
+                    //         thickness: 3,
+                    //       )
+                    //     ],
+                    //   ),
+                    //   Column(
+                    //     children: [
+                    //       InkWell(
+                    //         onTap: () {
+                    //           Get.to(CartPage(
+                    //             shopname: "Lifestyle",
+                    //             // shopaddress: shopaddress,
+                    //             // shopnumber: shopnumber,
+                    //             // shoplocation:shopGeoFirePoint,
+                    //             // shopstatus:shopstatus
+                    //           ));
+                    //         },
+                    //         child: Container(
+                    //           height: 100,
+                    //           child: Center(
+                    //             child: Text(
+                    //               "Products Added to \n Lifestyle",
+                    //               style: GoogleFonts.arvo(
+                    //                   color: Colors.blueGrey,
+                    //                   fontWeight: FontWeight.bold),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Divider(
+                    //         thickness: 3,
+                    //       )
+                    //     ],
+                    //   ),
+                    // ],
+                  )
+
+                  /* ListView.builder(
+                    itemCount: 2,
+                    itemBuilder: (context,index){
+                      var shopname = "Lifestyle";
+
+
+                      // var future = FirebaseFirestore.instance
+                      //     .collection("Restaurant").doc(shopname).get();
+                      //
+                      // print("shopname $shopname");
+
+                      return
+                      //
+                      //
+                      //   FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                      //   future: future,
+                      //   builder: (BuildContext context, snapshot) {
+                      //     if(!snapshot.hasData){
+                      //       return Center(child: CircularProgressIndicator(),);
+                      //     }
+                      //     var shopnumber = snapshot.requireData.get("number");
+                      //     GeoPoint shoplocation = snapshot.requireData.get("location.geopoint");
+                      //     var shopLatitude = shoplocation.latitude;
+                      //     var shopLongitude = shoplocation.longitude;
+                      //     GeoFirePoint shopGeoFirePoint = GeoFirePoint(shopLatitude, shopLongitude);
+                      //     var shopstatus = snapshot.requireData.get("status");
+                      //     var shopaddress = snapshot.requireData.get("address");
+                      //
+                      //     return Column(
+                      //       children: [
+                      //         InkWell(
+                      //           onTap: (){
+                      //             Get.to(CartPage(shopname: shopname,
+                      //                 shopaddress: shopaddress,
+                      //                 shopnumber: shopnumber,
+                      //                 shoplocation:shopGeoFirePoint,
+                      //                 shopstatus:shopstatus
+                      //             ));
+                      //           },
+                      //           child: Container(
+                      //             height: 100,
+                      //             child: Center(
+                      //               child: Text(
+                      //                 "Products Added to \n $shopname",
+                      //                 style: GoogleFonts.arvo(color: Colors.blueGrey,fontWeight: FontWeight.bold),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         Divider(thickness: 3,)
+                      //       ],
+                      //     );
+                      //   },
+                      // );
+                    }
+                ),*/
+                  ),
+            );
+          }
+        ),
       ),
     );
 

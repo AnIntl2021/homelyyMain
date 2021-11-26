@@ -47,7 +47,7 @@ class _EmptyShoppingCartScreenState extends State<EmptyShoppingCartScreen> {
               width: double.infinity,
               height: 250,
               child: Image.asset(
-                "assets/images/empty_shopping_cart.png",
+                "assets/empty_shopping_cart.png",
                 height: 250,
                 width: double.infinity,
               ),
