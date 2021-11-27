@@ -6,6 +6,7 @@ import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
 import 'package:homelyy/Screens/homepage/homepage.dart';
 import 'package:homelyy/component/models.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
@@ -497,6 +498,96 @@ class AllApi {
 
     return response.body;
   }
+
+
+  Future getCartTotal(String ref) async {
+
+    var userGetURL = Uri.parse("${conurl}getCartTotal?ref=$ref");
+    print("uri $userGetURL");
+    var response = await http.get(userGetURL);
+    print("response of gotccart ${response.body} $ref");
+
+    var list = json.decode(response.body);
+
+    print(response.body);
+
+      return CartTotalModel().fromJson(list);
+  }
+
+
+  Future postOrders(String orders) async {
+
+    var userGetURL = Uri.parse("${conurl}addOrders");
+
+    var response = await http.post(userGetURL,body: {
+      'list':orders
+
+
+    });
+
+    print("response of ccart ${response.body}");
+
+
+
+    return response.body;
+  }
+
+
+  Future addOrderTotal(UserModel users,CartTotalModel cartTotal,String shopName,String uaddress) async {
+    var date =DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
+
+    var userGetURL = Uri.parse("${conurl}addOrderTotal");
+
+    var response = await http.post(userGetURL,body: {
+
+      'address':uaddress,
+      'date': date ,
+      'name':users.name,
+      'phone':users.phone,
+      'ref':users.ref,
+      'status':"Pending",
+      'vid':shopName,
+      'total':cartTotal.total,
+      'discount':cartTotal.discount,
+      'subtotal':cartTotal.subTotal,
+      'savings':cartTotal.savings,
+
+
+
+
+    });
+
+    print("response of ccart ${response.body}");
+
+
+
+    return response.body;
+  }
+
+  Future removeAllCart(String ref,String vendorid) async {
+
+    var userGetURL = Uri.parse("${conurl}removeAllCart?ref=$ref&vid=$vendorid");
+
+    var response = await http.get(userGetURL);
+    print("response of deleteAllCart ${response.body}");
+
+    return response.body;
+  }
+
+  Future getOrderTotal(String ref) async {
+
+    var userGetURL = Uri.parse("${conurl}getOrderTotal?ref=$ref");
+    print("uri $userGetURL");
+    var response = await http.get(userGetURL);
+    print("response of gotorder ${response.body} $ref");
+
+    var list = json.decode(response.body);
+
+    print(list);
+
+    return list ;
+  }
+
 
 
 }

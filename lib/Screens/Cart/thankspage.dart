@@ -4,8 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/Screens/orders/orderpage.dart';
 
 class ThankScreen extends StatefulWidget {
+  final String ref;
+
+  const ThankScreen({Key key, this.ref}) : super(key: key);
   @override
   Splash createState() => Splash();
 }
@@ -20,13 +24,13 @@ class Splash extends State<ThankScreen>  {
   @override
   Widget build(BuildContext context) {
     Timer(Duration(seconds: 3), () {
-      // Get.offAll(OrderPage(
-      //   fromScreen: "Home",
-      // ));
+      Get.offAll(OrderPage(
+        ref:widget.ref
+      ));
     });
 
     var assetsImage = new AssetImage(
-        'assets/images/thankyou.gif'); //<- Creates an object that fetches an image.
+        'assets/thankyou.gif'); //<- Creates an object that fetches an image.
     var image = new Image(
         image: assetsImage,
         height: 300); //<- Creates a widget that displays an image.

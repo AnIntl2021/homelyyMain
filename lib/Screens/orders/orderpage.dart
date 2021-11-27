@@ -2,13 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/component/api.dart';
+import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'orderdetailpage.dart';
 
 class OrderPage extends StatefulWidget {
-  const OrderPage({Key key}) : super(key: key);
+  final String ref;
+  const OrderPage({Key key, this.ref}) : super(key: key);
 
   @override
   _OrderPageState createState() => _OrderPageState();
@@ -18,14 +21,33 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          margin: EdgeInsets.only(top: 10, bottom: 10),
+      body: FutureBuilder(
+        future: AllApi().getOrderTotal(widget.ref),
+        builder: (context, snapshot) {
 
-          child: createOrderListItem(
-              orderId: "orderId",status: "status",payment: "payment",total: "200",date: "date",time: "time"
-              ,subTotal: "150",wallet: "20",discount: "50",savings: "savings",reason: "reason",shopname:"shopName"
-              ,name:"name",deliveryname:"shopname",deliverynumber:"12345678"
-          ),
+          if(!snapshot.hasData){
+            return Center(child:CircularProgressIndicator(color: kgreen,));
+          }
+
+
+          var orderTotalMap = snapshot.requireData;
+          print("gotOrders $orderTotalMap");
+          return ListView.builder(
+            itemCount: orderTotalMap.length,
+            itemBuilder: (context, index) {
+
+              return Container(
+                  margin: EdgeInsets.only(top: 10, bottom: 10),
+
+                  child: createOrderListItem(
+                      orderId: "245",status: orderTotalMap[index]["status"],payment: "COD",total: orderTotalMap[index]["total"],date: orderTotalMap[index]["date"],time: orderTotalMap[index]["status"]
+                      ,subTotal: orderTotalMap[index]["subtotal"],wallet: "20",discount: orderTotalMap[index]["discount"],savings: orderTotalMap[index]["savings"],reason: "reason",shopname:orderTotalMap[index]["Arsh Cafe"]
+                      ,name:orderTotalMap[index]["name"],deliveryname:"Arsh Cafe",deliverynumber:"1234567890"
+                  ),
+              );
+            }
+          );
+        }
       )
     );
   }

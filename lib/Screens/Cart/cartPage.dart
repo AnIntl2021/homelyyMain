@@ -80,78 +80,132 @@ class _CartPageState extends State<CartPage> {
     super.initState();
   }
 
+  Future uploadCartTotal(List<CartModel> cartList) async {
+
+    var subtotal = 0;
+    var savings = 0;
+    var total = 0;
+
+    await Future.forEach(cartList,(CartModel element) {
+      var a = element.price;
+      var getcut = element.cutprice;
+      var c = int.parse(a);
+      var getcutInt =
+      getcut == "" ? int.parse("0") : int.parse(getcut);
+
+      savings += getcut == "" ? 0 : c - getcutInt;
+      subtotal += c;
+      print("cartPriceLoop $c");
+
+    });
+
+    print("end $subtotal");
+    print("cutpricetotal $savings");
+
+
+
+    total = subtotal +
+        discountfinal -
+        savings;
+
+  await  AllApi().postCartTotal(CartTotalModel(
+        discount:discountfinal.toString(),
+        subTotal:subtotal.toString(),
+        total:total.toString(),
+        savings:savings.toString(),
+        ref:widget.uid
+    ));
+    print("finalTotal $total");
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    // voucherQuery = FirebaseFirestore.instance
-    //     .collection("users")
-    //     .doc(uid)
-    //     .collection("cartTotal")
-    //     .doc("1");
     var availablewalletfinal = "0";
-    // var stream = FirebaseFirestore.instance
-    //     .collection("users")
-    //     .doc(uid)
-    //     .collection("cart").doc(widget.shopname).collection("products")
-    //     .snapshots();
-    // var stream1 = FirebaseFirestore.instance
-    //     .collection("users")
-    //     .doc(uid)
-    //     .collection("cartTotal")
-    //     .snapshots();
-    // var totalquery = FirebaseFirestore.instance
-    //     .collection("users")
-    //     .doc(uid)
-    //     .collection("cartTotal")
-    //     .doc("1");
-    // var streamCart = FirebaseFirestore.instance
-    //     .collection("users")
-    //     .doc(uid)
-    //     .collection("cart").doc(widget.shopname).collection("products")
-    //     .snapshots();
-    // FirebaseFirestore.instance.collection("users").doc(uid).get().then((value) {
-    //   var a = value.data()["wallet"];
-    //   print("PRINTING $a");
-    //   availablewalletfinal = a;
-    // });
-
-    // var userFuture  = FirebaseFirestore.instance.collection("users")
-    //                     .doc(uid).get();
-
 
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+      appBar: AppBar(title: Text("My Cart"),backgroundColor: kgreen   ,),
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
-        body: loading ? Center(child: Image.asset("assets/preloader.gif"),) : ListView(
-          children: [
-            Container(
-                margin: EdgeInsets.symmetric(horizontal: 8),
-                decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, -7),
-                        blurRadius: 33,
-                        color: Colors.deepOrange.withOpacity(0.11),
-                      ),
-                    ],
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20))),
-                child: cartListNew(
-                  "streamCart",
-                  cntrler,
-                )),
-            footer(context, 100, walletfinal, discountfinal,
-                200, 20, 10),
-            discountApplied
-                ? discountCard(context, 100, 0, 20,
-                200, 10)
-                : appliedDiscount(),
-            walletApplied
-                ? walletCard(context, 100, 0, 20,
-                200, availablewalletfinal, 10)
-                : appliedWallet(),
-          ],
+        body: loading ? Center(child: Image.asset("assets/preloader.gif"),) : FutureBuilder(
+          future: AllApi().getCart(widget.uid, widget.shopname),
+          builder: (context, snapshot) {
+
+
+            if(!snapshot.hasData){
+              return Center(child:CircularProgressIndicator(color: kgreen,));
+            }
+
+
+            List<CartModel> cartList = snapshot.requireData;
+            print("cartList in $cartList ${widget.uid} ${widget.shopname}");
+
+
+            return FutureBuilder(
+              future: uploadCartTotal(cartList),
+              builder: (context, snapshot3) {
+
+
+                // if(!snapshot3.hasData){
+                //   return Center(child:CircularProgressIndicator(color: kgreen,));
+                // }
+
+
+
+                return FutureBuilder(
+                  future: AllApi().getCartTotal(widget.uid),
+                  builder: (context, snapshot6) {
+
+
+                    if(!snapshot6.hasData){
+                      return Center(child:CircularProgressIndicator(color: kgreen,));
+                    }
+
+                    CartTotalModel cartTotal = snapshot6.requireData;
+                    print("cartTotal in $cartTotal ${widget.uid} ${widget.shopname}");
+
+                  var  subtotal = cartTotal.subTotal;
+                   var discountfinal =cartTotal.discount;
+                   var  total =cartTotal.total;
+                   var savings =cartTotal.savings;
+
+                    return ListView(
+                      children: [
+                        Container(
+                            margin: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    offset: Offset(0, -7),
+                                    blurRadius: 33,
+                                    color: Colors.deepOrange.withOpacity(0.11),
+                                  ),
+                                ],
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20))),
+                            child: cartListNew(
+                              cartList,
+                              cntrler,
+                            )),
+                        footer(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
+                            int.parse(total), 20, int.parse(savings),cartList),
+                        discountApplied
+                            ? discountCard(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
+                            int.parse(total), int.parse(savings))
+                            : appliedDiscount(),
+                        // walletApplied
+                        //     ? walletCard(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
+                        //     int.parse(total), availablewalletfinal, 10)
+                        //     : appliedWallet(),
+                      ],
+                    );
+                  }
+                );
+              }
+            );
+          }
         ));
     //
     //   FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -309,7 +363,7 @@ class _CartPageState extends State<CartPage> {
   }
 
   footer(BuildContext context, int subTotal, int wallet, int discount,
-      int total, int delivery,int savings) {
+      int total, int delivery,int savings,List<CartModel> cartList) {
     return Card(
       margin: EdgeInsets.only(top: 15, left: 10, right: 10),
       elevation: 1,
@@ -322,24 +376,24 @@ class _CartPageState extends State<CartPage> {
             billRow("Sub Total", subTotal.toString()),
             SizedBox(height: 8, width: 10),
             billRow("Total Savings", savings.toString()),
-            SizedBox(height: 8, width: 10),
-            billRow("Delivery Charges", delivery.toString()),
+            // SizedBox(height: 8, width: 10),
+            // billRow("Delivery Charges", delivery.toString()),
             SizedBox(height: 8, width: 0),
             billRow("Discount", discount.toString()),
-           SizedBox(height: 8, width: 0),
-            billRow("Wallet", wallet.toString()),
+           // SizedBox(height: 8, width: 0),
+           //  billRow("Wallet", wallet.toString()),
             SizedBox(height: 8, width: 0),
             billRow("Total", total.toString()),
             SizedBox(height: 8, width: 0),
             RaisedButton(
               onPressed: () {
-               widget.shopstatus == false ? Get.snackbar("SHOP CLOSED", "PLEASE CHECK SHOP ORDER TIMINGS") : Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => CheckOutPage(total:total.toString(),subTotal:subTotal.toString(), wallet: wallet.toString(), discount:discount.toString(),
-                              delivery:delivery.toString(), savings: savings.toString(),
-                            shopname:widget.shopname,shopaddress: widget.shopaddress,shopnumber: widget.shopnumber,
-                        )));
+               widget.shopstatus == false ? Get.snackbar("SHOP CLOSED", "PLEASE CHECK SHOP ORDER TIMINGS") :
+
+                   Get.to(CheckOutPage(total:total.toString(),subTotal:subTotal.toString(), wallet: wallet.toString(), discount:discount.toString(),
+                     delivery:delivery.toString(), savings: savings.toString(),
+                     shopname:widget.shopname,
+                     listofcart: cartList,
+                   ));
               },
               color: Colors.purple,
               padding:
@@ -668,22 +722,7 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  cartListNew(streamCart, controller) {
-
-    return FutureBuilder(
-      future: AllApi().getCart(widget.uid, widget.shopname),
-      builder: (context, snapshot) {
-
-
-        if(!snapshot.hasData){
-          return Center(child:CircularProgressIndicator(color: kgreen,));
-        }
-
-
-        List<CartModel> cartList = snapshot.requireData;
-        print("cartList in $cartList ${widget.uid} ${widget.shopname}");
-
-
+  cartListNew( List<CartModel> cartList, controller) {
 
 
         return ListView.builder(
@@ -718,8 +757,6 @@ class _CartPageState extends State<CartPage> {
             );
           }
         );
-      }
-    );
 
      /* StreamBuilder<QuerySnapshot>(
         stream: streamCart,

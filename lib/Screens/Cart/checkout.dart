@@ -2,15 +2,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/Screens/Cart/paymentDialogState.dart';
+import 'package:homelyy/component/constants.dart';
+import 'package:homelyy/component/models.dart';
 
 class CheckOutPage extends StatefulWidget {
   final String total,subTotal,  wallet,  discount,
     delivery, savings,shopname,shopnumber,shopaddress;
+  final List<CartModel> listofcart;
  // final GeoFirePoint shoplocation;
 
-  const CheckOutPage({Key key, this.total, this.subTotal, this.wallet, this.discount, this.delivery, this.savings, this.shopname, this.shopnumber, this.shopaddress}) : super(key: key);
+  const CheckOutPage({Key key, this.total, this.subTotal, this.wallet, this.discount, this.delivery, this.savings, this.shopname, this.shopnumber, this.shopaddress, this.listofcart}) : super(key: key);
   @override
   _CheckOutPageState createState() => _CheckOutPageState();
 }
@@ -40,6 +44,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
     return  Scaffold(
       appBar: AppBar(
         title: Text("SELECT ADDRESS"),
+        backgroundColor: kdarkgreen,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -48,128 +53,209 @@ class _CheckOutPageState extends State<CheckOutPage> {
           SizedBox(
             height: 10,
           ),
+          Card(
+            elevation: 0,
+            child: Container(
+              margin: EdgeInsets.only(
+                  left: 40, right: 40),
+              child: TextField(
+                controller: addressText,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                    hintText:
+                    "ENTER FULL ADDRESS",
+                    labelText: "Full Address",
+                    hintStyle: TextStyle(
+                        color: Colors.black12),
+                    errorText: addressError
+                        ? addresserrorText
+                        : null
+                ),
+              ),
+            ),
+          ),
+          Card(
+            elevation: 0,
+            child: Container(
+              margin: EdgeInsets.only(
+                  left: 80, right: 80),
+              child: TextField(
+                controller: pinText,
+                keyboardType:
+                TextInputType.number,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                    hintText: "ENTER PIN CODE",
+                    labelText: "PIN CODE",
+                    hintStyle: TextStyle(
+                        color: Colors.black12),
+                    errorText: codeError
+                        ? codeerrorText
+                        : null
+                ),
+                onChanged: (value){
+                  setState(() {
+                    selectedAddress = addressText.value.text + value;
+                  });
+                },
+              ),
+            ),
+          ),
           Center(
             child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                  MaterialStateProperty.all<Color>(Colors.green),
+                ),
                 onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return StatefulBuilder(
-                          builder: (BuildContext context,
-                              void Function(void Function()) setState) {
-                            return Center(
-                              child: Container(
-                                  color: Colors.white,
-                                  width: size,
-                                  height: 250,
-                                  child: ListView(
-                                    children: [
-                                      Material(
-                                        child: Center(
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              "FILL ALL DETAILS CORRECTLY",
-                                              style: GoogleFonts.cabin(
-                                                  fontSize: 16),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Card(
-                                        elevation: 0,
-                                        child: Container(
-                                          margin: EdgeInsets.only(
-                                              left: 40, right: 40),
-                                          child: TextField(
-                                            controller: addressText,
-                                            textAlign: TextAlign.center,
-                                            decoration: InputDecoration(
-                                                hintText:
-                                                "ENTER FULL ADDRESS",
-                                                labelText: "Full Address",
-                                                hintStyle: TextStyle(
-                                                    color: Colors.black12),
-                                                errorText: addressError
-                                                    ? addresserrorText
-                                                    : null
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Card(
-                                        elevation: 0,
-                                        child: Container(
-                                          margin: EdgeInsets.only(
-                                              left: 80, right: 80),
-                                          child: TextField(
-                                            controller: pinText,
-                                            keyboardType:
-                                            TextInputType.number,
-                                            textAlign: TextAlign.center,
-                                            decoration: InputDecoration(
-                                                hintText: "ENTER PIN CODE",
-                                                labelText: "PIN CODE",
-                                                hintStyle: TextStyle(
-                                                    color: Colors.black12),
-                                                errorText: codeError
-                                                    ? codeerrorText
-                                                    : null
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(
-                                            left: 80, right: 80, top: 10),
-                                        child: ElevatedButton(
-                                            onPressed: () {
-                                              // if (addressText
-                                              //     .text.isEmpty) {
-                                              //   setState(() {
-                                              //     addressError = true;
-                                              //     addresserrorText =
-                                              //     "Please Enter Full Address";
-                                              //   });
-                                              // } else if (pinText
-                                              //     .text.isEmpty) {
-                                              //   setState(() {
-                                              //     codeError = true;
-                                              //     codeerrorText =
-                                              //     "Please Enter Pincode";
-                                              //   });
-                                              // } else if (product.length >
-                                              //     3) {
-                                              //   print("GREATER 3");
-                                              // } else {
-                                              //   print(product.length);
-                                              //   FirebaseFirestore.instance
-                                              //       .collection("users")
-                                              //       .doc(uid)
-                                              //       .collection("address")
-                                              //       .add({
-                                              //     "address":
-                                              //     addressText.text,
-                                              //     "Pincode": pinText.text
-                                              //   }).then((value) {
-                                              //     Navigator.of(context,
-                                              //         rootNavigator:
-                                              //         true)
-                                              //         .pop();
-                                              //   });
-                                              // }
-                                            },
-                                            child: Text("Continue")),
-                                      ),
-                                    ],
-                                  )),
-                            );
-                          },
-                        );
-                      });
+
+
+
+                  if (addressText
+                      .text.isEmpty) {
+                    setState(() {
+                      addressError = true;
+                      addresserrorText =
+                      "Please Enter Full Address";
+                    });
+                  } else if (pinText
+                      .text.isEmpty) {
+                    setState(() {
+                      codeError = true;
+                      codeerrorText =
+                      "Please Enter Pincode";
+                    });
+                  } else {
+                   Get.to(PaymentDiaolog(total:widget.total,subTotal:widget.subTotal, wallet: widget.wallet, discount:widget.discount,
+                     delivery:widget.delivery, savings: widget.savings,address:selectedAddress,shopname: widget.shopname,
+                    listofcart: widget.listofcart,
+                     // shoplocation:widget.shoplocation
+                   ));
+                  }
+                  //
+                  //
+                  // showDialog(
+                  //     context: context,
+                  //     builder: (context) {
+                  //       return StatefulBuilder(
+                  //         builder: (BuildContext context,
+                  //             void Function(void Function()) setState) {
+                  //           return Center(
+                  //             child: Container(
+                  //                 color: Colors.white,
+                  //                 width: size,
+                  //                 height: 250,
+                  //                 child: ListView(
+                  //                   children: [
+                  //                     Material(
+                  //                       child: Center(
+                  //                         child: Padding(
+                  //                           padding:
+                  //                           const EdgeInsets.all(8.0),
+                  //                           child: Text(
+                  //                             "FILL ALL DETAILS CORRECTLY",
+                  //                             style: GoogleFonts.cabin(
+                  //                                 fontSize: 16),
+                  //                           ),
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                     Card(
+                  //                       elevation: 0,
+                  //                       child: Container(
+                  //                         margin: EdgeInsets.only(
+                  //                             left: 40, right: 40),
+                  //                         child: TextField(
+                  //                           controller: addressText,
+                  //                           textAlign: TextAlign.center,
+                  //                           decoration: InputDecoration(
+                  //                               hintText:
+                  //                               "ENTER FULL ADDRESS",
+                  //                               labelText: "Full Address",
+                  //                               hintStyle: TextStyle(
+                  //                                   color: Colors.black12),
+                  //                               errorText: addressError
+                  //                                   ? addresserrorText
+                  //                                   : null
+                  //                           ),
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                     Card(
+                  //                       elevation: 0,
+                  //                       child: Container(
+                  //                         margin: EdgeInsets.only(
+                  //                             left: 80, right: 80),
+                  //                         child: TextField(
+                  //                           controller: pinText,
+                  //                           keyboardType:
+                  //                           TextInputType.number,
+                  //                           textAlign: TextAlign.center,
+                  //                           decoration: InputDecoration(
+                  //                               hintText: "ENTER PIN CODE",
+                  //                               labelText: "PIN CODE",
+                  //                               hintStyle: TextStyle(
+                  //                                   color: Colors.black12),
+                  //                               errorText: codeError
+                  //                                   ? codeerrorText
+                  //                                   : null
+                  //                           ),
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                     Container(
+                  //                       margin: EdgeInsets.only(
+                  //                           left: 80, right: 80, top: 10),
+                  //                       child: ElevatedButton(
+                  //                           onPressed: () {
+                  //
+                  //
+                  //
+                  //                             // if (addressText
+                  //                             //     .text.isEmpty) {
+                  //                             //   setState(() {
+                  //                             //     addressError = true;
+                  //                             //     addresserrorText =
+                  //                             //     "Please Enter Full Address";
+                  //                             //   });
+                  //                             // } else if (pinText
+                  //                             //     .text.isEmpty) {
+                  //                             //   setState(() {
+                  //                             //     codeError = true;
+                  //                             //     codeerrorText =
+                  //                             //     "Please Enter Pincode";
+                  //                             //   });
+                  //                             // } else if (product.length >
+                  //                             //     3) {
+                  //                             //   print("GREATER 3");
+                  //                             // } else {
+                  //                             //   print(product.length);
+                  //                             //   FirebaseFirestore.instance
+                  //                             //       .collection("users")
+                  //                             //       .doc(uid)
+                  //                             //       .collection("address")
+                  //                             //       .add({
+                  //                             //     "address":
+                  //                             //     addressText.text,
+                  //                             //     "Pincode": pinText.text
+                  //                             //   }).then((value) {
+                  //                             //     Navigator.of(context,
+                  //                             //         rootNavigator:
+                  //                             //         true)
+                  //                             //         .pop();
+                  //                             //   });
+                  //                             // }
+                  //                           },
+                  //                           child: Text("Continue")),
+                  //                     ),
+                  //                   ],
+                  //                 )),
+                  //           );
+                  //         },
+                  //       );
+                  //     });
                 },
-                child: Text("ADD NEW ADDRESS")),
+                child: Text("Continue")),
           ),
 
           // Visibility(

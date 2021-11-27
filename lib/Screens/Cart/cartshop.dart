@@ -56,14 +56,18 @@ class _CartShopPageState extends State<CartShopPage> {
                         children: [
                           InkWell(
                             onTap: () {
-                              Get.to(CartPage(
-                                shopname: shopList[index]["vendorid"].toString().replaceAll("}", ""),
-                                uid: widget.ref,
-                                // shopaddress: shopaddress,
-                                // shopnumber: shopnumber,
-                                // shoplocation:shopGeoFirePoint,
-                                // shopstatus:shopstatus
-                              ));
+                              Get.to(
+                                  CartPage(
+                                  shopname: shopList[index]["vendorid"].toString().replaceAll("}", ""),
+                                  uid: widget.ref,
+
+                                    // shopaddress: shopaddress,
+                                    // shopnumber: shopnumber,
+                                    // shoplocation:shopGeoFirePoint,
+                                    // shopstatus:shopstatus
+
+                                  )
+                              );
                             },
                             child: Container(
                               height: 100,
