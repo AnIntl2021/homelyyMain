@@ -145,14 +145,15 @@ class AllApi {
 
 
     var response = await http.get(userGetURL);
-    print("prionting ref users = ${response.body}");
-    print(
 
-        "response for userpost ${response.body}");
+    print("prionting ref users = ${response.body} $ref");
+
+    print("response for userpost ${response.body}");
 
 
 
     return response.body;
+
   }
 
   Future getcat(String catid ) async {
@@ -588,6 +589,76 @@ class AllApi {
     return list ;
   }
 
+
+  Future getOrders(String ref,String vendorid) async {
+
+    var userGetURL = Uri.parse("${conurl}getOrderDetail?ref=$ref&vendorid=$vendorid");
+    print("uri $userGetURL");
+    var response = await http.get(userGetURL);
+    print("response of gotOrders ${response.body} $ref $vendorid");
+
+    List list = json.decode(response.body);
+
+    print(response.body);
+    //
+
+    Iterable<CartModel> newList = list.map((e) {
+      return CartModel().fromJson(e);
+    });
+
+    print("CartList = $newList");
+    //
+    return newList.toList();
+
+
+    return response.body;
+  }
+
+  Future getlifeProdAll(String vendorid , String catid) async {
+    var userGetURL = Uri.parse("${conurl}getLifeProducts?vendorid=$vendorid&category=$catid");
+    // print("vendorUrl = $userGetURL");
+    var response = await http.get(userGetURL);
+
+    List list = json.decode(response.body);
+    //
+    // print("vendorUrl Product${response.body}");
+
+    Iterable<LifeProductModel> newList = list.map((e) {
+      return LifeProductModel().fromJson(e);
+    });
+
+    return newList.toList();
+
+  }
+
+  Future getlifeprod(String varient,String vid) async {
+    var userGetURL = Uri.parse("${conurl}getlifeprod?varient=$varient&vid=$vid");
+    var response = await http.get(userGetURL);
+
+    List list = json.decode(response.body);
+
+    print("vendorUrl Product${userGetURL}");
+
+    Iterable<LifeProductModel> newList = list.map((e) {
+      return LifeProductModel().fromJson(e);
+    });
+
+    return newList.toList();
+
+  }
+
+  Future getVendorbyid(String vid) async {
+    var userGetURL = Uri.parse("${conurl}vendorgetid?vendorid=$vid");
+    var response = await http.get(userGetURL);
+
+    var list = json.decode(response.body);
+
+    print("vebndordetaukl ${userGetURL}");
+
+      return LifeProductModel().fromJson(list);
+
+
+  }
 
 
 }

@@ -21,6 +21,8 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: homeAppBar(context, "Orders", widget.ref, "Product"),
+
       body: FutureBuilder(
         future: AllApi().getOrderTotal(widget.ref),
         builder: (context, snapshot) {
@@ -30,19 +32,35 @@ class _OrderPageState extends State<OrderPage> {
           }
 
 
+
+
+
           var orderTotalMap = snapshot.requireData;
           print("gotOrders $orderTotalMap");
           return ListView.builder(
             itemCount: orderTotalMap.length,
             itemBuilder: (context, index) {
-
+              var shopUid = orderTotalMap[index]["vid"];
               return Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10),
 
-                  child: createOrderListItem(
-                      orderId: "245",status: orderTotalMap[index]["status"],payment: "COD",total: orderTotalMap[index]["total"],date: orderTotalMap[index]["date"],time: orderTotalMap[index]["status"]
-                      ,subTotal: orderTotalMap[index]["subtotal"],wallet: "20",discount: orderTotalMap[index]["discount"],savings: orderTotalMap[index]["savings"],reason: "reason",shopname:orderTotalMap[index]["Arsh Cafe"]
-                      ,name:orderTotalMap[index]["name"],deliveryname:"Arsh Cafe",deliverynumber:"1234567890"
+                  child: FutureBuilder(
+                      future: AllApi().getVendorbyid(shopUid),
+                    builder: (context, snapshot) {
+
+
+                      if(!snapshot.hasData){
+                        return Center(child:CircularProgressIndicator(color: kgreen,));
+                      }
+
+                      var shopName = snapshot.requireData.name;
+
+                      return createOrderListItem(
+                          orderId: "245",status: orderTotalMap[index]["status"],payment: "COD",total: orderTotalMap[index]["total"],date: orderTotalMap[index]["date"],time: orderTotalMap[index]["status"]
+                          ,subTotal: orderTotalMap[index]["subtotal"],wallet: "20",discount: orderTotalMap[index]["discount"],savings: orderTotalMap[index]["savings"],reason: "reason",shopname:orderTotalMap[index]["vid"]
+                          ,name:orderTotalMap[index]["name"],deliveryname:shopName,deliverynumber:"1234567890",uid:orderTotalMap[index]["ref"]
+                      );
+                    }
                   ),
               );
             }
@@ -56,14 +74,14 @@ class _OrderPageState extends State<OrderPage> {
 
     String orderId,String status,String date,String time,String payment,String total
     ,String subTotal,String wallet,String discount,String savings,String reason,shopname
-    ,String name,String deliveryname,String deliverynumber
+    ,String name,String deliveryname,String deliverynumber,String uid
 
   }){
     return InkWell(
       onTap: (){
         Get.to(() => OrderDetailScreen(id: orderId,status: status,subTotal: subTotal,
           wallet: wallet,discount: discount,savings: savings,total: total,delivery: "0",reason: reason
-          ,shopname:shopname,name:name,date:date
+          ,shopname:shopname,name:name,date:date,uid:uid
           ,));
       },
       child: Container(
@@ -82,7 +100,6 @@ class _OrderPageState extends State<OrderPage> {
             ),
 
             Text("Date: $date"),
-            Text("Time: $time"),
 
             deliveryname == "" ?             Text("Delivery Boy Not Assigned",style: GoogleFonts.basic(fontSize: 16,fontWeight: FontWeight.bold),)
                 :

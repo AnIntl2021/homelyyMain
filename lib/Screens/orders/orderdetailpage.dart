@@ -7,7 +7,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/Screens/Cart/customTextStyle.dart';
+import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
+import 'package:homelyy/component/models.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -24,7 +26,7 @@ class OrderDetailScreen extends StatefulWidget {
       savings,
       reason,
       shopname,
-      name,date;
+      name,date,uid;
 
   const OrderDetailScreen(
       {Key key,
@@ -37,7 +39,7 @@ class OrderDetailScreen extends StatefulWidget {
       this.delivery,
       this.savings,
       this.reason,
-      this.shopname, this.name, this.date})
+      this.shopname, this.name, this.date, this.uid})
       : super(key: key);
 
   @override
@@ -372,23 +374,49 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   cartListNew() {
-    return  Container(
-        margin: EdgeInsets.only(top: 10, bottom: 10),
-        child: createCartListItem(
-          "img",
-          "title",
-          "requirement",
-          "price",
-          "1",
-          "document.id",
-          true,
-         "20", "10",
-          "100",
-          "50",
-          0,
-          // snapshot,
-          context,
-        ));
+    return  FutureBuilder(
+      future: AllApi().getOrders(widget.uid,widget.shopname),
+      builder: (context, snapshot) {
+
+
+
+        if(!snapshot.hasData){
+          return Center(child:CircularProgressIndicator(color: kgreen,));
+        }
+
+
+        List<CartModel> orderList = snapshot.requireData;
+
+
+        print("OrderList in $orderList ${widget.uid} ${widget.shopname}");
+
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: orderList.length,
+          itemBuilder: (context, index) {
+            return Container(
+                margin: EdgeInsets.only(top: 10, bottom: 10),
+                child: createCartListItem(
+                  orderList[index].img,
+                  orderList[index].title,
+                  orderList[index].requirement,
+                  orderList[index].price ,
+                  orderList[index].quantity ,
+                  orderList[index].itemnumber,
+                  true,
+                  orderList[index].cutprice ,
+                  orderList[index].discount ,
+                  "50",
+                  orderList[index].img,
+                  0,
+                  // snapshot,
+                  context,
+                ));
+          }
+        );
+      }
+    );
 
     /*  StreamBuilder<QuerySnapshot>(
         stream: streamCart,

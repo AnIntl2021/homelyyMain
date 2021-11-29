@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       print("+${phoneText.text}");
 
-                      if (phoneText.text.length == 10) {
+                      if (phoneText.text.length > 10) {
                         Navigator.pushAndRemoveUntil<dynamic>(
                           context,
                           MaterialPageRoute(
@@ -108,9 +108,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // errorText: isdiscountAvailable ? erroText : null
       ),
-
-      maxLength: 10,
-      maxLengthEnforcement: MaxLengthEnforcement.enforced,
       showCursor: true,
     );
   }

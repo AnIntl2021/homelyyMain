@@ -149,7 +149,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
                       ), widget.shopname, widget.address);
 
                     await AllApi().removeAllCart(future.data.phone, widget.shopname);
-
+                    await AllApi().removeShopCart(future.data.phone, widget.shopname);
                     Get.offAll(ThankScreen(ref:future.data.phone));
 
                   } else if (shop && paymentvalue == 1) {

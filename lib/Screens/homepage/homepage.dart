@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:homelyy/Screens/UserProfile/userProfile.dart';
+import 'package:homelyy/Screens/Vouchers/vouchers.dart';
 import 'package:homelyy/Screens/homepage/homeBody.dart';
 import 'package:homelyy/Screens/orders/orderpage.dart';
 import 'package:homelyy/component/api.dart';
@@ -33,7 +34,7 @@ class _HomepageState extends State<Homepage> {
 
       ),
 
-      OrderPage(ref: widget.userRef.replaceAll("+", "").removeAllWhitespace,),
+      Vouchers(ref:widget.userRef.replaceAll("+", "").removeAllWhitespace),
 
       UserProfile(id: widget.userRef.replaceAll("+", "").removeAllWhitespace,),
 
@@ -45,7 +46,7 @@ class _HomepageState extends State<Homepage> {
     return SafeArea(
       child: Scaffold(
         body:   Scaffold(
-                appBar: homeAppBar(context,"Homelyy",widget.userRef.replaceAll("+", "").removeAllWhitespace),
+                appBar: homeAppBar(context,"Homelyy",widget.userRef.replaceAll("+", "").removeAllWhitespace,""),
                 bottomNavigationBar: buildBNB(),
                 body: IndexedStack(
                   index: currentIndex,
@@ -102,7 +103,7 @@ class _HomepageState extends State<Homepage> {
               children: [
                 IconButton(
                   icon: Icon(
-                    FontAwesomeIcons.opencart,
+                    FontAwesomeIcons.toriiGate,
                     size: currentIndex == 1 ? 30 : 24,
                     color: currentIndex == 1 ?  kgreen : kblackcolor.withOpacity(0.5),
                   ),
@@ -112,7 +113,7 @@ class _HomepageState extends State<Homepage> {
                     });
                   },
                 ),
-                Text("Your Orders")
+                Text("Offers")
               ],
             ),
           ]),

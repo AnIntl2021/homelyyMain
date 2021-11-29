@@ -4,7 +4,8 @@ import 'package:homelyy/Screens/lifestyle/lifeprodcard.dart';
 import 'package:homelyy/component/searchBoxx.dart';
 
 class LifeItemList extends StatefulWidget {
-  const LifeItemList({Key key}) : super(key: key);
+  final String vid,uid,shopName;
+  const LifeItemList({Key key, this.vid, this.uid, this.shopName}) : super(key: key);
 
   @override
   _LifeItemListState createState() => _LifeItemListState();
@@ -26,17 +27,9 @@ class _LifeItemListState extends State<LifeItemList> {
           ),
         ),
 
-          GridView.count(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            crossAxisCount: 2,
-            childAspectRatio: 0.8,
-            children: [
 
-              LifeProdCard(),
+              LifeProdCard(vid:widget.vid,uid:widget.uid,shopName:widget.shopName,catId: "CAT33",),
 
-            ],
-          ),
         ],
       )
     );

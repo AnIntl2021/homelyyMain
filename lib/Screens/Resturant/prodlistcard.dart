@@ -1,9 +1,13 @@
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/Screens/Cart/cartshop.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/counterNumber.dart';
@@ -27,6 +31,7 @@ class ProductListCard extends StatefulWidget {
   final bool stock;
   final bool discountVisibility;
   final int totalorders;
+  final Function setting;
 
   const ProductListCard({
     Key key,
@@ -44,7 +49,7 @@ class ProductListCard extends StatefulWidget {
     this.cutprice,
     this.totalorders,
     this.vid,
-    this.foodid,
+    this.foodid, this.setting,
   }) : super(key: key);
 
   @override
@@ -53,6 +58,7 @@ class ProductListCard extends StatefulWidget {
 
 class _ProductListCardState extends State<ProductListCard> {
   var _defaultvalue = 0;
+  bool haveCart = false;
 
   // var uid = FirebaseAuth.instance.currentUser.uid.toString();
   var requirementController = TextEditingController();
@@ -186,6 +192,7 @@ class _ProductListCardState extends State<ProductListCard> {
                                 DateTime.now().millisecond.toString();
                             setState(() {
                               _defaultvalue = 1;
+                              widget.setting;
                             });
                             await AllApi().postCart(CartModel(
                               img: widget.img,
@@ -215,15 +222,73 @@ class _ProductListCardState extends State<ProductListCard> {
                             ));
 
                             setState(() {
-                              final snackBar = SnackBar(
-                                content: Text('Product Added To Cart'),
-                                backgroundColor: Colors.green,
-                                duration: Duration(milliseconds: 300),
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
+
+                              Get.isSnackbarOpen ? Get.back() : print("sd");
+
+                              Get.snackbar("Go to Cart", "message",duration: Duration(minutes: 15),snackPosition: SnackPosition.BOTTOM,snackbarStatus: (value){
+                                  print("snackbar status $value");
+
+                              },backgroundColor: kgreen,icon:FutureBuilder(
+                                  future: AllApi().getCartCount(widget.uid,),
+                                  builder: (context, snapshot) {
+
+                                    if(!snapshot.hasData){
+
+                                      return Center(
+                                        child: CircularProgressIndicator(color: kgreen,),
+                                      );
+                                    }
+
+                                    var cartCount = snapshot.requireData;
+
+                                    print("councart = ${widget.uid} $cartCount");
+
+                                    return Stack(
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(right: 10),
+                                          child: Stack(children: [
+                                            IconButton(
+                                                icon: Icon(
+                                                  FontAwesomeIcons.opencart,
+                                                  color: kdarkgreen,
+                                                ),
+                                                onPressed: () {
+
+
+                                                  Get.to(CartShopPage(ref:widget.uid));
+
+                                                }),
+                                            Positioned(
+                                              right: 0,
+                                              child: Badge(
+                                                badgeContent: Text(
+                                                  cartCount,
+                                                  style: GoogleFonts.arvo(color: Colors.white),
+                                                ),
+                                                // child: Icon(
+                                                //   FontAwesomeIcons.opencart,
+                                                //   color: Colors.white,
+                                                // ),
+                                              ),
+                                            )
+                                          ]),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                              ), );
+                              // final snackBar = SnackBar(
+                              //   content:
+                              //   backgroundColor: Colors.green,
+                              //   duration: Duration(minutes: 15),
+                              //
+                              // );
+                              // ScaffoldMessenger.of(context)
+                              //     .showSnackBar(snackBar);
                               print("addedto cart");
                               _defaultvalue = 1;
+                              widget.setting;
                             });
                           },
                           child: Text("ADD"),
@@ -242,6 +307,7 @@ class _ProductListCardState extends State<ProductListCard> {
                     onChanged: (value) async {
                       setState(() {
                         _defaultvalue = int.parse(value.toString());
+                        widget.setting;
                       });
                       print(value);
                       if (_defaultvalue < 1) {
@@ -249,8 +315,9 @@ class _ProductListCardState extends State<ProductListCard> {
                             .removeCart(widget.uid, widget.vid, widget.foodid);
                         await AllApi()
                             .removeShopCart(widget.uid, widget.vid);
-                        setState(() {});
+                        setState(() { widget.setting;});
                         Fluttertoast.showToast(msg: "Removed From Cart");
+
                       } else {
                         Map<String, String> updateQuantity = new Map();
                         updateQuantity['quantity'] = value.toString();
@@ -281,7 +348,9 @@ class _ProductListCardState extends State<ProductListCard> {
                           foodid: widget.foodid,
                         ),"Update"
                         );
-                        setState(() {});
+                        setState(() {
+                          widget.setting;
+                        });
                       }
                     },
                     decimalPlaces: 0,

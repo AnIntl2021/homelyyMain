@@ -119,7 +119,7 @@ class _UserWalletState extends State<UserWallet> {
     updateWallet(String amount) {}
 
     return Scaffold(
-      appBar: homeAppBar(context, "Wallet", widget.id),
+      appBar: homeAppBar(context, "Wallet", widget.id,""),
       body: SingleChildScrollView(
         child: Column(
           children: [

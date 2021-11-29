@@ -396,6 +396,67 @@ class CartTotalModel {
 }
 
 
+class LifeProductModel {
+
+  String description;
+  String vendorid;
+  String foodid;
+  String name;
+  String image;
+  String price;
+  String category;
+  String subcategory;
+  String cutprice;
+  bool status;
+  String varient;
+
+  LifeProductModel(
+      {
+        this.description,
+        this.vendorid,
+        this.foodid,
+        this.name,
+        this.image,
+        this.price,
+        this.category,
+        this.subcategory,this.cutprice,this.status,this.varient});
+
+  fromJson(Map<String, dynamic> json) {
+    return LifeProductModel(
+      description : json['description'],
+      vendorid : json['vendorid'],
+      foodid : json['foodid'],
+      name : json['name'],
+      image : json['image'],
+      price : json['price'],
+      category : json['category'],
+      subcategory : json['subcategory'],
+      cutprice : json['cutprice'],
+      status : json['status'],
+      varient : json['varient'],
+    );
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['description'] = this.description;
+    data['vendorid'] = this.vendorid;
+    data['foodid'] = this.foodid;
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['price'] = this.price;
+    data['category'] = this.category;
+    data['subcategory'] = this.subcategory;
+    data['cutprice'] = this.cutprice;
+    data['status'] = this.status;
+    data['varient'] = this.varient;
+    return data;
+  }
+}
+
+
 
 
 

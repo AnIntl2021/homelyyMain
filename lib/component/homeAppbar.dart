@@ -6,60 +6,80 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/Screens/Cart/cartshop.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
-AppBar homeAppBar(BuildContext context,String title,String ref) {
+AppBar homeAppBar(BuildContext context,String title,String ref,from) {
   // var uid = FirebaseAuth.instance.currentUser.uid;
   // var addressStream = FirebaseFirestore.instance.collection("users").doc(uid).snapshots();
   
   return AppBar(
     backgroundColor: kgreen,
     elevation: 0,
-    title: Row(
-      children: [
-        IconButton(
-          icon: Icon(FontAwesomeIcons.mapSigns),
-          onPressed: () {
+    title: FutureBuilder(
+      future: SharedPreferences.getInstance(),
+      builder: (context, snapshot) {
+
+        if(!snapshot.hasData){
+
+          return Center(
+            child: CircularProgressIndicator(color: kgreen,),
+          );
+        }
+
+        SharedPreferences pref = snapshot.requireData;
+        var address =  pref.getString("address");
+        var code =  pref.getString("code");
+        print("pref = ${pref.getString("address")}");
 
 
-          },
-        ),
-        Expanded(
-          child: Container(
-            child: InkWell(
-                  onTap: (){
+        return Row(
+          children: [
+            IconButton(
+              icon: Icon(FontAwesomeIcons.mapSigns),
+              onPressed: () {
 
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                          "Farwania Street Kuwait",
-                          style: GoogleFonts.arvo(
-                              fontWeight: FontWeight.bold,fontSize: 12),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+
+              },
+            ),
+            Expanded(
+              child: Container(
+                child: InkWell(
+                      onTap: (){
+
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            address,
+                              style: GoogleFonts.arvo(
+                                  fontWeight: FontWeight.bold,fontSize: 12),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Container(
+                            child: Text(
+                              code,
+                                style: GoogleFonts.arvo(fontSize: 10),
+                              overflow: TextOverflow.ellipsis,
+
+                            ),
+                          ),
+                        ],
                       ),
-                      Container(
-                        child: Text(
-                            "400612",
-                            style: GoogleFonts.arvo(fontSize: 10),
-                          overflow: TextOverflow.ellipsis,
-
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-          ),
-        )
-      ],
+                    )
+              ),
+            )
+          ],
+        );
+      }
     ),
 
     actions: <Widget>[
-      FutureBuilder(
-        future: AllApi().getCartCount(ref,),
+    from == "Product" ? Container():  FutureBuilder(
+        future: Future.wait([AllApi().getCartCount(ref,)]),
         builder: (context, snapshot) {
 
           if(!snapshot.hasData){
@@ -69,7 +89,8 @@ AppBar homeAppBar(BuildContext context,String title,String ref) {
             );
           }
 
-          var cartCount = snapshot.requireData;
+          var cartCount = snapshot.requireData[0];
+
 
           print("councart = $ref $cartCount");
 

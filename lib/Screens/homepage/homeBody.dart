@@ -141,8 +141,11 @@ class _BodyState extends State<Body> {
     final coordinates =  coder.Coordinates(locationdata.latitude, locationdata.longitude);
     var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
-    print("${first.featureName} : ${first.addressLine}");
+    print(" : ${first.addressLine}");
 
+    var pref = await SharedPreferences.getInstance();
+    pref.setString("address", first.addressLine);
+    pref.setString("code", first.postalCode);
     return addresses;
   }
 
@@ -301,8 +304,10 @@ class _BodyState extends State<Body> {
         print("cat = ${catList[0].name}");
         print("users,${usersList.name}");
 
+
+
         return FutureBuilder(
-          future: selectedType == 0 ? AllApi().getRestaurant() :AllApi().getLifestyle() ,
+          future: Future.wait([selectedType == 0 ? AllApi().getRestaurant() :AllApi().getLifestyle() ,getAddress(latlng)]),
           builder: (context, snapshot1) {
             // var restoModel = snapshot.requireData[0];
 
@@ -313,7 +318,7 @@ class _BodyState extends State<Body> {
             }
 
 
-            var restomodel = snapshot1.requireData;
+            var restomodel = snapshot1.requireData[0];
 
             // print("resto ${restomodel[0]}");
 

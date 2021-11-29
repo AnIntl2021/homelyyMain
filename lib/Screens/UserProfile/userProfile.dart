@@ -2,6 +2,7 @@ import 'package:contactus/contactus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/Screens/UserProfile/contactus.dart';
 import 'package:homelyy/Screens/UserProfile/wallet.dart';
 import 'package:homelyy/Screens/login/loginScreen.dart';
+import 'package:homelyy/Screens/orders/orderpage.dart';
 import 'package:homelyy/component/constants.dart';
 
 class UserProfile extends StatefulWidget {
@@ -34,11 +36,11 @@ class _UserProfileState extends State<UserProfile> {
               ],
             ),
             buildListTile("MY ORDERS", FontAwesomeIcons.list, () {
-              // Get.to(
-              //     OrderPage(
-              //   fromScreen: "Home",
-              // )
-              // );
+              Get.to(
+                  OrderPage(
+                  ref: widget.id,
+              )
+              );
             }
             ),
             buildListTile("WALLET", FontAwesomeIcons.wallet, () {
@@ -47,8 +49,13 @@ class _UserProfileState extends State<UserProfile> {
 
             }
             ),
-            buildListTile("REFER & EARN", FontAwesomeIcons.share, () {
-              Fluttertoast.showToast(msg: "Available in Next Update");
+            buildListTile("REFER & EARN", FontAwesomeIcons.share, () async {
+              await FlutterShare.share(
+                  title: 'Download OK App Referal Code: ${widget.id.substring(6,10)}',
+                  text: 'Download OK App Referal Code:  ${widget.id.substring(6,10)}',
+                  linkUrl: 'https://flutter.dev/',
+                  chooserTitle: 'Example Chooser Title'
+              );
             }),
             buildListTile("CONTACT US", FontAwesomeIcons.phone, () {
               Navigator.of(context)
