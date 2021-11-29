@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
+import 'package:homelyy/component/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Screens/homepage/homepage.dart';
@@ -70,6 +71,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     getBoolValuesSF().then((value) {
+
       setState(() {
         isloggedin = value;
       });
@@ -95,7 +97,7 @@ class _MyAppState extends State<MyApp> {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home:  currentUser == null ? LoginScreen() : isloggedin ? Homepage(userRef: currentUser.phoneNumber,) : UserInfoScreen(phone: currentUser.phoneNumber,)
+        home: currentUser == null ? LoginScreen() : isloggedin ? Homepage(userRef: currentUser.phoneNumber,) : UserInfoScreen(phone: currentUser.phoneNumber,)
       ),
     );
   }

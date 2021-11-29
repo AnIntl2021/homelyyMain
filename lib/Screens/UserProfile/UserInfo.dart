@@ -224,6 +224,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           if (_formKey.currentState.validate()) {
                             print("Got all text = user = $userName ref = $refercode email = $userEmail ");
 
+                           // AllApi().getUser(widget.phone.replaceAll("+", "").removeAllWhitespace?? "").then((value){
+                           //
+                           //
+                           // });
+                           //
+
+
                             AllApi().postUser(UserModel(
                                 name:userName ?? "",
                                 address:"",
@@ -236,7 +243,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 wallet:"0",
                               refFrom: refercode
                             )).then((value) async {
-                              if(value == "\"User Not Exist\"" || value == "\"User Already Exist\""){
+                              if(value == "\"User Already Exist\""){
 
                                 Fluttertoast.showToast(msg: "User Already Exist");
                                 Get.snackbar("User Already Exist", "Use another number",snackPosition: SnackPosition.BOTTOM,colorText: Colors.red);

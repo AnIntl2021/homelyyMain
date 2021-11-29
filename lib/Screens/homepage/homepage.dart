@@ -1,6 +1,10 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:homelyy/Screens/UserProfile/userProfile.dart';
 import 'package:homelyy/Screens/Vouchers/vouchers.dart';
@@ -10,6 +14,9 @@ import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
 import 'package:homelyy/component/models.dart';
+import 'package:location/location.dart';
+import 'package:geocoder/geocoder.dart' as coder;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Homepage extends StatefulWidget {
   final String userRef;
@@ -17,6 +24,66 @@ class Homepage extends StatefulWidget {
 
   @override
   _HomepageState createState() => _HomepageState();
+}
+
+Location location = Location() ;
+
+bool _serviceEnabled;
+PermissionStatus _permissionGranted;
+LocationData _locationData;
+var userLatitude = "";
+var userLongitude = "";
+GeoPoint userGeoPoint ;
+
+Future<LocationData>getLocation() async {
+  _serviceEnabled = await location.serviceEnabled();
+  if (!_serviceEnabled) {
+    print("requesting permisssion");
+    _serviceEnabled = await location.requestService();
+
+    if (!_serviceEnabled) {
+      print("requested permisssion $_serviceEnabled");
+      Fluttertoast.showToast(msg: "Please enable location");
+      getLocation();
+    }else{
+      print("requested again permisssion $_serviceEnabled");
+      getLocation();
+
+    }
+  }else{
+
+  }
+
+  _permissionGranted = await location.hasPermission();
+  if (_permissionGranted == PermissionStatus.denied) {
+    _permissionGranted = await location.requestPermission();
+    if (_permissionGranted != PermissionStatus.granted) {
+      Fluttertoast.showToast(msg: "Please enable location");
+      getLocation();
+    }
+  }
+
+
+  return _locationData = await location.getLocation();
+}
+
+Future<List<coder.Address>>getAddress(LocationData locationdata) async {
+  // // From a query
+  // final query = "1600 Amphiteatre Parkway, Mountain View";
+  // var addresses = await Geocoder.local.findAddressesFromQuery(query);
+  // var first = addresses.first;
+  // print("${first.featureName} : ${first.coordinates}");
+
+// From coordinates
+  final coordinates =  coder.Coordinates(locationdata.latitude, locationdata.longitude);
+  var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+  var first = addresses.first;
+  print(" : ${first.addressLine}");
+
+  var pref = await SharedPreferences.getInstance();
+  pref.setString("address", first.addressLine);
+  pref.setString("code", first.postalCode);
+  return addresses;
 }
 
 class _HomepageState extends State<Homepage> {
@@ -45,14 +112,42 @@ class _HomepageState extends State<Homepage> {
 
     return SafeArea(
       child: Scaffold(
-        body:   Scaffold(
-                appBar: homeAppBar(context,"Homelyy",widget.userRef.replaceAll("+", "").removeAllWhitespace,""),
-                bottomNavigationBar: buildBNB(),
-                body: IndexedStack(
-                  index: currentIndex,
-                  children: viewContainer,
-                ),
-              )
+        body:   FutureBuilder(
+          future: getLocation(),
+          builder: (context, snapshot) {
+            if(!snapshot.hasData){
+
+              return Center(
+                child: CircularProgressIndicator(color: kgreen,),
+              );
+            }
+            var locationdata = snapshot.requireData;
+
+
+            return FutureBuilder(
+              future: getAddress(locationdata),
+              builder: (context, snapshot1) {
+
+                if(!snapshot1.hasData){
+
+                  return Center(
+                    child: CircularProgressIndicator(color: kgreen,),
+                  );
+                }
+
+
+                return Scaffold(
+                        appBar: homeAppBar(context,"Homelyy",widget.userRef.replaceAll("+", "").removeAllWhitespace,""),
+                        bottomNavigationBar: buildBNB(),
+                        body: IndexedStack(
+                          index: currentIndex,
+                          children: viewContainer,
+                        ),
+                      );
+              }
+            );
+          }
+        )
 
       ),
     );

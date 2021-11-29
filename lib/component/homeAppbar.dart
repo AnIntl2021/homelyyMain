@@ -32,7 +32,6 @@ AppBar homeAppBar(BuildContext context,String title,String ref,from) {
         var code =  pref.getString("code");
         print("pref = ${pref.getString("address")}");
 
-
         return Row(
           children: [
             IconButton(
