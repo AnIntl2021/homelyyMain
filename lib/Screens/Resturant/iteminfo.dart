@@ -202,6 +202,7 @@ class _ItemInfoState extends State<ItemInfo> {
               child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: widget.category.length,
+                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return FutureBuilder(
                         future: AllApi().getcat(widget.category[index]),
@@ -257,6 +258,7 @@ class _ItemInfoState extends State<ItemInfo> {
                                                       itemCount:
                                                       foodList.length,
                                                       shrinkWrap: true,
+                                                      physics: NeverScrollableScrollPhysics(),
                                                       itemBuilder:
                                                           (context, index) {
                                                         return ProductListCard(

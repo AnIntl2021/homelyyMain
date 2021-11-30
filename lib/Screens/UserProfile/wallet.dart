@@ -8,7 +8,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 
 class UserWallet extends StatefulWidget {

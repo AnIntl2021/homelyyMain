@@ -18,6 +18,7 @@ import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart' as coder;
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class Homepage extends StatefulWidget {
   final String userRef;
   const Homepage({Key key, this.userRef}) : super(key: key);
@@ -94,7 +95,7 @@ class _HomepageState extends State<Homepage> {
     final List<Widget> viewContainer = [
 
       Body(
-
+        // latLogn: _locationData,
         key: Key("Bodyhome"),
         fromMap:  false,
         userref: widget.userRef.replaceAll("+", "").removeAllWhitespace,
@@ -121,6 +122,12 @@ class _HomepageState extends State<Homepage> {
                 child: CircularProgressIndicator(color: kgreen,),
               );
             }
+            if(snapshot.hasError){
+Fluttertoast.showToast(msg: "Error ${snapshot.error}");
+
+            }
+
+
             var locationdata = snapshot.requireData;
 
 
@@ -154,6 +161,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   Widget buildBNB() {
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 35),
       height: 75,
@@ -246,5 +254,6 @@ class _HomepageState extends State<Homepage> {
         ],
       ),
     );
+
   }
 }

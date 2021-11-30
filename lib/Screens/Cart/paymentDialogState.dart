@@ -46,6 +46,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
     super.dispose();
   }
 
+ bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +84,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
           title: Text("SELECT PAYMENT OPTION"),
           backgroundColor: kgreen,
         ),
-        body: Column(
+        body: loading ? Center(child: Image.asset("assets/preloader.gif"),) : Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
@@ -136,6 +137,12 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
                     Fluttertoast.showToast(
                         msg: "Shop is Closed Please Check Order Timings");
                   } else if (shop && paymentvalue == 0) {
+
+
+                    setState(() {
+                      loading = true;
+                    });
+
                     print("paymentvale ${jsonEncode(widget.listofcart).toString()} COD");
 
                       await AllApi().postOrders(jsonEncode(widget.listofcart).toString());
@@ -150,6 +157,9 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
 
                     await AllApi().removeAllCart(future.data.phone, widget.shopname);
                     await AllApi().removeShopCart(future.data.phone, widget.shopname);
+                    setState(() {
+                      loading = false;
+                    });
                     Get.offAll(ThankScreen(ref:future.data.phone));
 
                   } else if (shop && paymentvalue == 1) {

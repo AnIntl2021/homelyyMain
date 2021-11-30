@@ -41,18 +41,20 @@ class _PhoneLoginState extends State<PhoneLogin> {
 
           print("Login Success UID: ${userCredential.user?.uid}");
 
-            AllApi().getUser(widget.phoneNumber).then((value) {
+            AllApi().getUser(widget.phoneNumber.replaceAll("+", "").removeAllWhitespace).then((value) async {
               if(value == "\"User Not Exist\""){
 
                 print("no user");
 
                 Get.to(UserInfoScreen(phone:widget.phoneNumber.replaceAll("+", "").removeAllWhitespace));
               }else{
-                UserModel users = UserModel().fromJson(value);
 
+                UserModel users = UserModel().fromJson(jsonDecode(value));
+                await AllApi().updateLocalUsers(jsonEncode(users));
                 print("getting user ${users.name}");
 
                 Get.off(Homepage(userRef: users.phone,));
+
               }
 
             });
@@ -64,9 +66,14 @@ class _PhoneLoginState extends State<PhoneLogin> {
 
         },
         onLoginFailed: (authException) {
-          print("An error occurred: ${authException.message}");
+          print("An error occurred again: ${authException.message}");
           setState(() {
-            verifyingOTP = false;
+            Fluttertoast.showToast(msg: "Wrong Number").then((value) {
+
+              Get.to(LoginScreen());
+            });
+
+
           });// handle error further if needed
         }, builder: (conyext , controller ) {
         return Scaffold(
@@ -147,10 +154,16 @@ class _PhoneLoginState extends State<PhoneLogin> {
                     await controller.verifyOTP(otp: _enteredOTP);
 
                     // Incorrect OTP
-                    if (!res)
+                    if (!res){
                       Fluttertoast.showToast(msg:
                         "Please enter the correct OTP sent to ${widget.phoneNumber}",
+
                       );
+                      setState(() {
+                        verifyingOTP = false;
+                      });
+                    }
+
                   }
                 },
               ),

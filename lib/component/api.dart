@@ -124,9 +124,9 @@ class AllApi {
     // var list = json.decode(response.body);
     //
 
-    // print(
-    //
-    //     "response for userpost ${response.body}");
+    print(
+
+        "response for userpost ${response.body}");
 
 
 
@@ -192,7 +192,7 @@ class AllApi {
 
   }
 
-  Future getBanner(String type) async {
+  Future<List<BannerModel>> getBanner(String type) async {
     var userGetURL = Uri.parse("${conurl}bannergetapp?type=$type");
     var response = await http.get(userGetURL);
 
@@ -205,7 +205,7 @@ class AllApi {
       return BannerModel().fromJson(e);
     });
 
-    print("bannerList = $newList");
+    print("bannerList = ${newList.toList()[0].image}");
     //
      return newList.toList();
 

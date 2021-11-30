@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/Screens/homepage/homepage.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
@@ -20,53 +21,57 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: homeAppBar(context, "Orders", widget.ref, "Product"),
+    return WillPopScope(
 
-      body: FutureBuilder(
-        future: AllApi().getOrderTotal(widget.ref),
-        builder: (context, snapshot) {
+      onWillPop: () { Get.offAll(Homepage(userRef: widget.ref,)); },
+      child: Scaffold(
+        appBar: homeAppBar(context, "Orders", widget.ref, "Product"),
 
-          if(!snapshot.hasData){
-            return Center(child:CircularProgressIndicator(color: kgreen,));
-          }
+        body: FutureBuilder(
+          future: AllApi().getOrderTotal(widget.ref),
+          builder: (context, snapshot) {
 
-
-
-
-
-          var orderTotalMap = snapshot.requireData;
-          print("gotOrders $orderTotalMap");
-          return ListView.builder(
-            itemCount: orderTotalMap.length,
-            itemBuilder: (context, index) {
-              var shopUid = orderTotalMap[index]["vid"];
-              return Container(
-                  margin: EdgeInsets.only(top: 10, bottom: 10),
-
-                  child: FutureBuilder(
-                      future: AllApi().getVendorbyid(shopUid),
-                    builder: (context, snapshot) {
-
-
-                      if(!snapshot.hasData){
-                        return Center(child:CircularProgressIndicator(color: kgreen,));
-                      }
-
-                      var shopName = snapshot.requireData.name;
-
-                      return createOrderListItem(
-                          orderId: "245",status: orderTotalMap[index]["status"],payment: "COD",total: orderTotalMap[index]["total"],date: orderTotalMap[index]["date"],time: orderTotalMap[index]["status"]
-                          ,subTotal: orderTotalMap[index]["subtotal"],wallet: "20",discount: orderTotalMap[index]["discount"],savings: orderTotalMap[index]["savings"],reason: "reason",shopname:orderTotalMap[index]["vid"]
-                          ,name:orderTotalMap[index]["name"],deliveryname:shopName,deliverynumber:"1234567890",uid:orderTotalMap[index]["ref"]
-                      );
-                    }
-                  ),
-              );
+            if(!snapshot.hasData){
+              return Center(child:CircularProgressIndicator(color: kgreen,));
             }
-          );
-        }
-      )
+
+
+
+
+
+            var orderTotalMap = snapshot.requireData;
+            print("gotOrders $orderTotalMap");
+            return ListView.builder(
+              itemCount: orderTotalMap.length,
+              itemBuilder: (context, index) {
+                var shopUid = orderTotalMap[index]["vid"];
+                return Container(
+                    margin: EdgeInsets.only(top: 10, bottom: 10),
+
+                    child: FutureBuilder(
+                        future: AllApi().getVendorbyid(shopUid),
+                      builder: (context, snapshot) {
+
+
+                        if(!snapshot.hasData){
+                          return Center(child:CircularProgressIndicator(color: kgreen,));
+                        }
+
+                        var shopName = snapshot.requireData.name;
+
+                        return createOrderListItem(
+                            orderId: "245",status: orderTotalMap[index]["status"],payment: "COD",total: orderTotalMap[index]["total"],date: orderTotalMap[index]["date"],time: orderTotalMap[index]["status"]
+                            ,subTotal: orderTotalMap[index]["subtotal"],wallet: "20",discount: orderTotalMap[index]["discount"],savings: orderTotalMap[index]["savings"],reason: "reason",shopname:orderTotalMap[index]["vid"]
+                            ,name:orderTotalMap[index]["name"],deliveryname:shopName,deliverynumber:"1234567890",uid:orderTotalMap[index]["ref"]
+                        );
+                      }
+                    ),
+                );
+              }
+            );
+          }
+        )
+      ),
     );
   }
 
