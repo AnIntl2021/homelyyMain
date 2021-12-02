@@ -648,6 +648,7 @@ class AllApi {
   }
 
   Future getVendorbyid(String vid) async {
+
     var userGetURL = Uri.parse("${conurl}vendorgetid?vendorid=$vid");
     var response = await http.get(userGetURL);
 
