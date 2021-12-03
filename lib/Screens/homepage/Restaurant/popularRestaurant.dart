@@ -47,10 +47,10 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
             padding:  EdgeInsets.all(8.0),
 
             child: RestaurentListCard(
-              category:widget.category,
+              category:widget.listofRestaurant[index]["category"],
               title: widget.listofRestaurant[index]["name"],
 
-              type:widget.listofRestaurant[index]["type"],
+              type: widget.listofRestaurant[index]["type"],
 
               img:
               widget.type == "0" ?"https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/Restaurant-logo-design-webp.webp?alt=media&token=847033e4-0e4b-4987-ac99-253736f10487"
@@ -58,7 +58,7 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
 
               discount: "15",
 
-              cuisine: widget.category == "0" ? ["Italian", "Mughlai", "Chinese"] : ["Half Tshirts","Full Tshirts,""Jeans"],
+              cuisine: widget.listofRestaurant[index]["cuisine"],
 
               area: widget.listofRestaurant[index]["address"],
 

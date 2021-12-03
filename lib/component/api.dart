@@ -104,6 +104,57 @@ class AllApi {
 
   }
 
+  Future getRestaurantbyCat(String catid) async {
+
+    var userGetURL = Uri.parse("${conurl}restobycat?lat=19.219305858205278&lng=72.980145824379&catid=$catid");
+
+    var response = await http.get(userGetURL);
+
+    var list = json.decode(response.body);
+
+    //
+    // print("list ${
+    // response.body
+    // }");
+    // print("listconvertedd ${
+    //     list
+    // }");
+    // Map json = jsonDecode(jsonString);
+    //
+    // String user = jsonEncode(UserModel().fromJson(json));
+
+
+
+    return list;
+
+  }
+
+  Future getLifestylebyCat(String catid) async {
+
+    var userGetURL = Uri.parse("${conurl}lifestylebycat?lat=19.219305858205278&lng=72.980145824379&catid=$catid");
+
+    var response = await http.get(userGetURL);
+
+    var list = json.decode(response.body);
+
+    //
+    // print("list ${
+    // response.body
+    // }");
+    // print("listconvertedd ${
+    //     list
+    // }");
+    // Map json = jsonDecode(jsonString);
+    //
+    // String user = jsonEncode(UserModel().fromJson(json));
+
+
+
+    return list;
+
+  }
+
+
   Future postUser(UserModel usermodel) async {
 
     var userGetURL = Uri.parse("${conurl}userpost?ref=${usermodel.phone}");
@@ -253,6 +304,7 @@ class AllApi {
 
     var userGetURL = Uri.parse("${conurl}addCart?ref=${cartModel.ref}&vendorid=${cartModel.vendorid}&foodid=${cartModel.foodid}");
 
+    print("cartFoofid=");
     var response = type == "Add" ?await http.put(userGetURL,body: {
 
       "img" : cartModel.img,
@@ -654,9 +706,11 @@ class AllApi {
 
     var list = json.decode(response.body);
 
-    print("vebndordetaukl ${userGetURL}");
-
-      return LifeProductModel().fromJson(list);
+    print("vebndordetaukl1 ${userGetURL}");
+    print("venodr nmaem ${list}");
+   // var checkMap = LifeProductModel().fromJson(list);
+    print("checkmap ${list["name"]}");
+    return list["name"];
 
 
   }

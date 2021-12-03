@@ -43,10 +43,14 @@ Future<LocationData>getLocation() async {
     _serviceEnabled = await location.requestService();
 
     if (!_serviceEnabled) {
+
       print("requested permisssion $_serviceEnabled");
       Fluttertoast.showToast(msg: "Please enable location");
       getLocation();
+
     }else{
+
+
       print("requested again permisssion $_serviceEnabled");
       getLocation();
 
@@ -56,6 +60,7 @@ Future<LocationData>getLocation() async {
   }
 
   _permissionGranted = await location.hasPermission();
+
   if (_permissionGranted == PermissionStatus.denied) {
     _permissionGranted = await location.requestPermission();
     if (_permissionGranted != PermissionStatus.granted) {
@@ -66,6 +71,7 @@ Future<LocationData>getLocation() async {
 
 
   return _locationData = await location.getLocation();
+
 }
 
 Future<List<coder.Address>>getAddress(LocationData locationdata) async {

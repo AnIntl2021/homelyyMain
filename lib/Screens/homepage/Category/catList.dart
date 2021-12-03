@@ -3,77 +3,97 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:homelyy/Screens/homepage/Restaurant/restaurantBYCat.dart';
+import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/models.dart';
 
 class CatCard extends StatelessWidget {
   final String title, shopName, svgSrc, price;
   final List catList;
+  final String catid,uid;
+  final int type;
+  final String count;
   const CatCard({
      Key key,
      this.title,
      this.shopName,
      this.svgSrc,
-     this.price, this.catList,
+     this.price, this.catList, this.catid, this.type, this.uid, this.count,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // This size provide you the total height and width of the screen
     Size size = MediaQuery.of(context).size;
-    return Container(
-      decoration: BoxDecoration(
-        // color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        // boxShadow: [
-        //   BoxShadow(
-        //     offset: Offset(0, 4),
-        //     blurRadius: 20,
-        //     color: Colors.yellow.withOpacity(0.32),
-        //   ),
-        // ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: (){
-            // Get.to(RestoSearchFilterScreen(titlebar: title,category: title,));
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(1.0),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: 110,
-                  margin: EdgeInsets.only(bottom: 15),
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: kgreen,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Image.network(
-                    svgSrc,
-                    height: 70,
-                    width: 70,
+    return FutureBuilder(
+        future: type == 0 ? AllApi().getRestaurantbyCat(title) :AllApi().getLifestylebyCat(title),
+      builder: (context, snapshot) {
 
-                    // size.width * 0.18 means it use 18% of total width
-                  ),
+        if(!snapshot.hasData){
+          return Center(
+              child:CircularProgressIndicator(color: kgreen,)
+          );
+        }
+
+
+        var restomodel = snapshot.requireData;
+
+        return Container(
+          decoration: BoxDecoration(
+            // color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            // boxShadow: [
+            //   BoxShadow(
+            //     offset: Offset(0, 4),
+            //     blurRadius: 20,
+            //     color: Colors.yellow.withOpacity(0.32),
+            //   ),
+            // ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: (){
+                Get.to(RestaurantByCat(type: type,catid: title,uid: uid,));
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      width: 110,
+                      margin: EdgeInsets.only(bottom: 15),
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: kgreen,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.network(
+                        svgSrc,
+                        height: 70,
+                        width: 70,
+
+                        // size.width * 0.18 means it use 18% of total width
+                      ),
+                    ),
+                    Text(title),
+                    SizedBox(height: 10),
+                    // Text(
+                    //   shopName,
+                    //   style: TextStyle(fontSize: 12),
+                    // ),
+                    Text(
+                     type == 0 ? "${restomodel.length.toString()} Restaurant" : "${restomodel.length.toString()} Shops",
+                      // style: TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                    ),
+                  ],
                 ),
-                Text(title),
-                SizedBox(height: 10),
-                // Text(
-                //   shopName,
-                //   style: TextStyle(fontSize: 12),
-                // ),
-                Text(
-                 title !="Jeans" ? "56 Restaurant" : "56 Shops",
-                  // style: TextStyle(fontSize: 16, color: Colors.purple.shade400),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      }
     );
   }
 }
@@ -81,9 +101,11 @@ class CatCard extends StatelessWidget {
 class CatList extends StatefulWidget {
   final String streamTitle;
   final List<CatModel> catList;
+  final int type;
+  final String uid;
   const CatList({
      Key key,
-     this.streamTitle, this.catList,
+     this.streamTitle, this.catList, this.type, this.uid,
   }) : super(key: key);
 
   @override
@@ -115,39 +137,11 @@ class _CatListState extends State<CatList> {
           return CatCard(
             title: widget.catList[index].name,
             svgSrc: img, price: '', shopName: '', key: Key("cartList"),
+            catid:widget.catList[index].catid,
+              type:widget.type,uid: widget.uid,count: widget.catList.length.toString(),
             // price: "\â‚¹ $price",
           );
         });
 
-      //
-      // StreamBuilder<QuerySnapshot>(
-      //   stream: collection,
-      //   builder: (context, snapshot) {
-      //     if (!snapshot.hasData) {
-      //       return Center(
-      //         child: CircularProgressIndicator(
-      //           backgroundColor: Colors.green,
-      //         ),
-      //       );
-      //     }
-      //     var product = snapshot.data.docs;
-      //     return ListView.builder(
-      //         shrinkWrap: true,
-      //         scrollDirection: Axis.horizontal,
-      //         itemCount: product.length,
-      //         itemBuilder: (context, index) {
-      //           var title = product[index]["title"];
-      //           // var catogry = product[index]["catogry"];
-      //           // var collection = product[index]["collection"];
-      //           // var recipe = product[index]["recipe"];
-      //           var img = product[index]["img"];
-      //           // var price = product[index]["price"];
-      //           return CatCard(
-      //             title: title,
-      //             svgSrc: img, price: '', shopName: '', key: Key("cartList"),
-      //             // price: "\â‚¹ $price",
-      //           );
-      //         });
-      //   });
   }
 }

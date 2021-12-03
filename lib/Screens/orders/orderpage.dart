@@ -57,8 +57,8 @@ class _OrderPageState extends State<OrderPage> {
                           return Center(child:CircularProgressIndicator(color: kgreen,));
                         }
 
-                        var shopName = snapshot.requireData.name;
-
+                        var shopName = snapshot.requireData;
+                        print("venodr nmaem1 ${snapshot.requireData}");
                         return createOrderListItem(
                             orderId: "245",status: orderTotalMap[index]["status"],payment: "COD",total: orderTotalMap[index]["total"],date: orderTotalMap[index]["date"],time: orderTotalMap[index]["status"]
                             ,subTotal: orderTotalMap[index]["subtotal"],wallet: "20",discount: orderTotalMap[index]["discount"],savings: orderTotalMap[index]["savings"],reason: "reason",shopname:orderTotalMap[index]["vid"]

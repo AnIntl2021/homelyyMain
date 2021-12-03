@@ -46,6 +46,7 @@ class TitlePriceRating extends StatelessWidget {
                         isReadOnly: true,
                         borderColor: kgreen,
                         rating: rating,
+                        color: Colors.yellow.shade800,
                       ),
                       SizedBox(width: 10),
                       Text("$numOfReviews reviews"),

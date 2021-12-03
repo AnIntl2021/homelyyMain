@@ -197,84 +197,6 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
 
 
-      // widget.fromMap
-      //     ? print("fromMap")
-      //     : gorLocation ? print("location Already Have") : getLocation().then((latlng) {
-      //   latlng == null
-      //       ? print("latlng is null")
-      //       : getAddress(latlng).then((address) {
-      //     print("latlng is not null $latlng");
-      //     myLocation =
-      //         GeoFirePoint(latlng.latitude, latlng.longitude);
-      //     userAddressFeature = address.first.featureName;
-      //     userAddress = address.first.addressLine;
-      //
-      //     addressfromFirestore == null
-      //         ? FirebaseFirestore.instance
-      //         .collection("users")
-      //         .doc(uid)
-      //         .update({
-      //       "location": myLocation.data,
-      //       "address": userAddress,
-      //       "area": address.first.featureName
-      //     })
-      //         : addressfromFirestore == userAddressFeature
-      //         ? print("its same")
-      //         : showDialog(
-      //       context: context,
-      //       barrierDismissible: false,
-      //       // dialog is dismissible with a tap on the barrier
-      //       builder: (BuildContext context) {
-      //         return AlertDialog(
-      //           title: Text(
-      //               'Seems like your location is changed \n Do you want to update it now ?'),
-      //           actions: [
-      //             ElevatedButton(
-      //               child: Text('Use Previous Location'),
-      //               onPressed: () {
-      //                 setState(() {
-      //                   gorLocation = true;
-      //                 });
-      //                 Get.back();
-      //               },
-      //               style: ButtonStyle(
-      //                 backgroundColor:
-      //                 MaterialStateProperty.all(
-      //                     Colors.red),
-      //               ),
-      //             ),
-      //             ElevatedButton(
-      //               child: Text('Use Updated Location'),
-      //               onPressed: () {
-      //                 FirebaseFirestore.instance
-      //                     .collection("users")
-      //                     .doc(uid)
-      //                     .update({
-      //                   "location": myLocation.data,
-      //                   "address": userAddress,
-      //                   "area": address.first.featureName
-      //                 }).then((value) {
-      //                   setState(() {
-      //                     gorLocation = true;
-      //                   });
-      //                   Get.back();
-      //                   Fluttertoast.showToast(
-      //                       msg: "Location updated");
-      //                 });
-      //               },
-      //               style: ButtonStyle(
-      //                 backgroundColor:
-      //                 MaterialStateProperty.all(
-      //                     Colors.green),
-      //               ),
-      //             ),
-      //           ],
-      //         );
-      //       },
-      //     );
-      //   });
-      // });
-
     print("userGetttinghomwebody ${widget.userref.replaceAll("+", "").removeAllWhitespace}");
     print("location $myLocation $userAddress");
 
@@ -308,6 +230,7 @@ class _BodyState extends State<Body> {
 
         return FutureBuilder(
           future: Future.wait([selectedType == 0 ? AllApi().getRestaurant() :AllApi().getLifestyle() ,getAddress(latlng)]),
+
           builder: (context, snapshot1) {
             // var restoModel = snapshot.requireData[0];
 
@@ -436,6 +359,7 @@ class _BodyState extends State<Body> {
                               child: CatList(
                                 catList: catList,
                                 streamTitle: selectedType == 0 ? catTitle : "Jeans", key: Key("catList"),
+                                type : selectedType,uid: usersList.ref,
                               ),
                             ),
                           ],
@@ -476,7 +400,7 @@ class _BodyState extends State<Body> {
                           ],
                         )
                     ),
-                              PopularRestaurantList(type:selectedType.toString(),category:["CAT84","CAT480"],userGeoPoint : userGeoPoint,status: true,listofRestaurant :restomodel,uid: usersList.ref.replaceAll("+", "").removeAllWhitespace,)
+                              PopularRestaurantList(type:selectedType.toString(),userGeoPoint : userGeoPoint,status: true,listofRestaurant :restomodel,uid: usersList.ref.replaceAll("+", "").removeAllWhitespace,)
                     // Divider(thickness: 2,),
                     // Expanded(child: RestroList(userGeoPoint : userGeoPoint,status: true,)),
                     // Expanded(child: RestroList(userGeoPoint : userGeoPoint,status: false,)),
