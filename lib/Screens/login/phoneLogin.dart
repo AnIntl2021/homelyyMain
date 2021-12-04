@@ -28,6 +28,7 @@ class PhoneLogin extends StatefulWidget {
 }
 
 class _PhoneLoginState extends State<PhoneLogin> {
+
   var _enteredOTP;
   var userName;
   bool verifyingOTP = false;
@@ -109,22 +110,28 @@ class _PhoneLoginState extends State<PhoneLogin> {
         phoneNumber: widget.phoneNumber,
         timeOutDuration: const Duration(seconds: 60),
         onLoginSuccess: (userCredential, autoVerified) async {
+
           print(autoVerified
               ? "OTP was fetched automatically"
               : "OTP was verified manually");
 
           print("Login Success UID: ${userCredential.user?.uid}");
 
+          Fluttertoast.showToast(msg: "Login Success UID: ${userCredential.user?.uid}");
+
             AllApi().getUser(widget.phoneNumber.replaceAll("+", "").removeAllWhitespace).then((value) async {
               if(value == "\"User Not Exist\""){
 
                 print("no user");
-               var latlng = await getLocation();
-               await getAddress(latlng);
+                var latlng = await getLocation();
+
+                await getAddress(latlng);
 
                 Get.to(UserInfoScreen(phone:widget.phoneNumber.replaceAll("+", "").removeAllWhitespace));
 
-              }else{
+              }
+              else{
+
                 var latlng = await getLocation();
                 await getAddress(latlng);
                 UserModel users = UserModel().fromJson(jsonDecode(value));
@@ -145,11 +152,11 @@ class _PhoneLoginState extends State<PhoneLogin> {
         },
         onLoginFailed: (authException) {
           print("An error occurred again: ${authException.message}");
-          setState(() {
-            Fluttertoast.showToast(msg: "Wrong Number").then((value) {
-
+          Fluttertoast.showToast(msg: "An error occurred again: ${authException.message}").then((value) {
+            setState(() {
               Get.to(LoginScreen());
-            });
+          });
+
 
 
           });// handle error further if needed
@@ -229,7 +236,17 @@ class _PhoneLoginState extends State<PhoneLogin> {
 
 
                     final res =
-                    await controller.verifyOTP(otp: _enteredOTP);
+                    await controller.verifyOTP(otp: _enteredOTP).then((value) {
+                      Fluttertoast.showToast(msg:
+                      "Something went wrong $value",
+
+                      ).then((value) {
+                        setState(() {
+                          verifyingOTP = false;
+                        });
+                      });
+
+                    });
 
                     // Incorrect OTP
                     if (!res){
