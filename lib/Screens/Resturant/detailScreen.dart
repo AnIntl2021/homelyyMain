@@ -1,8 +1,11 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:homelyy/Screens/Resturant/body.dart';
+import 'package:homelyy/Screens/UserProfile/userProfile.dart';
+import 'package:homelyy/Screens/homepage/homepage.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
 
@@ -36,14 +39,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
     //     .doc(uid)
     //     .collection("cart")
     //     .snapshots();
-    return Body(
-        category:widget.category,
-        type: widget.type,
-        title: widget.shoptitle,
-        rating: widget.rating,
-        numReviews: widget.numReview,
-        cuisine: widget.cuisine, key: Key("shopBody"),id: widget.shopUid, opentiming: widget.opentiming, closetiming: widget.closetiming, shopname: widget.shoptitle ,
-      uid:widget.uid.replaceAll("+", "").removeAllWhitespace
-      );
+    return WillPopScope(
+
+      onWillPop: () { Get.to(Homepage(userRef: widget.uid,)); },
+      child: Body(
+          category:widget.category,
+          type: widget.type,
+          title: widget.shoptitle,
+          rating: widget.rating,
+          numReviews: widget.numReview,
+          cuisine: widget.cuisine, key: Key("shopBody"),id: widget.shopUid, opentiming: widget.opentiming, closetiming: widget.closetiming, shopname: widget.shoptitle ,
+        uid:widget.uid.replaceAll("+", "").removeAllWhitespace
+        ),
+    );
   }
 }

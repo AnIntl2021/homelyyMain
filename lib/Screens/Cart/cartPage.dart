@@ -697,7 +697,7 @@ class _CartPageState extends State<CartPage> {
                                   Row(
                                     children: [
                                       Text(
-                                        cutprice == "" ? "" :"Rs.${(int.parse(cutprice)).toString()}",
+                                        cutprice == "" ? "" :"\$ ${(int.parse(cutprice)).toString()}",
                                         style:
                                         TextStyle(fontSize: 16, color: Colors.purple.shade400),
                                       ),
@@ -705,7 +705,7 @@ class _CartPageState extends State<CartPage> {
                                       SizedBox(width: 10,),
 
                                       Text(
-                                        "Rs.${price}",
+                                        "\$ ${price}",
                                         style:
                                         discountVisibility ? TextStyle(fontSize: 14, color: Colors.blueGrey,decoration: TextDecoration.lineThrough,) : TextStyle(fontSize: 16, color: Colors.purple.shade400),
                                       ),
@@ -844,7 +844,7 @@ class _CartPageState extends State<CartPage> {
                 child: Container(
                   width: 60,
                   height: 25,
-                  child: Center(child: Text("₹ ${discount} OFF",style: GoogleFonts.arvo(fontSize: 12,color: Colors.white),)),
+                  child: Center(child: Text("\$ ${discount} OFF",style: GoogleFonts.arvo(fontSize: 12,color: Colors.white),)),
                   decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6)), color: Colors.green,),
                 )),
           )
@@ -1022,7 +1022,7 @@ class _CartPageState extends State<CartPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "\₹",
+                "\$",
                 style: CustomTextStyle.textFormFieldBlack
                     .copyWith(color: Colors.deepOrange.shade700, fontSize: 14),
               ),

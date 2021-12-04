@@ -156,7 +156,7 @@ class _ProductListCardState extends State<ProductListCard> {
                               child: Text(
                                 widget.cutprice == ""
                                     ? ""
-                                    : "Rs.${widget.cutprice}",
+                                    : "\$ ${widget.cutprice}",
                                 style: TextStyle(fontSize: 16, color: kgreen),
                               ),
                             ),
@@ -164,7 +164,7 @@ class _ProductListCardState extends State<ProductListCard> {
                               width: 10,
                             ),
                             Text(
-                              "Rs.${widget.price}",
+                              "\$ ${widget.price}",
                               style: widget.discountVisibility
                                   ? TextStyle(
                                       fontSize: 14,
@@ -372,7 +372,7 @@ class _ProductListCardState extends State<ProductListCard> {
                       height: 25,
                       child: Center(
                           child: Text(
-                        "₹ ${widget.discount} OFF",
+                        "\$ ${widget.discount} OFF",
                         style:
                             GoogleFonts.arvo(fontSize: 12, color: Colors.white),
                       )),

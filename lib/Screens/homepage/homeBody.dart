@@ -13,6 +13,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/component/api.dart';
+import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/discountCard.dart';
 import 'package:homelyy/component/models.dart';
 import 'package:homelyy/component/searchBoxx.dart';
@@ -207,7 +208,7 @@ class _BodyState extends State<Body> {
 
         if(!snapshot.hasData){
           return Center(
-            child:CircularProgressIndicator()
+            child:CircularProgressIndicator(color: kgreen,)
           );
         }
 

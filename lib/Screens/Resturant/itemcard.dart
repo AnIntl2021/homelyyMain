@@ -80,7 +80,7 @@ class _ItemCardState extends State<ItemCard> {
                     Visibility(
                       visible: widget.cutprice == "" ? false : true,
                       child: Text(
-                        widget.cutprice == "" ? "" : "Rs.${widget
+                        widget.cutprice == "" ? "" : "\$ ${widget
                             .cutprice}",
                         style:
                         TextStyle(
@@ -89,7 +89,7 @@ class _ItemCardState extends State<ItemCard> {
                     ),
                     SizedBox(width: 10,),
                     Text(
-                      "Rs.${widget.price}",
+                      "\$ ${widget.price}",
                       style:
                       widget.discountVisibility
                           ? TextStyle(fontSize: 14,
@@ -242,7 +242,7 @@ class _ItemCardState extends State<ItemCard> {
             child: Container(
               width: 60,
               height: 25,
-              child: Center(child: Text("₹ ${widget.discount} OFF",
+              child: Center(child: Text("\$ ${widget.discount} OFF",
                 style: GoogleFonts.arvo(
                     fontSize: 12, color: Colors.white),)),
               decoration: BoxDecoration(

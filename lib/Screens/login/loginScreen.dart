@@ -1,11 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/Screens/login/phoneLogin.dart';
 import 'package:homelyy/Screens/registeration/regestration.dart';
 import 'package:homelyy/component/constants.dart';
+import 'package:location/location.dart';
+import 'package:geocoder/geocoder.dart' as coder;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -19,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var codeerrorText;
   var phoneError = false;
   var codeError = false;
+
 
   @override
   Widget build(BuildContext context) {

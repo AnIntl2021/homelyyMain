@@ -569,7 +569,7 @@ class AllApi {
 
 
   Future postOrders(String orders) async {
-
+  print("allordersSending $orders");
     var userGetURL = Uri.parse("${conurl}addOrders");
 
     var response = await http.post(userGetURL,body: {

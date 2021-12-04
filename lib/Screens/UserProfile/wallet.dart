@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
+import 'package:homelyy/component/models.dart';
 
 
 class UserWallet extends StatefulWidget {
@@ -119,118 +121,133 @@ class _UserWalletState extends State<UserWallet> {
 
     return Scaffold(
       appBar: homeAppBar(context, "Wallet", widget.id,""),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: FutureBuilder(
+        future: AllApi().getLocalUsers(),
+        builder: (context, snapshot) {
+
+          if(!snapshot.hasData){
+            return Center(
+                child:CircularProgressIndicator(color: kgreen,)
+            );
+          }
+          UserModel usersList =  snapshot.requireData;
+
+
+
+          return SingleChildScrollView(
+            child: Column(
               children: [
-                Text("GrocPod WALLET"),
+                Container(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text("GrocPod WALLET"),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          addClicked
+                              ? openCheckout(
+                                  phone: "9653137263",
+                                  id: DateTime.now()
+                                      .millisecondsSinceEpoch
+                                      .toString(),
+                                  amount: int.parse(enteredAmount),
+                                  email: "arsalank28@gmail.com")
+                              : setState(() {
+                                  addClicked = true;
+                                });
+                        },
+                        child: Text(
+                          "ADD MONEY",
+                          style: GoogleFonts.arvo(color: Colors.white),
+                        ))
+                  ],
+                )),
+                Visibility(
+                  visible: addClicked,
+                  child: Container(
+                    margin: EdgeInsets.all(15),
+                    child: TextFormField(
+                      // The validator receives the text that the user has entered.
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: "Enter Amount",
+                        labelText: "Amount to Add to Wallet",
+                        // hintStyle: TextStyle(color: Colors.white30),
+                        labelStyle: TextStyle(color: kgreen),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: kgreen),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: kgreen),
+                        ),
+
+                        // errorText: isdiscountAvailable ? erroText : null
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter amount';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          enteredAmount = value;
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          enteredAmount = value;
+                        });
+                      },
+                    ),
+                  ),
+                ),
                 SizedBox(
-                  width: 10,
+                  height: 40,
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      addClicked
-                          ? openCheckout(
-                              phone: "9653137263",
-                              id: DateTime.now()
-                                  .millisecondsSinceEpoch
-                                  .toString(),
-                              amount: int.parse(enteredAmount),
-                              email: "arsalank28@gmail.com")
-                          : setState(() {
-                              addClicked = true;
-                            });
-                    },
-                    child: Text(
-                      "ADD MONEY",
-                      style: GoogleFonts.arvo(color: Colors.white),
-                    ))
+                Container(
+                  color: Colors.white,
+                  child:  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "Available Balance",
+                        style: GoogleFonts.arvo(color: Colors.black),
+                      ),
+                      Text(
+                        "\$ ${usersList.wallet}",
+                        style: GoogleFonts.arvo(color: Colors.blueGrey),
+                      ),
+                    ],
+                  )
+
+                  // FutureBuilder(
+                  //     future: future,
+                  //     builder: (context,
+                  //         AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                  //             future) {
+                  //       return Row(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //         children: [
+                  //           Text(
+                  //             "Available Balance",
+                  //             style: GoogleFonts.arvo(color: Colors.black),
+                  //           ),
+                  //           Text(
+                  //             "₹ ${future.data.get("wallet")}",
+                  //             style: GoogleFonts.arvo(color: Colors.blueGrey),
+                  //           ),
+                  //         ],
+                  //       );
+                  //     }),
+                )
               ],
-            )),
-            Visibility(
-              visible: addClicked,
-              child: Container(
-                margin: EdgeInsets.all(15),
-                child: TextFormField(
-                  // The validator receives the text that the user has entered.
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: "Enter Amount",
-                    labelText: "Amount to Add to Wallet",
-                    // hintStyle: TextStyle(color: Colors.white30),
-                    labelStyle: TextStyle(color: kgreen),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: kgreen),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: kgreen),
-                    ),
-
-                    // errorText: isdiscountAvailable ? erroText : null
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter amount';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    setState(() {
-                      enteredAmount = value;
-                    });
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      enteredAmount = value;
-                    });
-                  },
-                ),
-              ),
             ),
-            SizedBox(
-              height: 40,
-            ),
-            Container(
-              color: Colors.white,
-              child:  Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    "Available Balance",
-                    style: GoogleFonts.arvo(color: Colors.black),
-                  ),
-                  Text(
-                    "₹100}",
-                    style: GoogleFonts.arvo(color: Colors.blueGrey),
-                  ),
-                ],
-              )
-
-              // FutureBuilder(
-              //     future: future,
-              //     builder: (context,
-              //         AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
-              //             future) {
-              //       return Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //         children: [
-              //           Text(
-              //             "Available Balance",
-              //             style: GoogleFonts.arvo(color: Colors.black),
-              //           ),
-              //           Text(
-              //             "₹ ${future.data.get("wallet")}",
-              //             style: GoogleFonts.arvo(color: Colors.blueGrey),
-              //           ),
-              //         ],
-              //       );
-              //     }),
-            )
-          ],
-        ),
+          );
+        }
       ),
     );
   }

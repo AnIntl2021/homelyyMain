@@ -354,7 +354,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "\₹",
+                "\$",
                 style: CustomTextStyle.textFormFieldBlack
                     .copyWith(color: Colors.deepOrange.shade700, fontSize: 14),
               ),
@@ -555,7 +555,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                       Text(
                                         cutprice == ""
                                             ? ""
-                                            : "Rs.${(int.parse(cutprice)).toString()}",
+                                            : "\$ ${(int.parse(cutprice)).toString()}",
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.purple.shade400),
@@ -564,7 +564,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         width: 10,
                                       ),
                                       Text(
-                                        "Rs.${price}",
+                                        "\$ ${price}",
                                         style: discountVisibility
                                             ? TextStyle(
                                                 fontSize: 14,
@@ -601,7 +601,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   height: 25,
                   child: Center(
                       child: Text(
-                    "₹ ${discount} OFF",
+                    "\$ ${discount} OFF",
                     style: GoogleFonts.arvo(fontSize: 12, color: Colors.white),
                   )),
                   decoration: BoxDecoration(

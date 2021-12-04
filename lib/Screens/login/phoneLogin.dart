@@ -6,12 +6,16 @@ import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:get/get.dart';
 import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
 import 'package:homelyy/Screens/homepage/homepage.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/models.dart';
+import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'loginScreen.dart';
+import 'package:geocoder/geocoder.dart' as coder;
 
 class PhoneLogin extends StatefulWidget {
   final String phoneNumber;
@@ -28,6 +32,76 @@ class _PhoneLoginState extends State<PhoneLogin> {
   var userName;
   bool verifyingOTP = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+
+
+  Location location = Location() ;
+
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  LocationData _locationData;
+  var userLatitude = "";
+  var userLongitude = "";
+
+  Future<LocationData>getLocation() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      print("requesting permisssion");
+      _serviceEnabled = await location.requestService();
+
+      if (!_serviceEnabled) {
+
+        print("requested permisssion $_serviceEnabled");
+        Fluttertoast.showToast(msg: "Please enable location");
+        getLocation();
+
+      }else{
+
+
+        print("requested again permisssion $_serviceEnabled");
+        getLocation();
+
+      }
+    }else{
+
+    }
+
+    _permissionGranted = await location.hasPermission();
+
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        Fluttertoast.showToast(msg: "Please enable location");
+        getLocation();
+      }
+    }
+
+    var latlmng = await location.getLocation();
+    return latlmng ;
+
+  }
+
+  Future<List<coder.Address>>getAddress(LocationData locationdata) async {
+    // // From a query
+    // final query = "1600 Amphiteatre Parkway, Mountain View";
+    // var addresses = await Geocoder.local.findAddressesFromQuery(query);
+    // var first = addresses.first;
+    // print("${first.featureName} : ${first.coordinates}");
+
+// From coordinates
+    final coordinates =  coder.Coordinates(locationdata.latitude, locationdata.longitude);
+    var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    print(" : ${first.addressLine}");
+
+    var pref = await SharedPreferences.getInstance();
+    pref.setString("address", first.addressLine);
+    pref.setString("code", first.postalCode);
+    return addresses;
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -45,10 +119,14 @@ class _PhoneLoginState extends State<PhoneLogin> {
               if(value == "\"User Not Exist\""){
 
                 print("no user");
+               var latlng = await getLocation();
+               await getAddress(latlng);
 
                 Get.to(UserInfoScreen(phone:widget.phoneNumber.replaceAll("+", "").removeAllWhitespace));
-              }else{
 
+              }else{
+                var latlng = await getLocation();
+                await getAddress(latlng);
                 UserModel users = UserModel().fromJson(jsonDecode(value));
                 await AllApi().updateLocalUsers(jsonEncode(users));
                 print("getting user ${users.name}");
