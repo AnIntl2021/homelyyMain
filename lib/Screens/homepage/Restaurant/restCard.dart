@@ -134,7 +134,7 @@ class RestaurentListCard extends StatelessWidget {
                                 DecorationImage(
                                   image:
                                   NetworkImage(
-                                      img,
+                                      "${imageURL}vendor/${img}",
 
                                   ),
                                   fit: BoxFit.fill,

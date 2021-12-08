@@ -83,22 +83,46 @@ class _PhoneLoginState extends State<PhoneLogin> {
   }
 
   Future<List<coder.Address>>getAddress(LocationData locationdata) async {
-    // // From a query
+
+    // From a query
+
+
+
     // final query = "1600 Amphiteatre Parkway, Mountain View";
+
+
+
     // var addresses = await Geocoder.local.findAddressesFromQuery(query);
+
+
+
     // var first = addresses.first;
+
+
+
     // print("${first.featureName} : ${first.coordinates}");
 
-// From coordinates
+
+
+    // From coordinates
+
+
     final coordinates =  coder.Coordinates(locationdata.latitude, locationdata.longitude);
+
     var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+
     var first = addresses.first;
+
     print(" : ${first.addressLine}");
 
     var pref = await SharedPreferences.getInstance();
+
     pref.setString("address", first.addressLine);
+
     pref.setString("code", first.postalCode);
+
     return addresses;
+
   }
 
 
@@ -135,7 +159,7 @@ class _PhoneLoginState extends State<PhoneLogin> {
                 var latlng = await getLocation();
                 await getAddress(latlng);
                 UserModel users = UserModel().fromJson(jsonDecode(value));
-                await AllApi().updateLocalUsers(jsonEncode(users));
+                await AllApi().updateLocalUsers(jsonEncode(users), users.phone);
                 print("getting user ${users.name}");
 
                 Get.off(Homepage(userRef: users.phone,));

@@ -267,7 +267,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
                                 UserModel users = UserModel().fromJson(result);
 
-                                AllApi().updateLocalUsers(jsonEncode(users));
+                                AllApi().updateLocalUsers(jsonEncode(users),users.phone.replaceAll("+", "").removeAllWhitespace);
 
                                 print("getting user ${users.phone.replaceAll("+", "")}");
 

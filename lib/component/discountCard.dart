@@ -49,9 +49,12 @@ class _DiscountCardState extends State<DiscountCard> {
               height: 166,
               child: CarouselSlider.builder(
                 slideBuilder: (index){
-                  var sliderimage = widget.snapshot[index];
+                  var sliderimage = widget.snapshot[index].image;
+
+
+
                   return Container(
-                    child: Image.network("https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2Ffood_banner.webp?alt=media&token=b54e6725-4af0-4783-84d8-e2bcf21e20d3", loadingBuilder: (BuildContext context,
+                    child: Image.network("${imageURL}banner/$sliderimage", loadingBuilder: (BuildContext context,
                         Widget child,
                         ImageChunkEvent loadingProgress) {
                       if (loadingProgress == null) {

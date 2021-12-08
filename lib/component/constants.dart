@@ -6,3 +6,5 @@ const kblackcolor = Color(0xFF000000);
 const conurl = "https://webhooks.mongodb-realm.com/api/client/v2.0/app/application-0-aveoz/service/Homelyy/incoming_webhook/";
 
 const shareduserdata = "userData";
+
+const imageURL = "https://thehomelyy.com/images/";

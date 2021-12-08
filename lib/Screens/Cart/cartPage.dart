@@ -191,10 +191,10 @@ class _CartPageState extends State<CartPage> {
                             )),
                         footer(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
                             int.parse(total), 20, int.parse(savings),cartList),
-                        discountApplied
-                            ? discountCard(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
-                            int.parse(total), int.parse(savings))
-                            : appliedDiscount(),
+                        // discountApplied
+                        //     ? discountCard(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
+                        //     int.parse(total), int.parse(savings))
+                        //     : appliedDiscount(),
                         // walletApplied
                         //     ? walletCard(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
                         //     int.parse(total), availablewalletfinal, 10)
@@ -584,7 +584,7 @@ class _CartPageState extends State<CartPage> {
                 margin: EdgeInsets.only(top: 10, bottom: 10),
 
                 child: createCartListItem(
-                  "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/images%2Fpizza-png-free-download-20.png?alt=media&token=5dd88c43-5798-4413-bd29-d2b8089b3e30",
+                  cartList[index].img,
                   cartList[index].title,
                   "requirement",
                   cartList[index].price,
@@ -643,7 +643,7 @@ class _CartPageState extends State<CartPage> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(14)),
                       color: Colors.white,
-                      image: DecorationImage(image: NetworkImage(img))),
+                      image: DecorationImage(image: NetworkImage("${imageURL}products/$img"))),
                 ),
                 Expanded(
                   child: Container(

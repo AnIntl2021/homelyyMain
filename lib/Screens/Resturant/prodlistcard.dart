@@ -97,7 +97,7 @@ class _ProductListCardState extends State<ProductListCard> {
                           visible: true,
                           child: Card(
                             child: Image.network(
-                              "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/Burger-webp-Clipart%20(1).webp?alt=media&token=7ccdbf05-e37d-4da4-b784-f6882ac0084e",
+                              widget.img,
                             ),
                           ),
                         ),

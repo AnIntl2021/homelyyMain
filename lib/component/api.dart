@@ -13,7 +13,7 @@ import 'constants.dart';
 
 class AllApi {
 
-  Future<UserModel> updateLocalUsers(String jsonString) async {
+  Future<UserModel> updateLocalUsers(String jsonString,String phone) async {
 
     SharedPreferences pref = await SharedPreferences.getInstance();
 
@@ -22,6 +22,7 @@ class AllApi {
     // String user = jsonEncode(UserModel().fromJson(json));
 
     await pref.setString('userData', jsonString);
+    await pref.setString('phone', phone);
     await pref.setBool('loggedin', true);
 
 
@@ -170,6 +171,8 @@ class AllApi {
       "token" : usermodel.token,
       "wallet" : usermodel.wallet,
     "email" : usermodel.email,
+      "country":usermodel.country,
+      "password": usermodel.password
     });
 
     // var list = json.decode(response.body);

@@ -97,38 +97,28 @@ class _BodyState extends State<Body> {
   var userLongitude = "";
   GeoPoint userGeoPoint ;
 
-  Future<LocationData>getLocation() async {
+  Future<LocationData> getLocation() async {
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
-      print("requesting permisssion");
       _serviceEnabled = await location.requestService();
-
       if (!_serviceEnabled) {
-        print("requested permisssion $_serviceEnabled");
-        Fluttertoast.showToast(msg: "Please enable location");
-        getLocation();
-      }else{
-        print("requested again permisssion $_serviceEnabled");
-        getLocation();
-        setState(() {
-
-        });
+        Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
+        return null;
       }
-    }else{
-
     }
 
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
       if (_permissionGranted != PermissionStatus.granted) {
-         Fluttertoast.showToast(msg: "Please enable location");
-         getLocation();
+        Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
+        return null;
       }
     }
 
+    _locationData = await location.getLocation();
 
-   return _locationData = await location.getLocation();
+    return _locationData;
   }
 
   Future<List<coder.Address>>getAddress(LocationData locationdata) async {
@@ -233,12 +223,15 @@ class _BodyState extends State<Body> {
           future: Future.wait([selectedType == 0 ? AllApi().getRestaurant() :AllApi().getLifestyle() ,getAddress(latlng)]),
 
           builder: (context, snapshot1) {
+
             // var restoModel = snapshot.requireData[0];
 
             if(!snapshot1.hasData){
+
               return Center(
                   child:CircularProgressIndicator()
               );
+
             }
 
 

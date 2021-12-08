@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:homelyy/Screens/UserProfile/userProfile.dart';
 import 'package:homelyy/Screens/Vouchers/vouchers.dart';
@@ -36,43 +37,69 @@ var userLatitude = "";
 var userLongitude = "";
 GeoPoint userGeoPoint ;
 
-Future<LocationData>getLocation() async {
+// Future<LocationData>getLocation() async {
+//   _serviceEnabled = await location.serviceEnabled();
+//   if (!_serviceEnabled) {
+//     print("requesting permisssion");
+//     _serviceEnabled = await location.requestService();
+//
+//     if (!_serviceEnabled) {
+//
+//       print("requested permisssion $_serviceEnabled");
+//       Fluttertoast.showToast(msg: "Please enable location");
+//       getLocation();
+//
+//     }else{
+//
+//
+//       print("requested again permisssion $_serviceEnabled");
+//       getLocation();
+//
+//     }
+//   }else{
+//
+//   }
+//
+//   _permissionGranted = await location.hasPermission();
+//
+//   if (_permissionGranted == PermissionStatus.denied) {
+//     _permissionGranted = await location.requestPermission();
+//     if (_permissionGranted != PermissionStatus.granted) {
+//       Fluttertoast.showToast(msg: "Please enable location");
+//       getLocation();
+//     }
+//   }
+//
+//
+//   return _locationData = await location.getLocation();
+//
+// }
+
+Future<LocationData> getLocation() async {
   _serviceEnabled = await location.serviceEnabled();
   if (!_serviceEnabled) {
-    print("requesting permisssion");
     _serviceEnabled = await location.requestService();
-
     if (!_serviceEnabled) {
-
-      print("requested permisssion $_serviceEnabled");
-      Fluttertoast.showToast(msg: "Please enable location");
-      getLocation();
-
-    }else{
-
-
-      print("requested again permisssion $_serviceEnabled");
-      getLocation();
-
+      Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
+      return null;
     }
-  }else{
-
   }
 
   _permissionGranted = await location.hasPermission();
-
   if (_permissionGranted == PermissionStatus.denied) {
     _permissionGranted = await location.requestPermission();
     if (_permissionGranted != PermissionStatus.granted) {
-      Fluttertoast.showToast(msg: "Please enable location");
-      getLocation();
+      Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
+      return null;
     }
   }
 
+  _locationData = await location.getLocation();
 
-  return _locationData = await location.getLocation();
-
+  return _locationData;
 }
+
+
 
 Future<List<coder.Address>>getAddress(LocationData locationdata) async {
   // // From a query
@@ -91,6 +118,7 @@ Future<List<coder.Address>>getAddress(LocationData locationdata) async {
   pref.setString("address", first.addressLine);
   pref.setString("code", first.postalCode);
   return addresses;
+
 }
 
 class _HomepageState extends State<Homepage> {
@@ -129,7 +157,9 @@ class _HomepageState extends State<Homepage> {
               );
             }
             if(snapshot.hasError){
-Fluttertoast.showToast(msg: "Error ${snapshot.error}");
+
+                Fluttertoast.showToast(msg: "Error ${snapshot.error}",toastLength: Toast.LENGTH_LONG);
+
 
             }
 
@@ -147,7 +177,10 @@ Fluttertoast.showToast(msg: "Error ${snapshot.error}");
                     child: CircularProgressIndicator(color: kgreen,),
                   );
                 }
+                if(!snapshot1.hasError){
 
+                  Fluttertoast.showToast(msg: "Error ${snapshot1.error}",toastLength: Toast.LENGTH_LONG);
+                }
 
                 return Scaffold(
                         appBar: homeAppBar(context,"Homelyy",widget.userRef.replaceAll("+", "").removeAllWhitespace,""),

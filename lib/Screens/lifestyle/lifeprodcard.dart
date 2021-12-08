@@ -77,6 +77,7 @@ class _LifeProdCardState extends State<LifeProdCard> {
           itemCount: prod.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
+
             return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child:Stack(children: [
@@ -100,9 +101,8 @@ class _LifeProdCardState extends State<LifeProdCard> {
                           child: Column(
                             children: <Widget>[
                               Image.network(
-                                "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Product%2F%20scaled_image_picker3022407072641909862.jpg?alt=media&token=719412fe-688a-46ba-b1d5-686ffc9fb825"
-                                ,fit: BoxFit.fill,width: 90,),
-                              Text("Floral Tshirt"),
+                                "${imageURL}/products/${prod[index].image}",fit: BoxFit.fill,width: 90,),
+                              Text(prod[index].name),
                               SizedBox(height: 3),
                               // Text(
                               //   shopName,
@@ -112,13 +112,13 @@ class _LifeProdCardState extends State<LifeProdCard> {
                               Row(
                                 children: [
                                   Text(
-                                    "Rs.${100}",
+                                    "Rs.${prod[index].cutprice}",
                                     style:
                                     TextStyle(fontSize: 16, color: Colors.purple.shade400),
                                   ),
                                   SizedBox(width: 10,),
                                   Text(
-                                    "Rs.${200}",
+                                    "Rs.${prod[index].price}",
                                     style:
                                     TextStyle(fontSize: 14, color: Colors.blueGrey,decoration: TextDecoration.lineThrough,),
                                   ),
@@ -337,7 +337,7 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                                                                 .format(DateTime.now()),
                                                                                             ref: widget.uid.toString().replaceAll(" ", ""),
                                                                                             vendorid: widget.vid.toString().replaceAll(" ", ""),
-                                                                                            foodid: prod1[index].foodid.toString().replaceAll(" ", ""),
+                                                                                            foodid: prod1[index].productid.toString().replaceAll(" ", ""),
                                                                                           ),"Add");
                                                                                           await AllApi().postShopCart(CartModel(
                                                                                             shop: widget.shopName,

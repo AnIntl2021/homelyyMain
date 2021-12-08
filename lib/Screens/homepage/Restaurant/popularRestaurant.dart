@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:homelyy/Screens/homepage/Restaurant/restCard.dart';
+import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/models.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
@@ -52,9 +53,7 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
 
               type: widget.listofRestaurant[index]["type"],
 
-              img:
-              widget.type == "0" ?"https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/Restaurant-logo-design-webp.webp?alt=media&token=847033e4-0e4b-4987-ac99-253736f10487"
-                  : "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2Fpuma.jpg?alt=media&token=7790fda5-ee3c-4898-801c-f8a46ef93baa",
+              img:widget.listofRestaurant[index]["image"],
 
               discount: "15",
 

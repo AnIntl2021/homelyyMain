@@ -87,6 +87,8 @@ class  UserModel {
   String token;
   String wallet;
   String refFrom;
+  String country;
+  String password;
 
   UserModel(
       {
@@ -100,7 +102,9 @@ class  UserModel {
         this.phone,
         this.token,
         this.wallet,
-        this.refFrom
+        this.refFrom,
+        this.country,
+        this.password
       });
 
   fromJson(Map<String, dynamic> json) {
@@ -130,7 +134,9 @@ class  UserModel {
       token : json['token'],
 
       wallet : json['wallet'],
-      refFrom: json["refForm"]
+      refFrom: json["refForm"],
+      country: json["country"],
+        password: json["password"]
 
     );
 
@@ -150,6 +156,8 @@ class  UserModel {
     data['wallet'] = this.wallet;
     data['email'] = this.email;
      data["refForm"] =refFrom;
+     data["country"]= country;
+    data["password"]= password;
     print("jsonUser ${json.encode(data)}");
     return json.encode(data);
   }
@@ -282,6 +290,8 @@ class CartModel {
   String time;
   String vendorid;
   String foodid;
+  String productid;
+
 
 
   CartModel(
@@ -302,7 +312,9 @@ class CartModel {
         this.time,
         this.ref,
         this.vendorid,
-        this.foodid
+        this.foodid,
+        this.productid
+
       });
 
   fromJson(Map<String, dynamic> json) {
@@ -320,7 +332,8 @@ class CartModel {
         discount : json['discount'],
         shop : json['shop'],
         date : json['date'],
-    time : json['time'],
+      productid : json["productid"],
+      time : json['time'],
     ref : json['ref'],
     vendorid : json['vendorid'],
     foodid : json["foodid"],
@@ -348,6 +361,7 @@ class CartModel {
     data['ref'] = this.ref;
     data['vendorid'] = this.vendorid;
     data["foodid"] = this.foodid;
+    data["productid"] = this.productid;
     return data;
   }
 
@@ -409,6 +423,7 @@ class LifeProductModel {
   String cutprice;
   bool status;
   String varient;
+  String productid;
 
   LifeProductModel(
       {
@@ -419,7 +434,7 @@ class LifeProductModel {
         this.image,
         this.price,
         this.category,
-        this.subcategory,this.cutprice,this.status,this.varient});
+        this.subcategory,this.cutprice,this.status,this.varient,this.productid});
 
   fromJson(Map<String, dynamic> json) {
     return LifeProductModel(
@@ -434,6 +449,7 @@ class LifeProductModel {
       cutprice : json['cutprice'],
       status : json['status'],
       varient : json['varient'],
+        productid:json["productid"]
     );
 
   }
@@ -452,6 +468,7 @@ class LifeProductModel {
     data['cutprice'] = this.cutprice;
     data['status'] = this.status;
     data['varient'] = this.varient;
+    data["productid"] = this.productid;
     return data;
   }
 }

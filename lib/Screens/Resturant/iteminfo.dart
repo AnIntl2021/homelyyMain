@@ -272,8 +272,7 @@ class _ItemInfoState extends State<ItemInfo> {
                                                                 .description,
                                                             stock: true,
                                                             tagVisibility: true,
-                                                            img:
-                                                            "https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/pizza_combo.webp?alt=media&token=ab1aa2b7-d1f3-4c30-8015-9c8d70161d37",
+                                                            img:"${imageURL}products/${foodList[index].image}",
                                                             press: () {},
                                                             discount: (int.parse(
                                                                 "100") -

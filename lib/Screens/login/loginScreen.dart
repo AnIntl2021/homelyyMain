@@ -1,14 +1,22 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
+import 'package:homelyy/Screens/homepage/homepage.dart';
 import 'package:homelyy/Screens/login/phoneLogin.dart';
+import 'package:homelyy/Screens/login/signup.dart';
 import 'package:homelyy/Screens/registeration/regestration.dart';
+import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
+import 'package:homelyy/component/models.dart';
 import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart' as coder;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,10 +29,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   var phoneText = TextEditingController();
+  var passwordController = TextEditingController();
+  var passwordErrorText;
+  var passwordError;
   var phoneerrorText;
   var codeerrorText;
   var phoneError = false;
   var codeError = false;
+  bool obsecureText = true;
 
 
   @override
@@ -32,7 +44,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
+
         padding: EdgeInsets.all(16),
+
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -54,7 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 10,
                 ),
 
-                buildTextField("Enter Phone Number with country code","Phone",phoneText),
+                buildTextField("Enter Registered Phone Number","Phone",phoneText),
+                buildTextField("Enter Password","Password",passwordController),
 
                 SizedBox(
                   height: 30,
@@ -67,41 +82,101 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       print("+${phoneText.text}");
 
-                      if (phoneText.text.length > 10) {
-                        Navigator.pushAndRemoveUntil<dynamic>(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PhoneLogin(
-                                phoneNumber: "+${phoneText.text}", key: Key("1223"),
-                                // phoneNumber: "+91${phoneText.text}", key: Key("1223"),
-                              )),
-                              (route) =>
-                          false, //if you want to disable back feature set to false
-                        );
+                      if (phoneText.text.length == 10 && passwordController.text.isNotEmpty) {
+
+                        AllApi().getUser(phoneText.text.replaceAll("+", "").removeAllWhitespace).then((value) async {
+
+                          if(value == "\"User Not Exist\""){
+
+                            Fluttertoast.showToast(msg: "User Not Exist Please Signup");
+
+                          }
+                          else{
+
+                            UserModel users = UserModel().fromJson(jsonDecode(value));
+
+
+                            if(users.password == passwordController.text){
+
+                              var latlng = await getLocation();
+                              await getAddress(latlng);
+
+                              await AllApi().updateLocalUsers(
+                                  jsonEncode(users), users.phone);
+                              print("getting user ${users.name}");
+
+                              Get.off(Homepage(
+                                userRef: users.phone,
+                              ));
+
+                            }else{
+
+                              Fluttertoast.showToast(msg: "Incorrect Password");
+
+                            }
+                          }
+
+                        });
+
                       } else {
+
                         setState(() {
                           phoneError = true;
                           phoneerrorText = "Enter Correct Mobile Number with country code";
                         });
+
                       }
                     },
-                    child: Text("Send OTP"))
+                    child: Text("Login")),
+                SizedBox(
+                  height: 10,
+                ),
+                InkWell(
+                  onTap: (){
+                    Get.to(SignUp());
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Dont have an Account ? "),
+                      Text(
+                        "Signup",
+                        style: GoogleFonts.arvo(color: Colors.red, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+
   }
+
+
 
   Widget buildTextField(String hint,String label,TextEditingController controller) {
     return TextField(
       style: TextStyle(color:kdarkgreen),
       controller: controller,
-      keyboardType: TextInputType.number,
+      keyboardType: label == "Phone"?TextInputType.number:TextInputType.text,
+      obscureText: label == "Phone" ? false : obsecureText,
       textAlign: TextAlign.center,
+
       // autofocus: true,
       decoration: InputDecoration(
+        suffixIcon: label == "Phone"? null :IconButton(onPressed: (){
+          setState(() {
+
+            obsecureText ?obsecureText = false :obsecureText = true ;
+
+          });
+        }, icon: Icon(FontAwesomeIcons.eye,size: 18,)),
         hintText: hint,
         labelText: label,
         hintStyle: TextStyle(),

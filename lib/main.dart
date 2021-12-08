@@ -58,14 +58,16 @@ class _MyAppState extends State<MyApp> {
 
   var currentUser = FirebaseAuth.instance.currentUser;
   var isloggedin = false;
+  var phone ;
 
-
-  Future<bool> getBoolValuesSF() async {
+  Future<List> getBoolValuesSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return bool
     bool boolValue = prefs.getBool('loggedin') ?? false;
+    var userphone = prefs.getString("phone");
+    print("Get Lcocal User ${userphone}");
     print("boolvalue $boolValue");
-    return boolValue;
+    return [boolValue,userphone];
   }
 
   @override
@@ -73,7 +75,8 @@ class _MyAppState extends State<MyApp> {
     getBoolValuesSF().then((value) {
 
       setState(() {
-        isloggedin = value;
+        isloggedin = value[0];
+        phone = value[1];
       });
     });
     super.initState();
@@ -97,7 +100,7 @@ class _MyAppState extends State<MyApp> {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: currentUser == null ? LoginScreen() : isloggedin ? Homepage(userRef: currentUser.phoneNumber,) : LoginScreen()
+        home: isloggedin ? Homepage(userRef: phone,) : LoginScreen()
       ),
     );
   }
