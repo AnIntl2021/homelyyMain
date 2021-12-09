@@ -38,6 +38,56 @@ class _LoginScreenState extends State<LoginScreen> {
   var codeError = false;
   bool obsecureText = true;
 
+  Location location = Location() ;
+
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  LocationData _locationData;
+  var userLatitude = "";
+  var userLongitude = "";
+
+  Future<LocationData> getLocation() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
+        return null;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
+        return null;
+      }
+    }
+
+    _locationData = await location.getLocation();
+
+    return _locationData;
+  }
+
+
+
+  Future<List<coder.Address>>getAddress() async {
+    getLocation().then((value) async {
+      final coordinates =  coder.Coordinates(value.latitude, value.longitude);
+      var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = addresses.first;
+      print(" : ${first.addressLine}");
+
+      var pref = await SharedPreferences.getInstance();
+      pref.setString("address", first.addressLine);
+      pref.setString("code", first.postalCode);
+      return addresses;
+    });
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,8 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             if(users.password == passwordController.text){
 
-                              var latlng = await getLocation();
-                              await getAddress(latlng);
+                              await getAddress();
 
                               await AllApi().updateLocalUsers(
                                   jsonEncode(users), users.phone);

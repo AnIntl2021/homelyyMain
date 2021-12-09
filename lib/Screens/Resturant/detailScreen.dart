@@ -41,7 +41,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     //     .snapshots();
     return WillPopScope(
 
-      onWillPop: () { Get.to(Homepage(userRef: widget.uid,)); },
+      onWillPop: () { Get.offAll(Homepage(userRef: widget.uid,)); },
       child: Body(
           category:widget.category,
           type: widget.type,

@@ -1,4 +1,5 @@
 
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/Screens/Cart/cartshop.dart';
 import 'package:homelyy/Screens/UserProfile/userProfile.dart';
 import 'package:homelyy/Screens/Vouchers/vouchers.dart';
 import 'package:homelyy/Screens/homepage/homeBody.dart';
@@ -77,6 +80,7 @@ GeoPoint userGeoPoint ;
 
 Future<LocationData> getLocation() async {
   _serviceEnabled = await location.serviceEnabled();
+
   if (!_serviceEnabled) {
     _serviceEnabled = await location.requestService();
     if (!_serviceEnabled) {
@@ -147,53 +151,122 @@ class _HomepageState extends State<Homepage> {
 
     return SafeArea(
       child: Scaffold(
-        body:   FutureBuilder(
-          future: getLocation(),
-          builder: (context, snapshot) {
-            if(!snapshot.hasData){
+          appBar:
+          AppBar(title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset("assets/homelyy.png",width: 50,height: 50,color: Colors.white,),
+              SizedBox(width: 20,),
+              // Text("Homelyy",style: GoogleFonts.arvo(),),
+            ],
+          ),   backgroundColor: kgreen,
 
-              return Center(
-                child: CircularProgressIndicator(color: kgreen,),
-              );
-            }
-            if(snapshot.hasError){
+            elevation: 0,
+            actions: <Widget>[
+              FutureBuilder(
+                  future: Future.wait([AllApi().getCartCount(widget.userRef,)]),
+                  builder: (context, snapshot) {
 
-                Fluttertoast.showToast(msg: "Error ${snapshot.error}",toastLength: Toast.LENGTH_LONG);
+                    if(!snapshot.hasData){
 
-
-            }
-
-
-            var locationdata = snapshot.requireData;
-
-
-            return FutureBuilder(
-              future: getAddress(locationdata),
-              builder: (context, snapshot1) {
-
-                if(!snapshot1.hasData){
-
-                  return Center(
-                    child: CircularProgressIndicator(color: kgreen,),
-                  );
-                }
-                if(!snapshot1.hasError){
-
-                  Fluttertoast.showToast(msg: "Error ${snapshot1.error}",toastLength: Toast.LENGTH_LONG);
-                }
-
-                return Scaffold(
-                        appBar: homeAppBar(context,"Homelyy",widget.userRef.replaceAll("+", "").removeAllWhitespace,""),
-                        bottomNavigationBar: buildBNB(),
-                        body: IndexedStack(
-                          index: currentIndex,
-                          children: viewContainer,
-                        ),
+                      return Center(
+                        child: CircularProgressIndicator(color: kgreen,),
                       );
-              }
-            );
-          }
-        )
+                    }
+
+                    var cartCount = snapshot.requireData[0];
+
+
+
+                    return Container(
+                      margin: EdgeInsets.only(right: 10),
+                      child: Stack(children: [
+                        IconButton(
+                            icon: Icon(
+                              FontAwesomeIcons.opencart,
+                              color: kdarkgreen,
+                            ),
+                            onPressed: () {
+
+
+                              Get.to(CartShopPage(ref:widget.userRef));
+
+                            }),
+                        Positioned(
+                          right: 0,
+                          child: Badge(
+                            badgeContent: Text(
+                              cartCount,
+                              style: GoogleFonts.arvo(color: Colors.white),
+                            ),
+                            // child: Icon(
+                            //   FontAwesomeIcons.opencart,
+                            //   color: Colors.white,
+                            // ),
+                          ),
+                        )
+                      ]),
+                    );
+                  }
+              ),
+            ],
+
+          ),
+
+          // homeAppBar(context,"Homelyy",widget.userRef.replaceAll("+", "").removeAllWhitespace,""),
+          bottomNavigationBar: buildBNB(),
+          body: IndexedStack(
+            index: currentIndex,
+            children: viewContainer,
+          ),
+
+        // FutureBuilder(
+        //   future: getLocation(),
+        //   builder: (context, snapshot) {
+        //     if(!snapshot.hasData){
+        //
+        //       return Center(
+        //         child: CircularProgressIndicator(color: kgreen,),
+        //       );
+        //     }
+        //     if(snapshot.hasError){
+        //
+        //         Fluttertoast.showToast(msg: "Error ${snapshot.error}",toastLength: Toast.LENGTH_LONG);
+        //
+        //
+        //     }
+        //
+        //
+        //     var locationdata = snapshot.requireData;
+        //
+        //
+        //     return FutureBuilder(
+        //       future: getAddress(locationdata),
+        //       builder: (context, snapshot1) {
+        //
+        //         if(!snapshot1.hasData){
+        //
+        //           return Center(
+        //             child: CircularProgressIndicator(color: kgreen,),
+        //           );
+        //         }
+        //         if(!snapshot1.hasError){
+        //
+        //           Fluttertoast.showToast(msg: "Error ${snapshot1.error}",toastLength: Toast.LENGTH_LONG);
+        //         }
+        //
+        //         return Scaffold(
+        //                 appBar: homeAppBar(context,"Homelyy",widget.userRef.replaceAll("+", "").removeAllWhitespace,""),
+        //                 bottomNavigationBar: buildBNB(),
+        //                 body: IndexedStack(
+        //                   index: currentIndex,
+        //                   children: viewContainer,
+        //                 ),
+        //               );
+        //       }
+        //     );
+        //   }
+        // )
 
       ),
     );
