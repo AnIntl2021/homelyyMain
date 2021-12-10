@@ -11,6 +11,7 @@ import 'package:homelyy/Screens/Cart/thankspage.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/models.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import 'customTextStyle.dart';
 
@@ -29,7 +30,7 @@ class PaymentDiaolog extends StatefulWidget {
 class _PaymentDiaologState extends State<PaymentDiaolog> {
   var paymentvalue;
 
-
+  Razorpay _razorpay;
   var shop = true;
 
   var paymentSuccess = false;
@@ -38,15 +39,21 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
 
   @override
   void initState() {
+
     super.initState();
+
   }
 
   @override
   void dispose() {
+
     super.dispose();
+    _razorpay.clear();
   }
 
  bool loading = false;
+
+  UserModel data ;
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +69,99 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
     var listoforders = [];
 
 
+
+
+    //razorpay
+    void openCheckout({String phone, String id, String email}) async {
+
+      var options = {
+        'key': 'rzp_test_u8g13PFaeMNHNf',
+        'amount': int.parse(widget.total) * 100,
+        'name': 'Homelyy',
+        'description': 'Order no: $id}',
+        'prefill': {'contact': '$phone', 'email': '$email'},
+        'external': {
+          'wallets': ['paytm']
+        }
+      };
+
+      try {
+
+        _razorpay.open(options);
+
+      } catch (e) {
+        debugPrint('Error: e');
+      }
+
+    }
+
+    Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
+
+
+
+      setState(() {
+        loading = true;
+      });
+
+      print("paymentvale ${jsonEncode(widget.listofcart).toString()} COD");
+
+      await AllApi().postOrders(jsonEncode(widget.listofcart).toString());
+
+      await AllApi().addOrderTotal(data, CartTotalModel(
+        discount:widget.discount,
+        total: widget.total,
+        savings: widget.savings,
+        subTotal: widget.subTotal,
+        ref: "",
+      ), widget.shopname, widget.address);
+
+      await AllApi().removeAllCart(data.phone, widget.shopname);
+      await AllApi().removeShopCart(data.phone, widget.shopname);
+      setState(() {
+        loading = false;
+      });
+      Get.offAll(ThankScreen(ref:data.phone));
+
+    }
+
+    void _handlePaymentError(PaymentFailureResponse response) {
+      Fluttertoast.showToast(
+          msg: "ERROR: " + response.code.toString() + " - " + response.message,
+          toastLength: Toast.LENGTH_SHORT);
+      setState(() {
+        paymentSuccess = false;
+      });
+    }
+
+    void _handleExternalWallet(ExternalWalletResponse response) {
+      Fluttertoast.showToast(
+          msg: "EXTERNAL_WALLET: " + response.walletName,
+          toastLength: Toast.LENGTH_SHORT);
+      setState(() {
+        paymentSuccess = true;
+      });
+    }
+
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+
+
+
+
+
+
+
+
+
+
+
     return
       FutureBuilder<UserModel>(
       future: AllApi().getLocalUsers(),
       builder: (context,future){
+
         if(!future.hasData){
           return Center(child: CircularProgressIndicator(color: kgreen,));
         }
@@ -164,19 +260,16 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
 
                   } else if (shop && paymentvalue == 1) {
 
-                    // setState(() {
-                    //   eachProduct = product;
-                    // });
-                    // openCheckout(
-                    //     id: phoneNumber,
-                    //     phone: phoneNumber,
-                    //     email: email);
-                    // // paymentSuccess ?sendOrder(shopOrderStream,shopTotalStream,name, phoneNumber, email, product,
-                    // //                           listoforders, orderStream,
-                    // //           orderTotalStream, adminOrderStream, adminTotalStream,"ONLINE",widget.shopname)
-                    // //     :  Fluttertoast.showToast(
-                    // //     msg: "Payment Processing",
-                    // //     toastLength: Toast.LENGTH_SHORT);
+                    setState(() {
+                      data = future.data;
+                    });
+
+
+                    openCheckout(
+                        id: phoneNumber,
+                        phone: phoneNumber,
+                        email: email);
+
 
                   }
                 },

@@ -9,6 +9,7 @@ import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/models.dart';
 
 class CheckOutPage extends StatefulWidget {
+
   final String total,subTotal,  wallet,  discount,
     delivery, savings,shopname,shopnumber,shopaddress;
   final List<CartModel> listofcart;
@@ -17,11 +18,12 @@ class CheckOutPage extends StatefulWidget {
   const CheckOutPage({Key key, this.total, this.subTotal, this.wallet, this.discount, this.delivery, this.savings, this.shopname, this.shopnumber, this.shopaddress, this.listofcart}) : super(key: key);
   @override
   _CheckOutPageState createState() => _CheckOutPageState();
+
 }
 
 
 class _CheckOutPageState extends State<CheckOutPage> {
-  var uid = FirebaseAuth.instance.currentUser.uid.toString();
+  // var uid = FirebaseAuth.instance.currentUser.uid.toString();
   int value = 0;
 // int paymentvalue = 0;
   var addressText = TextEditingController();

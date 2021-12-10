@@ -19,17 +19,22 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
     importance: Importance.max,
     playSound: true,
     sound: RawResourceAndroidNotificationSound('notification'),
-    enableLights: true);
+    enableLights: true
+);
+
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 
 Future<void> firebaseMessgaingBackgroundHandler(RemoteMessage message) async {
+
   await Firebase.initializeApp();
   print("a message bg : ${message.messageId}");
+
 }
 
 void main() async{
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -45,6 +50,7 @@ void main() async{
     sound: true,
   );
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatefulWidget {
@@ -61,6 +67,7 @@ class _MyAppState extends State<MyApp> {
   var phone ;
 
   Future<List> getBoolValuesSF() async {
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return bool
     bool boolValue = prefs.getBool('loggedin') ?? false;
@@ -68,10 +75,12 @@ class _MyAppState extends State<MyApp> {
     print("Get Lcocal User ${userphone}");
     print("boolvalue $boolValue");
     return [boolValue,userphone];
+
   }
 
   @override
   void initState() {
+
     getBoolValuesSF().then((value) {
 
       setState(() {
@@ -79,7 +88,9 @@ class _MyAppState extends State<MyApp> {
         phone = value[1];
       });
     });
+
     super.initState();
+
   }
 
   @override
