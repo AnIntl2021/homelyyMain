@@ -2,6 +2,7 @@
 
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -103,23 +104,35 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
         loading = true;
       });
 
-      print("paymentvale ${jsonEncode(widget.listofcart).toString()} COD");
 
-      await AllApi().postOrders(jsonEncode(widget.listofcart).toString());
+
+      print("paymentvale ${jsonEncode(widget.listofcart).toString()} COD");
+      int min = 100000; //min and max values act as your 6 digit range
+      int max = 999999;
+      var randomizer = new Random();
+      var rNum = min + randomizer.nextInt(max - min);
+
+      await Future.forEach(widget.listofcart,(CartModel element) {
+        AllApi().postOrders(element, rNum.toString());
+
+
+      });
+
+      // await AllApi().postOrders(jsonEncode(widget.listofcart).toString());
 
       await AllApi().addOrderTotal(data, CartTotalModel(
         discount:widget.discount,
         total: widget.total,
         savings: widget.savings,
         subTotal: widget.subTotal,
-        ref: "",
-      ), widget.shopname, widget.address);
+        ref: data.ref,
+      ), widget.shopname, widget.address,rNum.toString());
 
       await AllApi().removeAllCart(data.phone, widget.shopname);
       await AllApi().removeShopCart(data.phone, widget.shopname);
-      setState(() {
-        loading = false;
-      });
+      // setState(() {
+      //   loading = false;
+      // });
       Get.offAll(ThankScreen(ref:data.phone));
 
     }
@@ -241,7 +254,19 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
 
                     print("paymentvale ${jsonEncode(widget.listofcart).toString()} COD");
 
-                      await AllApi().postOrders(jsonEncode(widget.listofcart).toString());
+
+
+                    print("paymentvale ${jsonEncode(widget.listofcart).toString()} COD");
+                    int min = 100000; //min and max values act as your 6 digit range
+                    int max = 999999;
+                    var randomizer = new Random();
+                    var rNum = min + randomizer.nextInt(max - min);
+
+                    await Future.forEach(widget.listofcart,(CartModel element) {
+                      AllApi().postOrders(element, rNum.toString());
+
+
+                    });
 
                       await AllApi().addOrderTotal(future.data, CartTotalModel(
                         discount:widget.discount,
@@ -249,7 +274,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
                         savings: widget.savings,
                         subTotal: widget.subTotal,
                         ref: "",
-                      ), widget.shopname, widget.address);
+                      ), widget.shopname, widget.address,rNum.toString());
 
                     await AllApi().removeAllCart(future.data.phone, widget.shopname);
                     await AllApi().removeShopCart(future.data.phone, widget.shopname);

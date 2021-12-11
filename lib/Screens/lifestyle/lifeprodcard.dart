@@ -68,7 +68,7 @@ class _LifeProdCardState extends State<LifeProdCard> {
 
         List<LifeProductModel> prod =
             snapshot1.requireData;
-        print("foodList lenght = ${prod}");
+        print("foodList lenght = ${prod} ${widget.catId}");
 
 
 

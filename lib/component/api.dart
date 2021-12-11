@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -571,13 +572,32 @@ class AllApi {
   }
 
 
-  Future postOrders(String orders) async {
-  print("allordersSending $orders");
+  Future postOrders(CartModel cartModel,String rNum) async {
+
     var userGetURL = Uri.parse("${conurl}addOrders");
 
-    var response = await http.post(userGetURL,body: {
-      'list':orders
 
+
+
+    var response = await http.post(userGetURL,body: {
+
+      "img" : cartModel.img,
+      "price" : cartModel.price,
+      "ref" : cartModel.ref,
+      "title" : cartModel.title,
+      // "location" : json.encode({"j":"k"}),
+      "recipe" : cartModel.recipe ,
+      "quantity" : cartModel.quantity,
+      "requirement" : cartModel.requirement,
+      "itemnumber" : cartModel.itemnumber,
+      "cutprice" : cartModel.cutprice,
+      "ogprice" : cartModel.ogprice,
+      "ogcutprice" : cartModel.ogcutprice,
+      "discount" : cartModel.discount,
+      "shop" : cartModel.shop,
+      "foodid" : cartModel.foodid,
+      "vendorid" : cartModel.vendorid,
+      "order_id" :rNum
 
     });
 
@@ -589,11 +609,11 @@ class AllApi {
   }
 
 
-  Future addOrderTotal(UserModel users,CartTotalModel cartTotal,String shopName,String uaddress) async {
+  Future addOrderTotal(UserModel users,CartTotalModel cartTotal,String shopName,String uaddress,String rNum) async {
     var date =DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
 
     var userGetURL = Uri.parse("${conurl}addOrderTotal");
-
+    print("orderToital $rNum");
     var response = await http.post(userGetURL,body: {
 
       'address':uaddress,
@@ -607,7 +627,7 @@ class AllApi {
       'discount':cartTotal.discount,
       'subtotal':cartTotal.subTotal,
       'savings':cartTotal.savings,
-
+      'order_id': rNum
 
 
 
@@ -645,9 +665,9 @@ class AllApi {
   }
 
 
-  Future getOrders(String ref,String vendorid) async {
+  Future getOrders(String ref,String vendorid,String order_id) async {
 
-    var userGetURL = Uri.parse("${conurl}getOrderDetail?ref=$ref&vendorid=$vendorid");
+    var userGetURL = Uri.parse("${conurl}getOrderDetail?ref=$ref&vendorid=$vendorid&order_id=$order_id");
     print("uri $userGetURL");
     var response = await http.get(userGetURL);
     print("response of gotOrders ${response.body} $ref $vendorid");
@@ -676,7 +696,7 @@ class AllApi {
 
     List list = json.decode(response.body);
     //
-    // print("vendorUrl Product${response.body}");
+    print("vendorUrl Product${response.body} $vendorid $catid");
 
     Iterable<LifeProductModel> newList = list.map((e) {
       return LifeProductModel().fromJson(e);
@@ -715,6 +735,20 @@ class AllApi {
     print("checkmap ${list["name"]}");
     return list["name"];
 
+
+  }
+
+  Future getCatImage(String catid) async {
+
+
+    var userGetURL = Uri.parse("${conurl}getCategoryImage?catid=$catid");
+    var response = await http.get(userGetURL);
+
+    var list = json.decode(response.body);
+
+    print("catIMage ${list}");
+
+    return list;
 
   }
 

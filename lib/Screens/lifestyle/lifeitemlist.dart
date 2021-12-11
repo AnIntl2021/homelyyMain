@@ -4,8 +4,8 @@ import 'package:homelyy/Screens/lifestyle/lifeprodcard.dart';
 import 'package:homelyy/component/searchBoxx.dart';
 
 class LifeItemList extends StatefulWidget {
-  final String vid,uid,shopName;
-  const LifeItemList({Key key, this.vid, this.uid, this.shopName}) : super(key: key);
+  final String vid,uid,shopName,catid;
+  const LifeItemList({Key key, this.vid, this.uid, this.shopName, this.catid}) : super(key: key);
 
   @override
   _LifeItemListState createState() => _LifeItemListState();
@@ -28,7 +28,7 @@ class _LifeItemListState extends State<LifeItemList> {
         ),
 
 
-              LifeProdCard(vid:widget.vid,uid:widget.uid,shopName:widget.shopName,catId: "CAT33",),
+              LifeProdCard(vid:widget.vid,uid:widget.uid,shopName:widget.shopName,catId: widget.catid,),
 
         ],
       )

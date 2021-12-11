@@ -98,6 +98,7 @@ class _ItemInfoState extends State<ItemInfo> {
               Divider(),
 
               ExpansionTile(
+
                 title: widget.type == "restro"
                     ? Text("Recommended Foods")
                     : Text('Recommended Products'),
@@ -114,6 +115,7 @@ class _ItemInfoState extends State<ItemInfo> {
                         key: Key("recommendedList"),))
 
                 ],
+
               ),
               widget.type == "lifestyle" ? Container(
                 margin: EdgeInsets.only(left: 8, right: 8, bottom: 15),
@@ -146,7 +148,7 @@ class _ItemInfoState extends State<ItemInfo> {
               //           print("calledfrom parent");
               //
               // })
-              : LifestylePage(id: widget.id,vid: widget.id,uid:widget.uid,shopName:widget.title)
+              : LifestylePage(id: widget.id,vid: widget.id,uid:widget.uid,shopName:widget.title,category: widget.category,)
         ]),)
     ,
     )

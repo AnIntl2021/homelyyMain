@@ -375,7 +375,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   cartListNew() {
     return  FutureBuilder(
-      future: AllApi().getOrders(widget.uid,widget.shopname),
+      future: AllApi().getOrders(widget.uid,widget.shopname,widget.id),
       builder: (context, snapshot) {
 
 

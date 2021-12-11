@@ -195,7 +195,7 @@ class _ProductListCardState extends State<ProductListCard> {
                               widget.setting;
                             });
                             await AllApi().postCart(CartModel(
-                              img: widget.img,
+                              img: widget.img.replaceAll("https://thehomelyy.com/images/products/", ""),
                               price: widget.price,
                               title: widget.title,
                               recipe: widget.recipe,
@@ -329,7 +329,7 @@ class _ProductListCardState extends State<ProductListCard> {
                         var quantity = value.toString();
 
                         await AllApi().postCart(CartModel(
-                          img: widget.img,
+                          img: widget.img.replaceAll("https://thehomelyy.com/images/products/", ""),
                           price: changedprice.toString(),
                           title: widget.title,
                           recipe: widget.recipe,

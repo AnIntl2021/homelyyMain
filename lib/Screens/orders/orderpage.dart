@@ -60,7 +60,7 @@ class _OrderPageState extends State<OrderPage> {
                         var shopName = snapshot.requireData;
                         print("venodr nmaem1 ${snapshot.requireData}");
                         return createOrderListItem(
-                            orderId: "245",status: orderTotalMap[index]["status"],payment: "COD",total: orderTotalMap[index]["total"],date: orderTotalMap[index]["date"],time: orderTotalMap[index]["status"]
+                            orderId: orderTotalMap[index]["order_id"],status: orderTotalMap[index]["status"],payment: "COD",total: orderTotalMap[index]["total"],date: orderTotalMap[index]["date"],time: orderTotalMap[index]["status"]
                             ,subTotal: orderTotalMap[index]["subtotal"],wallet: "20",discount: orderTotalMap[index]["discount"],savings: orderTotalMap[index]["savings"],reason: "reason",shopname:orderTotalMap[index]["vid"]
                             ,name:orderTotalMap[index]["name"],deliveryname:shopName,deliverynumber:"1234567890",uid:orderTotalMap[index]["ref"]
                         );
