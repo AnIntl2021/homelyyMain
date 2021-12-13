@@ -1,14 +1,22 @@
 
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/Screens/Cart/cartshop.dart';
+import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/counterNumber.dart';
+import 'package:homelyy/component/models.dart';
+import 'package:intl/intl.dart';
 
 
 class ItemCard extends StatefulWidget {
-  final String title, shopName, price, uid,img,cutprice,recipe,discount;
+  final String title, shopName, price, uid,img,cutprice,recipe,discount,type,vid,foodid;
   final Function press;
   final bool tagVisibility;
   final bool stock;
@@ -20,7 +28,7 @@ class ItemCard extends StatefulWidget {
      this.shopName,
      this.press,
      this.price,
-     this.uid,  this.img,  this.cutprice,  this.recipe,  this.tagVisibility,  this.stock,  this.discountVisibility,  this.discount,  this.totalorders,
+     this.uid,  this.img,  this.cutprice,  this.recipe,  this.tagVisibility,  this.stock,  this.discountVisibility,  this.discount,  this.totalorders, this.type, this.vid, this.foodid,
   }) : super(key: key);
 
   @override
@@ -68,6 +76,7 @@ class _ItemCardState extends State<ItemCard> {
                     widget.img,
                     height: 97,
                     width: 97,
+                    fit: BoxFit.fill,
                     // size.width * 0.18 means it use 18% of total width
                   ),
                 ),
@@ -111,64 +120,112 @@ class _ItemCardState extends State<ItemCard> {
             bottom: 0,
             right: 0,
             child: ElevatedButton(
-                onPressed: () {
-                  var itemInitoal = DateTime
-                      .now()
-                      .millisecond
-                      .toString();
+                onPressed: () async {
+                  var itemInitoal =
+                  DateTime.now().millisecond.toString();
                   setState(() {
                     _defaultvalue = 1;
+
                   });
-                  var img = widget.img;
-                  var price = widget.price;
-                  var title = widget.title;
-                  var recipe = widget.recipe;
-                  var quantity = _defaultvalue;
-                  var cutprice = widget.cutprice;
-                  var requirement = "";
-                  Map<String, dynamic> items = new Map();
-                  items['img'] = img;
-                  items['price'] = price;
-                  items['title'] = title;
-                  items['recipe'] = recipe;
-                  items['quantity'] = quantity.toString();
-                  items['requirement'] = requirement;
-                  items['itemnumber'] = itemInitoal;
-                  items['cutprice'] = cutprice;
-                  items['ogprice'] = price;
-                  items['ogcutprice'] = cutprice;
-                  items['discount'] = widget.discount;
-                  items['shop'] = widget.shopName;
-                  items['totalorders'] = widget.totalorders;
-                  // FirebaseFirestore.instance
-                  //     .collection("users")
-                  //     .doc(widget.uid)
-                  //     .collection("cart")
-                  //     .doc(widget.shopName).collection("products")
-                  //     .doc(widget.title)
-                  //     .set(items)
-                  //     .then((value)
-                  // {
-                  //   FirebaseFirestore.instance
-                  //       .collection("users")
-                  //       .doc(widget.uid)
-                  //       .collection("cart")
-                  //       .doc(widget.shopName)
-                  //       .set({"title": widget.shopName});
-                  //           setState(() {
-                  //
-                  //             final snackBar = SnackBar(
-                  //               content: Text('Product Added To Cart'),
-                  //               backgroundColor: Colors.green,
-                  //               duration: Duration(milliseconds: 300),
-                  //             );
-                  //             ScaffoldMessenger.of(context)
-                  //                 .showSnackBar(snackBar);
-                  //             print("addedto cart");
-                  //             _defaultvalue = 1;
-                  //           });
-                  //         }
-                  //         );
+                  await AllApi().postCart(CartModel(
+                    img: widget.img.replaceAll("https://thehomelyy.com/images/products/", ""),
+                    price: widget.price,
+                    title: widget.title,
+                    recipe: widget.recipe,
+                    quantity: _defaultvalue.toString(),
+                    requirement: "",
+                    itemnumber: "y",
+                    cutprice: widget.cutprice,
+                    ogprice: widget.price,
+                    ogcutprice: widget.cutprice,
+                    discount: widget.discount,
+                    shop: widget.shopName,
+                    date: DateFormat('dd-MM-yyyy')
+                        .format(DateTime.now()),
+                    time: DateFormat('hh-MM-yyyy')
+                        .format(DateTime.now()),
+                    ref: widget.uid.toString().replaceAll(" ", ""),
+                    vendorid: widget.vid.toString().replaceAll(" ", ""),
+                    foodid: widget.foodid.toString().replaceAll(" ", ""),
+                  ),"Add");
+                  await AllApi().postShopCart(CartModel(
+                    shop: widget.shopName,
+                    ref: widget.uid.toString().replaceAll(" ", ""),
+                    vendorid: widget.vid.toString().replaceAll(" ", ""),
+                  ));
+
+                  setState(() {
+
+                    Get.isSnackbarOpen ? Get.back() : print("sd");
+
+                    Get.snackbar("Go to Cart", "message",duration: Duration(minutes: 15),snackPosition: SnackPosition.BOTTOM,snackbarStatus: (value){
+                      print("snackbar status $value");
+
+                    },backgroundColor: kgreen,icon:FutureBuilder(
+                        future: AllApi().getCartCount(widget.uid,),
+                        builder: (context, snapshot) {
+
+                          if(!snapshot.hasData){
+
+                            return Center(
+                              child: CircularProgressIndicator(color: kgreen,),
+                            );
+                          }
+
+                          var cartCount = snapshot.requireData;
+
+                          print("councart = ${widget.uid} $cartCount");
+
+                          return Stack(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(right: 10),
+                                child: Stack(children: [
+                                  IconButton(
+                                      icon: Icon(
+                                        FontAwesomeIcons.opencart,
+                                        color: kdarkgreen,
+                                      ),
+                                      onPressed: () {
+
+
+                                        Get.to(CartShopPage(ref:widget.uid));
+
+                                      }),
+                                  Positioned(
+                                    right: 0,
+                                    child: Badge(
+                                      badgeContent: Text(
+                                        cartCount,
+                                        style: GoogleFonts.arvo(color: Colors.white),
+                                      ),
+                                      // child: Icon(
+                                      //   FontAwesomeIcons.opencart,
+                                      //   color: Colors.white,
+                                      // ),
+                                    ),
+                                  )
+                                ]),
+                              ),
+                            ],
+                          );
+                        }
+                    ), );
+                    // final snackBar = SnackBar(
+                    //   content:
+                    //   backgroundColor: Colors.green,
+                    //   duration: Duration(minutes: 15),
+                    //
+                    // );
+                    // ScaffoldMessenger.of(context)
+                    //     .showSnackBar(snackBar);
+                    print("addedto cart");
+                    _defaultvalue = 1;
+
+                  });
+
+
+
                 },
                 child: Text("ADD"),
                 style: ElevatedButton.styleFrom(primary: Colors.pink))),
@@ -183,48 +240,54 @@ class _ItemCardState extends State<ItemCard> {
             minValue: 0,
             maxValue: 10,
             step: 1,
-            onChanged: (value) {
-
-              print(value);
-              if (value < 1) {
-                // print("lesthnone");
-                // FirebaseFirestore.instance
-                //     .collection("users")
-                //     .doc(widget.uid)
-                //     .collection("cart")
-                //     .doc(widget.shopName).collection("products").doc(widget.title)
-                //     .delete().then((value) {
-                //   FirebaseFirestore.instance .collection("users")
-                //       .doc(widget.uid)
-                //       .collection("cart")
-                //       .doc(widget.shopName).collection("products").get().then((value) {
-                //     value.size == 0 ?  FirebaseFirestore.instance .collection("users")
-                //         .doc(widget.uid)
-                //         .collection("cart")
-                //         .doc(widget.shopName).delete() : print("hasdata");
-                //   });
-                // });
-              }
-
+            onChanged: (value) async {
               setState(() {
                 _defaultvalue = int.parse(value.toString());
+
               });
-              Map<String, String> updateQuantity = new Map();
-              updateQuantity['quantity'] = value.toString();
-              var changedprice = value * int.parse(widget.price);
-              var changedcutprice = widget.cutprice == "" ? "" : value * int.parse(widget.cutprice);
-              updateQuantity['price'] = changedprice.toString();
-              updateQuantity['cutprice'] = changedcutprice.toString();
-              // FirebaseFirestore.instance
-              //     .collection("users")
-              //     .doc(widget.uid)
-              //     .collection("cart").doc(widget.shopName).collection("products")
-              //     .doc(widget.title)
-              //     .update(updateQuantity).then((it) {
-              //   setState(() {
-              //
-              //   });
-              // });
+              print(value);
+              if (_defaultvalue < 1) {
+                await AllApi()
+                    .removeCart(widget.uid, widget.vid, widget.foodid);
+                await AllApi()
+                    .removeShopCart(widget.uid, widget.vid);
+                setState(() { });
+                Fluttertoast.showToast(msg: "Removed From Cart");
+
+              } else {
+                Map<String, String> updateQuantity = new Map();
+                updateQuantity['quantity'] = value.toString();
+                var changedprice = value * int.parse(widget.price);
+                var changedcutprice = widget.cutprice == ""
+                    ? ""
+                    : value * int.parse(widget.cutprice);
+
+                var quantity = value.toString();
+
+                await AllApi().postCart(CartModel(
+                  img: widget.img.replaceAll("https://thehomelyy.com/images/products/", ""),
+                  price: changedprice.toString(),
+                  title: widget.title,
+                  recipe: widget.recipe,
+                  quantity: quantity.toString(),
+                  requirement: "",
+                  itemnumber: "y",
+                  cutprice: changedcutprice.toString(),
+                  ogprice: widget.price,
+                  ogcutprice: widget.cutprice,
+                  discount: widget.discount,
+                  shop: widget.shopName,
+                  date: DateFormat('dd-MM-yyyy').format(DateTime.now()),
+                  time: DateFormat('hh-MM-yyyy').format(DateTime.now()),
+                  ref: widget.uid,
+                  vendorid: widget.vid,
+                  foodid: widget.foodid,
+                ),"Update"
+                );
+                setState(() {
+
+                });
+              }
             },
             decimalPlaces: 0,
             color: kgreen,

@@ -22,16 +22,18 @@ class _VouchersState extends State<Vouchers> {
       builder: (context, snapshot) {
 
         if(!snapshot.hasData){
+
           return Center(child: CircularProgressIndicator(),);
+
         }
 
         UserModel users = UserModel().fromJson(jsonDecode(snapshot.requireData));
 
         print("getting user ${users.name}");
+       List offers = [];
 
-
-        return ListView.builder(
-          itemCount: 3,
+        return  offers.isEmpty ?Container(child: Center(child : Text("No Avaialable Vouchers")),) :ListView.builder(
+          itemCount: offers.length,
           itemBuilder: (context, index) {
             return Card(
               child: Column(

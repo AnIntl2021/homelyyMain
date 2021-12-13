@@ -247,6 +247,43 @@ class AllApi {
 
   }
 
+  Future getrecproduct(String vendorid ) async {
+    var userGetURL = Uri.parse("${conurl}getRecProdcut?vendorid=$vendorid");
+    var response = await http.get(userGetURL);
+
+    List list = json.decode(response.body);
+
+    print(response.body);
+
+    Iterable<LifeProductModel> newList = list.map((e) {
+      return LifeProductModel().fromJson(e);
+    });
+
+    return newList.toList();
+
+  }
+
+
+
+  Future<List<ProductModel>> getrestrecfood(String vendorid ) async {
+
+    var userGetURL = Uri.parse("${conurl}getrecFoods?vendorid=$vendorid");
+    var response = await http.get(userGetURL);
+    print("vendorid $vendorid");
+
+    List list = json.decode(response.body);
+
+    print(response.body);
+
+    Iterable<ProductModel> newList = list.map((e) {
+      return ProductModel().fromJson(e);
+    });
+
+    return newList.toList();
+
+  }
+
+
   Future<List<BannerModel>> getBanner(String type) async {
     var userGetURL = Uri.parse("${conurl}bannergetapp?type=$type");
     var response = await http.get(userGetURL);
@@ -751,6 +788,104 @@ class AllApi {
     return list;
 
   }
+
+  Future updateWallet(String ref,String wallet) async {
+
+    var userGetURL = Uri.parse("${conurl}updateUserWallet?ref=$ref");
+
+    var response = await http.put(userGetURL,body: {
+
+      "wallet" : wallet,
+
+    });
+
+    print("response of wallet ${response.body}");
+     SharedPreferences pref = await SharedPreferences.getInstance();
+
+
+
+    return response.body;
+  }
+
+  Future<double> getAllRatings(String vid,int userRating) async {
+
+
+    var userGetURL = Uri.parse("${conurl}ratingall?vendorid=$vid");
+
+    var response = await http.get(userGetURL);
+
+    List allRating = json.decode(response.body);
+
+    var allRatingCount = allRating.length + 1;
+
+    var ct = 0.0;
+
+    Future.forEach(allRating,(element){
+
+        ct += double.parse(element["rating"]);
+
+    });
+
+    var totalRating = ct + userRating;
+
+
+
+
+    double avgRating = totalRating / allRatingCount;
+
+
+
+
+    return avgRating;
+
+  }
+
+  Future addRating(String ref,String vendorid,String rating , String comment) async {
+
+    var date =DateFormat('yyyy/MM/dd').format(DateTime.now());
+    var time =DateFormat('hh:mm aa ').format(DateTime.now());
+
+    var userGetURL = Uri.parse("${conurl}ratingadd");
+
+    var response = await http.post(userGetURL,body: {
+
+      "rating" : rating,
+      "comment":comment,
+      "user":ref,
+      "vendorid":vendorid,
+      "date":date,
+      "time":time,
+
+
+
+    });
+
+    print("response of wallet ${response.body}");
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+
+
+    return response.body;
+  }
+
+  Future updateRating(String vid,double userRating) async {
+
+
+    var userGetURL = Uri.parse("${conurl}rateVendor?vendorid=$vid&rating=$userRating");
+
+    var response = await http.get(userGetURL);
+
+
+
+
+
+
+
+    return response;
+
+  }
+
+
 
 
 }

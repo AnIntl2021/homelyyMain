@@ -1,4 +1,6 @@
 // @dart=2.9
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +12,7 @@ import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
 import 'package:homelyy/component/models.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 
 class UserWallet extends StatefulWidget {
@@ -21,12 +24,14 @@ class UserWallet extends StatefulWidget {
 }
 
 class _UserWalletState extends State<UserWallet> {
-  var currentUser = FirebaseAuth.instance.currentUser;
+
   var paymentvalue;
   // var uid = FirebaseAuth.instance.currentUser.uid;
-  // static const platform = const MethodChannel("razorpay_flutter");
+
+  static const platform = const MethodChannel("razorpay_flutter");
+
   var shop = true;
-  // Razorpay _razorpay;
+  Razorpay _razorpay;
 
   var paymentSuccess = false;
 
@@ -37,8 +42,10 @@ class _UserWalletState extends State<UserWallet> {
 
   @override
   void dispose() {
+
     super.dispose();
-    // _razorpay.clear();
+    _razorpay.clear();
+
   }
 
   var addClicked = false;
@@ -49,10 +56,13 @@ class _UserWalletState extends State<UserWallet> {
   Widget build(BuildContext context) {
     void openCheckout(
         {String phone, String id, String email, int amount}) async {
+
+        print("amount = $amount");
+
       var options = {
-        'key': 'rzp_test_spbD0AwJXmtoZG',
-        'amount': amount * 100,
-        'name': 'GrocPod',
+        'key': 'rzp_test_u8g13PFaeMNHNf',
+        'amount': amount * 100 ,
+        'name': 'Homelyy',
         'description': 'Order no: $id}',
         'prefill': {'contact': '$phone', 'email': '$email'},
         'external': {
@@ -60,69 +70,75 @@ class _UserWalletState extends State<UserWallet> {
         }
       };
 
-      // try {
-      //   _razorpay.open(options);
-      // } catch (e) {
-      //   debugPrint('Error: e');
-      // }
+      try {
+        _razorpay.open(options);
+      } catch (e) {
+        debugPrint('Error: e');
+      }
     }
 
-    // void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    //   Fluttertoast.showToast(
-    //           msg: "SUCCESS: " + response.paymentId,
-    //           toastLength: Toast.LENGTH_SHORT)
-    //       .then((value) => {
-    //             FirebaseFirestore.instance
-    //                 .collection("users")
-    //                 .doc(currentUser.uid)
-    //                 .update({"wallet": enteredAmount}).then((value) {
-    //               Fluttertoast.showToast(msg: "Wallet updated");
-    //             })
-    //           });
-    // }
+    Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
 
-    // void _handlePaymentError(PaymentFailureResponse response) {
-    //   Fluttertoast.showToast(
-    //       msg: "ERROR: " + response.code.toString() + " - " + response.message,
-    //       toastLength: Toast.LENGTH_SHORT);
-    //   setState(() {
-    //     paymentSuccess = false;
-    //   });
-    // }
+      Fluttertoast.showToast(
+              msg: "SUCCESS: " + response.paymentId,
+              toastLength: Toast.LENGTH_SHORT)
+          .then((value) async => {
 
-    // void _handleExternalWallet(ExternalWalletResponse response) {
-    //   Fluttertoast.showToast(
-    //       msg: "EXTERNAL_WALLET: " + response.walletName,
-    //       toastLength: Toast.LENGTH_SHORT);
-    //   setState(() {
-    //     paymentSuccess = true;
-    //   });
-    // }
+       await  AllApi().updateWallet(widget.id,enteredAmount.toString()).then((value) async {
 
-    // _razorpay = Razorpay();
-    // _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    // _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    // _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-    //
-    // print("enteredamount $enteredAmount");
-    // var stream = FirebaseFirestore.instance
-    //     .collection("users")
-    //     .doc(currentUser.uid)
-    //     .collection("cart")
-    //     .snapshots();
-    // var future = FirebaseFirestore.instance
-    //     .collection("users")
-    //     .doc(currentUser.uid)
-    //     .get();
+
+
+
+
+       })
+
+
+
+
+              });
+
+
+    }
+
+    void _handlePaymentError(PaymentFailureResponse response) {
+
+      Fluttertoast.showToast(
+          msg: "ERROR: " + response.code.toString() + " - " + response.message,
+          toastLength: Toast.LENGTH_SHORT);
+      setState(() {
+        paymentSuccess = false;
+      });
+
+    }
+
+    void _handleExternalWallet(ExternalWalletResponse response) {
+
+      Fluttertoast.showToast(
+          msg: "EXTERNAL_WALLET: " + response.walletName,
+          toastLength: Toast.LENGTH_SHORT);
+      setState(() {
+        paymentSuccess = true;
+      });
+
+    }
+
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+
+    print("enteredamount $enteredAmount");
 
     var amountController = TextEditingController();
 
     updateWallet(String amount) {}
 
+    UserModel users;
+
     return Scaffold(
       appBar: homeAppBar(context, "Wallet", widget.id,""),
       body: FutureBuilder(
-        future: AllApi().getLocalUsers(),
+        future: AllApi().getUser(widget.id),
         builder: (context, snapshot) {
 
           if(!snapshot.hasData){
@@ -130,7 +146,7 @@ class _UserWalletState extends State<UserWallet> {
                 child:CircularProgressIndicator(color: kgreen,)
             );
           }
-          UserModel usersList =  snapshot.requireData;
+          UserModel usersList =   UserModel().fromJson(jsonDecode(snapshot.requireData));
 
 
 
@@ -149,12 +165,12 @@ class _UserWalletState extends State<UserWallet> {
                         onPressed: () {
                           addClicked
                               ? openCheckout(
-                                  phone: "9653137263",
-                                  id: DateTime.now()
+                                  phone: usersList.phone,
+                                  id:  "HOMELYY"+  DateTime.now()
                                       .millisecondsSinceEpoch
                                       .toString(),
                                   amount: int.parse(enteredAmount),
-                                  email: "arsalank28@gmail.com")
+                                  email: usersList.email)
                               : setState(() {
                                   addClicked = true;
                                 });
@@ -193,6 +209,7 @@ class _UserWalletState extends State<UserWallet> {
                         return null;
                       },
                       onSaved: (value) {
+
                         setState(() {
                           enteredAmount = value;
                         });
@@ -208,6 +225,7 @@ class _UserWalletState extends State<UserWallet> {
                 SizedBox(
                   height: 40,
                 ),
+
                 Container(
                   color: Colors.white,
                   child:  Row(
@@ -224,25 +242,7 @@ class _UserWalletState extends State<UserWallet> {
                     ],
                   )
 
-                  // FutureBuilder(
-                  //     future: future,
-                  //     builder: (context,
-                  //         AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
-                  //             future) {
-                  //       return Row(
-                  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //         children: [
-                  //           Text(
-                  //             "Available Balance",
-                  //             style: GoogleFonts.arvo(color: Colors.black),
-                  //           ),
-                  //           Text(
-                  //             "₹ ${future.data.get("wallet")}",
-                  //             style: GoogleFonts.arvo(color: Colors.blueGrey),
-                  //           ),
-                  //         ],
-                  //       );
-                  //     }),
+
                 )
               ],
             ),

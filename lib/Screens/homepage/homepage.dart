@@ -1,4 +1,5 @@
 
+import 'package:adr_in_app_review/adr_in_app_review.dart';
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -359,6 +360,14 @@ class _HomepageState extends State<Homepage> {
                   ),
                   onPressed: (){
                     currentIndex = 3;
+                    Future.microtask(() async {
+                      AdrInAppReview.startInAppReview()
+                          .then((value) => print('result $value'))
+                          .catchError((e) {
+                        print(e.toString());
+                        // only to avoid crash when error happened and not being handled
+                      });
+                    });
                   }),
               Text("Rate Us")
             ],

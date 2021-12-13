@@ -111,6 +111,8 @@ class _ItemInfoState extends State<ItemInfo> {
                   Container(height: 260,
                       child: RecommendedList(shopuid: widget.id,
                         shopTitle: widget.title,
+                        type: widget.type,
+                        uid:widget.uid,
                         streamTitle: '',
                         key: Key("recommendedList"),))
 
@@ -135,6 +137,7 @@ class _ItemInfoState extends State<ItemInfo> {
                   addinOther((){setState(() {
                     print("done");
                   });})
+
               // ItemList(category: widget.category,
               //     streamTitle: '',
               //     callback: () {},
@@ -148,6 +151,7 @@ class _ItemInfoState extends State<ItemInfo> {
               //           print("calledfrom parent");
               //
               // })
+
               : LifestylePage(id: widget.id,vid: widget.id,uid:widget.uid,shopName:widget.title,category: widget.category,)
         ]),)
     ,
@@ -244,7 +248,7 @@ class _ItemInfoState extends State<ItemInfo> {
 
                                         List<ProductModel> foodList =
                                             snapshot1.requireData;
-                                        print("foodList lenght = ${foodList}");
+                                        print("foodList lenght = ${foodList[0].status}");
 
                                         return Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -272,7 +276,8 @@ class _ItemInfoState extends State<ItemInfo> {
                                                             recipe:
                                                             foodList[index]
                                                                 .description,
-                                                            stock: true,
+                                                            stock: foodList[index]
+                                                                .status,
                                                             tagVisibility: true,
                                                             img:"${imageURL}products/${foodList[index].image}",
                                                             press: () {},
@@ -290,7 +295,8 @@ class _ItemInfoState extends State<ItemInfo> {
                                                             shopName:
                                                             widget.shopname,
                                                             vid: widget.id,
-                                                            cutprice: "80",
+                                                            cutprice:  foodList[index]
+                                                                .cutprice,
                                                             setting:calling
 
                                                         );

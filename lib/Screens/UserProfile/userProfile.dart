@@ -51,9 +51,9 @@ class _UserProfileState extends State<UserProfile> {
             ),
             buildListTile("REFER & EARN", FontAwesomeIcons.share, () async {
               await FlutterShare.share(
-                  title: 'Download OK App Referal Code: ${widget.id.substring(6,10)}',
-                  text: 'Download OK App Referal Code:  ${widget.id.substring(6,10)}',
-                  linkUrl: 'https://flutter.dev/',
+                  title: 'Download Homelyy App Referal Code: ${widget.id.substring(6,10)}',
+                  text: 'Download Homelyy App Referal Code:  ${widget.id.substring(6,10)}',
+                  linkUrl: 'https://play.google.com/store/apps/details?id=com.an.homelyy.homelyy',
                   chooserTitle: 'Example Chooser Title'
               );
             }),

@@ -278,9 +278,11 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
 
                     await AllApi().removeAllCart(future.data.phone, widget.shopname);
                     await AllApi().removeShopCart(future.data.phone, widget.shopname);
+
                     setState(() {
                       loading = false;
                     });
+
                     Get.offAll(ThankScreen(ref:future.data.phone));
 
                   } else if (shop && paymentvalue == 1) {

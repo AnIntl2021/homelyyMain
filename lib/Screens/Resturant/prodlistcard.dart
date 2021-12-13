@@ -73,6 +73,8 @@ class _ProductListCardState extends State<ProductListCard> {
     //     .collection("cart");
     // This size provide you the total height and width of the screen
     Size size = MediaQuery.of(context).size;
+
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),

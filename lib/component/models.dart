@@ -230,6 +230,9 @@ class ProductModel {
   String price;
   String category;
   String subcategory;
+  String cutprice;
+  String recommended;
+  bool status;
 
   ProductModel(
       {
@@ -240,7 +243,7 @@ class ProductModel {
         this.image,
         this.price,
         this.category,
-        this.subcategory});
+        this.subcategory,this.cutprice,this.recommended,this.status});
 
   fromJson(Map<String, dynamic> json) {
  return ProductModel(
@@ -252,12 +255,15 @@ class ProductModel {
  price : json['price'],
  category : json['category'],
  subcategory : json['subcategory'],
-   
+   cutprice : json['cutprice'],
+   recommended : json['recommended'],
+   status : json['status'],
  );
 
   }
 
   Map<String, dynamic> toJson() {
+
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
     data['description'] = this.description;
@@ -268,7 +274,12 @@ class ProductModel {
     data['price'] = this.price;
     data['category'] = this.category;
     data['subcategory'] = this.subcategory;
+    data['cutprice'] = this.cutprice;
+    data['recommended'] = this.recommended;
+    data['status'] = this.status;
+
     return data;
+
   }
 }
 

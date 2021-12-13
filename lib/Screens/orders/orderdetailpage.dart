@@ -69,6 +69,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     });
   }
 
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
     // var orderTotalstream = FirebaseFirestore.instance
@@ -201,58 +203,55 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            ElevatedButton(
+                            loading ? CircularProgressIndicator(color:kgreen,) : ElevatedButton(
                               child: Text('Submit Rating'),
                               onPressed: () {
+                                setState(() {
+                                  loading = true;
+                                });
                                 // rated != null
                                 //     ? rated.isGreaterThan(1)
                                 //     ? print("rated $rated")
                                 //     : print("rated nothing")
                                 //     : print("rated null");
+                                //
                                 // reviewText != null
                                 //     ? reviewText.isNotEmpty
                                 //     ? print("review ${reviewText}")
                                 //     : print("review empty")
                                 //     : print("review null");
-                                //
-                                // rated != null && reviewText != null
-                                //     ? rated.isGreaterThan(1) &&
-                                //     reviewText.isNotEmpty
-                                //     ? FirebaseFirestore.instance
-                                //     .collection("users")
-                                //     .doc(uid)
-                                //     .collection("ratings")
-                                //     .doc(widget.shopname)
-                                //     .set({
-                                //   "rating": rated,
-                                //   "review": reviewText,
-                                //   "date": widget.date,
-                                //   "name": widget.name
-                                // }).then((value) {
-                                //   FirebaseFirestore.instance
-                                //       .collection("Restaurant")
-                                //       .doc(widget.shopname)
-                                //       .collection("ratings")
-                                //       .doc(uid)
-                                //       .set({
-                                //     "rating": rated,
-                                //     "review": reviewText,
-                                //     "date": widget.date,
-                                //     "name": widget.name
-                                //   }).whenComplete(() {
-                                //     setState(() {
-                                //       rateVisible = false;
-                                //     });
-                                //   });
-                                // })
-                                //     : Fluttertoast.showToast(
-                                //     msg:
-                                //     "Please Rate A Star More Than 0 and Add Some Review",
-                                //     toastLength: Toast.LENGTH_LONG)
-                                //     : Fluttertoast.showToast(
-                                //     msg:
-                                //     "Please Rate A Star More Than 0 and Add Some Review",
-                                //     toastLength: Toast.LENGTH_LONG);
+
+                                rated != null && reviewText != null
+                                    ? rated.isGreaterThan(1) &&
+                                    reviewText.isNotEmpty
+                                    ? AllApi().getAllRatings(widget.shopname, rated.round()).then((value) async {
+
+                                      await AllApi().addRating(widget.uid, widget.shopname, rated.toString(), reviewText.toString());
+
+                                      await AllApi().updateRating(widget.shopname, value.toPrecision(1));
+
+                                      Fluttertoast.showToast(
+                                          msg:
+                                          "Thank you for giving your Review",
+                                          toastLength: Toast.LENGTH_LONG);
+
+                                      setState(() {
+                                        loading = false;
+                                      });
+
+                                })
+                                    : Fluttertoast.showToast(
+                                    msg:
+                                    "Please Rate A Star More Than 0 and Add Some Review",
+                                    toastLength: Toast.LENGTH_LONG).then((value) => setState(() {
+                                  loading = false;
+                                }))
+                                    : Fluttertoast.showToast(
+                                    msg:
+                                    "Please Rate A Star More Than 0 and Add Some Review",
+                                    toastLength: Toast.LENGTH_LONG).then((value) => setState(() {
+                                  loading = false;
+                                }));
                               },
                               style: ButtonStyle(
                                 backgroundColor:

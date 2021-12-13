@@ -5,12 +5,15 @@ import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Screens/homepage/homepage.dart';
 import 'Screens/login/loginScreen.dart';
+import 'component/constants.dart';
+import 'component/splashscreenMY.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
@@ -111,7 +114,20 @@ class _MyAppState extends State<MyApp> {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: isloggedin ? Homepage(userRef: phone,) : LoginScreen()
+        home: SplashScreenMy(
+            duration: 6000,
+            imageSize: 180,
+            imageSrc: "assets/homelyy.png",
+            text: "HOMELYY -EVERYTHING FROM HOME",
+            colors: [Colors.amber],
+            textType: TextType1.ScaleAnimatedText,
+            textStyle: GoogleFonts.cabin(
+                fontSize: 30,
+                color: kgreen,
+                fontWeight: FontWeight.bold),
+            backgroundColor: Colors.white,
+            speed: 1, navigateRoute: isloggedin ? Homepage(userRef: phone,) : LoginScreen()
+        )
       ),
     );
   }
