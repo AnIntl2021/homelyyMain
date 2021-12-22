@@ -56,14 +56,18 @@ class AllApi {
   }
 
 
-  Future getRestaurant() async {
+  Future getRestaurant(String lat,String lon) async {
 
-    var userGetURL = Uri.parse("${conurl}restrogetnearme?lat=19.219305858205278&lng=72.980145824379");
+    var userGetURL = Uri.parse("${conurl}restrogetnearme?lat=$lat&lng=$lon");
 
     var response = await http.get(userGetURL);
+    print("got restaurant ${response.body}");
+
+
+
 
     var list = json.decode(response.body);
-
+    print("got restaurant1 ${list.length}");
     //
     // print("list ${
     // response.body
@@ -75,84 +79,80 @@ class AllApi {
     //
     // String user = jsonEncode(UserModel().fromJson(json));
 
+    var newList = list.length == 0 ? null : list.map((e) {
+      return restaurantModel().fromJson(e);
+    });
 
 
-    return list;
+
+    return newList == null ? [] : newList.toList();
 
   }
 
-  Future getLifestyle() async {
+  Future getLifestyle(String lat,String lon) async {
 
-    var userGetURL = Uri.parse("${conurl}lifestylegetnearme?lat=19.219305858205278&lng=72.980145824379");
+    var userGetURL = Uri.parse("${conurl}lifestylegetnearme?lat=$lat&lng=$lon");
 
     var response = await http.get(userGetURL);
 
+
+
+
     var list = json.decode(response.body);
 
-    //
-    // print("list ${
-    // response.body
-    // }");
-    // print("listconvertedd ${
-    //     list
-    // }");
-    // Map json = jsonDecode(jsonString);
-    //
-    // String user = jsonEncode(UserModel().fromJson(json));
+
+    var newList = list.length == 0 ? null : list.map((e) {
+      return restaurantModel().fromJson(e);
+    });
 
 
 
-    return list;
+    return newList == null ? [] : newList.toList();
 
   }
 
-  Future getRestaurantbyCat(String catid) async {
+  Future getRestaurantbyCat(String catid,String lat,String lon) async {
 
-    var userGetURL = Uri.parse("${conurl}restobycat?lat=19.219305858205278&lng=72.980145824379&catid=$catid");
+    var userGetURL = Uri.parse("${conurl}restobycat?lat=$lat&lng=$lon&catid=$catid");
 
     var response = await http.get(userGetURL);
 
+
+
+
     var list = json.decode(response.body);
 
-    //
-    // print("list ${
-    // response.body
-    // }");
-    // print("listconvertedd ${
-    //     list
-    // }");
-    // Map json = jsonDecode(jsonString);
-    //
-    // String user = jsonEncode(UserModel().fromJson(json));
+
+    var newList = list.length == 0 ? null : list.map((e) {
+      return restaurantModel().fromJson(e);
+    });
 
 
 
-    return list;
+    return newList == null ? [] : newList.toList();
 
   }
 
-  Future getLifestylebyCat(String catid) async {
+  Future getLifestylebyCat(String catid,String lat,String lon) async {
 
-    var userGetURL = Uri.parse("${conurl}lifestylebycat?lat=19.219305858205278&lng=72.980145824379&catid=$catid");
+    var userGetURL = Uri.parse("${conurl}lifestylebycat?lat=$lat&lng=$lon&catid=$catid");
+
 
     var response = await http.get(userGetURL);
 
+
+
+
     var list = json.decode(response.body);
 
-    //
-    // print("list ${
-    // response.body
-    // }");
-    // print("listconvertedd ${
-    //     list
-    // }");
-    // Map json = jsonDecode(jsonString);
-    //
-    // String user = jsonEncode(UserModel().fromJson(json));
+
+    var newList = list.length == 0 ? null : list.map((e) {
+      return restaurantModel().fromJson(e);
+    });
 
 
 
-    return list;
+    return newList == null ? [] : newList.toList();
 
   }
 

@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
@@ -18,10 +19,10 @@ import 'component/splashscreenMY.dart';
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
-    'This channel is used for important notifications.', // description
+    description: 'This channel is used for important notifications.', // description
     importance: Importance.max,
     playSound: true,
-    sound: RawResourceAndroidNotificationSound('notification'),
+    // sound: RawResourceAndroidNotificationSound('notification'),
     enableLights: true
 );
 
@@ -42,6 +43,7 @@ void main() async{
   await Firebase.initializeApp();
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessgaingBackgroundHandler);
+
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
       AndroidFlutterLocalNotificationsPlugin>()
@@ -52,23 +54,25 @@ void main() async{
     badge: true,
     sound: true,
   );
+
   runApp(const MyApp());
 
 }
 
 class MyApp extends StatefulWidget {
+
   const MyApp({Key key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
+
 }
 
 class _MyAppState extends State<MyApp> {
 
-  var currentUser = FirebaseAuth.instance.currentUser;
   var isloggedin = false;
   var phone ;
-
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   Future<List> getBoolValuesSF() async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -81,6 +85,31 @@ class _MyAppState extends State<MyApp> {
 
   }
 
+
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage initialMessage =
+    await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null && initialMessage.data['order'] == 'order') {
+      Get.to(MyApp());
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if (message.data['type'] == 'home') {
+        Get.to(MyApp());
+      }
+    });
+  }
+
+
+
+
   @override
   void initState() {
 
@@ -91,6 +120,45 @@ class _MyAppState extends State<MyApp> {
         phone = value[1];
       });
     });
+
+
+
+
+    firebaseMessaging.requestPermission(
+        alert: true, badge: true, provisional: true, sound: true);
+
+    setupInteractedMessage();
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      print("NOTIFICATION WORLKING $android");
+
+      if (notification != null && android != null) {
+
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  channelDescription:channel.description,
+                  // icon: 'grocerylogo',
+                  // sound: RawResourceAndroidNotificationSound('notification'),
+                  // other properties...
+                  importance: channel.importance,
+                  priority: Priority.max
+              ),
+            ));
+
+      }
+    });
+
+
+
 
     super.initState();
 

@@ -3,10 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:homelyy/Screens/homepage/Restaurant/restaurantBYCat.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/models.dart';
+import 'package:location/location.dart';
 
 class CatCard extends StatelessWidget {
   final String title, shopName, svgSrc, price;
@@ -14,12 +16,13 @@ class CatCard extends StatelessWidget {
   final String catid,uid;
   final int type;
   final String count;
+  final LatLng latlng;
   const CatCard({
      Key key,
      this.title,
      this.shopName,
      this.svgSrc,
-     this.price, this.catList, this.catid, this.type, this.uid, this.count,
+     this.price, this.catList, this.catid, this.type, this.uid, this.count, this.latlng,
   }) : super(key: key);
 
   @override
@@ -27,7 +30,7 @@ class CatCard extends StatelessWidget {
     // This size provide you the total height and width of the screen
     Size size = MediaQuery.of(context).size;
     return FutureBuilder(
-        future: type == 0 ? AllApi().getRestaurantbyCat(title) :AllApi().getLifestylebyCat(title),
+        future: type == 0 ? AllApi().getRestaurantbyCat(title,latlng.latitude.toString(),latlng.longitude.toString()) :AllApi().getLifestylebyCat(title,latlng.latitude.toString(),latlng.longitude.toString()),
       builder: (context, snapshot) {
 
         if(!snapshot.hasData){
@@ -55,26 +58,43 @@ class CatCard extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               onTap: (){
-                Get.to(RestaurantByCat(type: type,catid: title,uid: uid,));
+                Get.to(RestaurantByCat(type: type,catid: title,uid: uid,restomodel: restomodel,));
               },
               child: Padding(
                 padding: const EdgeInsets.all(1.0),
                 child: Column(
                   children: <Widget>[
                     Container(
+
                       width: 110,
+
                       margin: EdgeInsets.only(bottom: 15),
+
                       padding: EdgeInsets.all(5),
+
                       decoration: BoxDecoration(
+
                         color: kgreen,
+
                         shape: BoxShape.circle,
+
                       ),
+
                       child: Image.network(
+
+
                         svgSrc,
+
+
                         height: 70,
+
+
                         width: 70,
 
+
                         // size.width * 0.18 means it use 18% of total width
+
+
                       ),
                     ),
                     Text(title),
@@ -103,9 +123,10 @@ class CatList extends StatefulWidget {
   final List<CatModel> catList;
   final int type;
   final String uid;
+  final LatLng latlng;
   const CatList({
      Key key,
-     this.streamTitle, this.catList, this.type, this.uid,
+     this.streamTitle, this.catList, this.type, this.uid, this.latlng,
   }) : super(key: key);
 
   @override
@@ -138,7 +159,7 @@ class _CatListState extends State<CatList> {
             title: widget.catList[index].name,
             svgSrc: img, price: '', shopName: '', key: Key("cartList"),
             catid:widget.catList[index].catid,
-              type:widget.type,uid: widget.uid,count: widget.catList.length.toString(),
+              type:widget.type,uid: widget.uid,count: widget.catList.length.toString(),latlng: widget.latlng,
             // price: "\â‚¹ $price",
           );
         });

@@ -13,9 +13,11 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/discountCard.dart';
+import 'package:homelyy/component/map.dart';
 import 'package:homelyy/component/models.dart';
 import 'package:homelyy/component/searchBoxx.dart';
 import 'package:homelyy/component/typecard.dart';
@@ -28,7 +30,8 @@ import 'Restaurant/popularRestaurant.dart';
 class Body extends StatefulWidget {
   final bool fromMap;
   final String userref;
-  const Body({Key key, this.fromMap, this.userref}) : super(key: key);
+  final LatLng latlng;
+  const Body({Key key, this.fromMap, this.userref, this.latlng}) : super(key: key);
   @override
   _BodyState createState() => _BodyState();
 }
@@ -68,28 +71,6 @@ class _BodyState extends State<Body> {
         .update({"search": caseSearchList});
   }
 
-  setRestro() {
-    List<String> caseSearchList = [];
-
-    FirebaseFirestore.instance
-        .collection("Restaurant")
-        .doc("Burger Adda")
-        .update({
-      "area": "Mumbra",
-      "closetiming": "Mumbra",
-      "cuisine": ["Mumbra"],
-      "deliveryTime": "Mumbra",
-      "discount": "Mumbra",
-      "img": "Mumbra",
-      "name": "Mumbra",
-      "number": "Mumbra",
-      "opentiming": "Mumbra",
-      "rating": "4",
-      "status": true,
-      "tag": "new",
-      "type": "Restaurant"
-    });
-  }
 
   Location location = Location();
 
@@ -126,26 +107,7 @@ class _BodyState extends State<Body> {
     return _locationData;
   }
 
-  Future<List<coder.Address>> getAddress(LocationData locationdata) async {
-    // // From a query
-    // final query = "1600 Amphiteatre Parkway, Mountain View";
-    // var addresses = await Geocoder.local.findAddressesFromQuery(query);
-    // var first = addresses.first;
-    // print("${first.featureName} : ${first.coordinates}");
 
-// From coordinates
-    final coordinates =
-        coder.Coordinates(locationdata.latitude, locationdata.longitude);
-    var addresses =
-        await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    var first = addresses.first;
-    print(" : ${first.addressLine}");
-
-    var pref = await SharedPreferences.getInstance();
-    pref.setString("address", first.addressLine);
-    pref.setString("code", first.postalCode);
-    return addresses;
-  }
 
   // Future<DocumentSnapshot>getFirestoreAddress() async {
   //  return FirebaseFirestore.instance.collection("users").doc(uid).get();
@@ -185,6 +147,38 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    Future<List<coder.Address>> getAddress(LocationData locationdata) async {
+      // // From a query
+      // final query = "1600 Amphiteatre Parkway, Mountain View";
+      // var addresses = await Geocoder.local.findAddressesFromQuery(query);
+      // var first = addresses.first;
+      // print("${first.featureName} : ${first.coordinates}");
+
+// From coordinates
+      final coordinates = widget.latlng == null ? coder.Coordinates(locationdata.latitude, locationdata.longitude) :
+      coder.Coordinates(widget.latlng.latitude, widget.latlng.longitude)
+      ;
+
+
+      var addresses =
+      await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = addresses.first;
+      print(" : ${first.addressLine}");
+
+      var pref = await SharedPreferences.getInstance();
+      pref.setString("address", first.addressLine);
+      pref.setString("code", first.postalCode);
+      return addresses;
+
+
+    }
+
+
+
+
+
     print(
         "userGetttinghomwebody ${widget.userref.replaceAll("+", "").removeAllWhitespace}");
     print("location $myLocation $userAddress");
@@ -197,6 +191,7 @@ class _BodyState extends State<Body> {
           AllApi().getLocalUsers()
         ]),
         builder: (context, snapshot) {
+
           if (!snapshot.hasData) {
             return Center(
                 child: CircularProgressIndicator(
@@ -218,43 +213,53 @@ class _BodyState extends State<Body> {
           print("users,${usersList.name}");
 
           return FutureBuilder(
+
               future: Future.wait([
+
                 selectedType == 0
-                    ? AllApi().getRestaurant()
-                    : AllApi().getLifestyle(),
-                getAddress(latlng)
+                    ? AllApi().getRestaurant(widget.latlng == null ? latlng.latitude.toString() : widget.latlng.latitude.toString(),widget.latlng == null ? latlng.longitude.toString():widget.latlng.longitude.toString())
+                    : AllApi().getLifestyle(widget.latlng == null ? latlng.latitude.toString() : widget.latlng.latitude.toString(),widget.latlng == null ? latlng.longitude.toString():widget.latlng.longitude.toString()),
+                getAddress(latlng),
+
               ]),
               builder: (context, snapshot1) {
                 // var restoModel = snapshot.requireData[0];
-
+                //
                 if (!snapshot1.hasData) {
                   return Center(child: CircularProgressIndicator(color: kgreen,));
                 }
 
+
                 var restomodel = snapshot1.requireData[0];
+                List<Address> addresses = snapshot1.requireData[1];
+                print("restomodel $restomodel");
 
-                var adresses = snapshot1.requireData[1];
 
-                print("address homedbody ${adresses}");
 
-                return ListView(
+                return  ListView(
                   children: [
                     Row(
                       children: [
                         IconButton(
                           icon: Icon(FontAwesomeIcons.mapSigns),
-                          onPressed: () {},
+                          onPressed: () {
+
+                          },
                         ),
                         Expanded(
                           child: Container(
                               child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+
+                              Get.to(MapScreen(loc: widget.latlng == null ? LatLng(latlng.latitude, latlng.longitude) : widget.latlng,userRef:widget.userref));
+
+                              },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  adresses.first.addressLine,
+                                  addresses.first.addressLine,
                                   style: GoogleFonts.arvo(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12),
@@ -263,14 +268,15 @@ class _BodyState extends State<Body> {
                                 ),
                                 Container(
                                   child: Text(
-                                    adresses.first.postalCode,
+                                    addresses.first.postalCode,
                                     style: GoogleFonts.arvo(fontSize: 10),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],
                             ),
-                          )),
+                          )
+                          ),
                         )
                       ],
                     ),
@@ -390,12 +396,18 @@ class _BodyState extends State<Body> {
                             Divider(),
                             Expanded(
                               child: CatList(
+
                                 catList: catList,
+
                                 streamTitle:
                                     selectedType == 0 ? catTitle : "Jeans",
+
                                 key: Key("catList"),
+
                                 type: selectedType,
-                                uid: usersList.ref,
+
+                                uid: usersList.ref,latlng: widget.latlng == null ? LatLng(latlng.latitude, latlng.longitude) : widget.latlng,
+
                               ),
                             ),
                           ],
@@ -435,13 +447,25 @@ class _BodyState extends State<Body> {
                         ),
                       ],
                     )),
-                    PopularRestaurantList(
+                    restomodel.length == 0 ? Container(child: Padding(
+                      padding: const EdgeInsets.only(bottom: 30.0,left: 30),
+                      child: Row(
+                        children: [
+                          Icon(FontAwesomeIcons.sadCry),
+                          SizedBox(width: 10,),
+                          Text("We are not Serving in Your Location",style:  GoogleFonts.basic(
+                              fontWeight: FontWeight.bold, fontSize: 18,color: Colors.red.shade800),)
+                        ],
+                      ),
+                    )) :  PopularRestaurantList(
+
                       type: selectedType.toString(),
                       userGeoPoint: userGeoPoint,
                       status: true,
                       listofRestaurant: restomodel,
                       uid:
                           usersList.ref.replaceAll("+", "").removeAllWhitespace,
+
                     )
                     // Divider(thickness: 2,),
                     // Expanded(child: RestroList(userGeoPoint : userGeoPoint,status: true,)),

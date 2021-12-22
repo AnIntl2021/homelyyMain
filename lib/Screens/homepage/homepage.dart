@@ -10,6 +10,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:homelyy/Screens/Cart/cartshop.dart';
 import 'package:homelyy/Screens/UserProfile/userProfile.dart';
 import 'package:homelyy/Screens/Vouchers/vouchers.dart';
@@ -26,7 +27,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Homepage extends StatefulWidget {
   final String userRef;
-  const Homepage({Key key, this.userRef}) : super(key: key);
+  final LatLng latlng;
+  const Homepage({Key key, this.userRef, this.latlng}) : super(key: key);
 
   @override
   _HomepageState createState() => _HomepageState();
@@ -40,44 +42,6 @@ LocationData _locationData;
 var userLatitude = "";
 var userLongitude = "";
 GeoPoint userGeoPoint ;
-
-// Future<LocationData>getLocation() async {
-//   _serviceEnabled = await location.serviceEnabled();
-//   if (!_serviceEnabled) {
-//     print("requesting permisssion");
-//     _serviceEnabled = await location.requestService();
-//
-//     if (!_serviceEnabled) {
-//
-//       print("requested permisssion $_serviceEnabled");
-//       Fluttertoast.showToast(msg: "Please enable location");
-//       getLocation();
-//
-//     }else{
-//
-//
-//       print("requested again permisssion $_serviceEnabled");
-//       getLocation();
-//
-//     }
-//   }else{
-//
-//   }
-//
-//   _permissionGranted = await location.hasPermission();
-//
-//   if (_permissionGranted == PermissionStatus.denied) {
-//     _permissionGranted = await location.requestPermission();
-//     if (_permissionGranted != PermissionStatus.granted) {
-//       Fluttertoast.showToast(msg: "Please enable location");
-//       getLocation();
-//     }
-//   }
-//
-//
-//   return _locationData = await location.getLocation();
-//
-// }
 
 Future<LocationData> getLocation() async {
   _serviceEnabled = await location.serviceEnabled();
@@ -106,30 +70,13 @@ Future<LocationData> getLocation() async {
 
 
 
-Future<List<coder.Address>>getAddress(LocationData locationdata) async {
-  // // From a query
-  // final query = "1600 Amphiteatre Parkway, Mountain View";
-  // var addresses = await Geocoder.local.findAddressesFromQuery(query);
-  // var first = addresses.first;
-  // print("${first.featureName} : ${first.coordinates}");
 
-// From coordinates
-  final coordinates =  coder.Coordinates(locationdata.latitude, locationdata.longitude);
-  var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
-  var first = addresses.first;
-  print(" : ${first.addressLine}");
-
-  var pref = await SharedPreferences.getInstance();
-  pref.setString("address", first.addressLine);
-  pref.setString("code", first.postalCode);
-  return addresses;
-
-}
 
 class _HomepageState extends State<Homepage> {
   var currentIndex = 0;
   @override
   Widget build(BuildContext context) {
+
 
     final List<Widget> viewContainer = [
 
@@ -138,7 +85,7 @@ class _HomepageState extends State<Homepage> {
         key: Key("Bodyhome"),
         fromMap:  false,
         userref: widget.userRef.replaceAll("+", "").removeAllWhitespace,
-
+        latlng: widget.latlng,
       ),
 
       Vouchers(ref:widget.userRef.replaceAll("+", "").removeAllWhitespace),
@@ -165,7 +112,9 @@ class _HomepageState extends State<Homepage> {
             elevation: 0,
             actions: <Widget>[
               FutureBuilder(
+
                   future: Future.wait([AllApi().getCartCount(widget.userRef,)]),
+
                   builder: (context, snapshot) {
 
                     if(!snapshot.hasData){
@@ -173,6 +122,7 @@ class _HomepageState extends State<Homepage> {
                       return Center(
                         child: CircularProgressIndicator(color: kgreen,),
                       );
+
                     }
 
                     var cartCount = snapshot.requireData[0];
@@ -221,53 +171,6 @@ class _HomepageState extends State<Homepage> {
             children: viewContainer,
           ),
 
-        // FutureBuilder(
-        //   future: getLocation(),
-        //   builder: (context, snapshot) {
-        //     if(!snapshot.hasData){
-        //
-        //       return Center(
-        //         child: CircularProgressIndicator(color: kgreen,),
-        //       );
-        //     }
-        //     if(snapshot.hasError){
-        //
-        //         Fluttertoast.showToast(msg: "Error ${snapshot.error}",toastLength: Toast.LENGTH_LONG);
-        //
-        //
-        //     }
-        //
-        //
-        //     var locationdata = snapshot.requireData;
-        //
-        //
-        //     return FutureBuilder(
-        //       future: getAddress(locationdata),
-        //       builder: (context, snapshot1) {
-        //
-        //         if(!snapshot1.hasData){
-        //
-        //           return Center(
-        //             child: CircularProgressIndicator(color: kgreen,),
-        //           );
-        //         }
-        //         if(!snapshot1.hasError){
-        //
-        //           Fluttertoast.showToast(msg: "Error ${snapshot1.error}",toastLength: Toast.LENGTH_LONG);
-        //         }
-        //
-        //         return Scaffold(
-        //                 appBar: homeAppBar(context,"Homelyy",widget.userRef.replaceAll("+", "").removeAllWhitespace,""),
-        //                 bottomNavigationBar: buildBNB(),
-        //                 body: IndexedStack(
-        //                   index: currentIndex,
-        //                   children: viewContainer,
-        //                 ),
-        //               );
-        //       }
-        //     );
-        //   }
-        // )
 
       ),
     );
@@ -369,7 +272,9 @@ class _HomepageState extends State<Homepage> {
                       });
                     });
                   }),
+
               Text("Rate Us")
+
             ],
           ),
         ],

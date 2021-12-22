@@ -44,6 +44,7 @@ class _OrderPageState extends State<OrderPage> {
             return ListView.builder(
               itemCount: orderTotalMap.length,
               itemBuilder: (context, index) {
+
                 var shopUid = orderTotalMap[index]["vid"];
                 return Container(
                     margin: EdgeInsets.only(top: 10, bottom: 10),
@@ -64,6 +65,7 @@ class _OrderPageState extends State<OrderPage> {
                             ,subTotal: orderTotalMap[index]["subtotal"],wallet: "20",discount: orderTotalMap[index]["discount"],savings: orderTotalMap[index]["savings"],reason: "reason",shopname:orderTotalMap[index]["vid"]
                             ,name:orderTotalMap[index]["name"],deliveryname:shopName,deliverynumber:"1234567890",uid:orderTotalMap[index]["ref"]
                         );
+
                       }
                     ),
                 );
@@ -74,7 +76,6 @@ class _OrderPageState extends State<OrderPage> {
       ),
     );
   }
-
   Widget createOrderListItem({
 
     String orderId,String status,String date,String time,String payment,String total
@@ -141,5 +142,6 @@ class _OrderPageState extends State<OrderPage> {
     );
 
   }
+
 
 }

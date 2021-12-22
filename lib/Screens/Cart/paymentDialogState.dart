@@ -76,7 +76,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
     void openCheckout({String phone, String id, String email}) async {
 
       var options = {
-        'key': 'rzp_test_u8g13PFaeMNHNf',
+        'key': 'rzp_live_TjQcOcMzLxnJ6j',
         'amount': int.parse(widget.total) * 100,
         'name': 'Homelyy',
         'description': 'Order no: $id}',
@@ -92,6 +92,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
 
       } catch (e) {
         debugPrint('Error: e');
+        Fluttertoast.showToast(msg: "Error $e");
       }
 
     }
