@@ -64,6 +64,7 @@ class SearchBox extends StatelessWidget {
             // var inPromo = suggestion.get("inPromotion");
             // var status = suggestion.get("status");
             // var img = suggestion.get("img");
+
             return Container(
               margin: EdgeInsets.only(top: 10, bottom: 10),
               child: Padding(

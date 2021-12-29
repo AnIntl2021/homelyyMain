@@ -10,7 +10,9 @@ class restaurantModel {
   String vendorid;
   String inPromotion;
   String description;
-  String email;
+  String email,rating;
+  var category;
+  var cuisine;
   var location;
 
 
@@ -25,7 +27,7 @@ class restaurantModel {
         this.vendorid,
         this.inPromotion,
         this.description,
-        this.email,this.location});
+        this.email,this.location,this.category,this.cuisine,this.rating});
 
   fromJson(Map<String, dynamic> json) {
 
@@ -52,8 +54,10 @@ class restaurantModel {
         inPromotion : json['inPromotion'],
 
         description : json['description'],
-      location: json['location']
-
+      location: json['location'],
+        category: json['category'],
+        cuisine:json['cuisine'],
+      rating:json['rating'],
     );
 
 

@@ -28,8 +28,7 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
 
   @override
   Widget build(BuildContext context) {
-
-  //
+    print("restaurant gettin ${widget.listofRestaurant}");
   // var uid = FirebaseAuth.instance.currentUser.uid;
   //   final geo = Geoflutterfire();
   //   var firestore =
@@ -48,31 +47,30 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
             padding:  EdgeInsets.all(8.0),
 
             child: RestaurentListCard(
+              category:widget.listofRestaurant[index].category,
+              title: widget.listofRestaurant[index].name,
 
-              category:widget.listofRestaurant[index]["category"],
-              title: widget.listofRestaurant[index]["name"],
+              type: widget.listofRestaurant[index].type,
 
-              type: widget.listofRestaurant[index]["type"],
-
-              img:widget.listofRestaurant[index]["image"],
+              img:widget.listofRestaurant[index].image,
 
               discount: "15",
 
-              cuisine: widget.listofRestaurant[index]["cuisine"],
+              cuisine: widget.listofRestaurant[index].cuisine,
 
-              area: widget.listofRestaurant[index]["address"],
+              area: widget.listofRestaurant[index].address,
 
               deliveryTime: "15-20",
 
               tag: "",
 
-              rating: widget.listofRestaurant[index]["rating"],
+              rating: widget.listofRestaurant[index].rating,
 
               discountVisibility: true,
 
               tagVisibility: false,
 
-              shopid: widget.listofRestaurant[index]["vendorid"],
+              shopid: widget.listofRestaurant[index].vendorid,
 
               press: () {},
 
@@ -82,13 +80,54 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
 
               opentiming: "10",
 
-              badgeVisibility: widget.listofRestaurant[index]["inPromotion"] == "1" ? true : false,
+              badgeVisibility: widget.listofRestaurant[index].inPromotion == "1" ? true : false,
 
               status: true,
 
               numReview: 12,
 
               uid: widget.uid.replaceAll("+", "").removeAllWhitespace,
+
+              // category:widget.listofRestaurant[index]["category"],
+              // title: widget.listofRestaurant[index]["name"],
+              //
+              // type: widget.listofRestaurant[index]["type"],
+              //
+              // img:widget.listofRestaurant[index]["image"],
+              //
+              // discount: "15",
+              //
+              // cuisine: widget.listofRestaurant[index]["cuisine"],
+              //
+              // area: widget.listofRestaurant[index]["address"],
+              //
+              // deliveryTime: "15-20",
+              //
+              // tag: "",
+              //
+              // rating: widget.listofRestaurant[index]["rating"],
+              //
+              // discountVisibility: true,
+              //
+              // tagVisibility: false,
+              //
+              // shopid: widget.listofRestaurant[index]["vendorid"],
+              //
+              // press: () {},
+              //
+              // key: Key("resto1"),
+              //
+              // closetiming: "10",
+              //
+              // opentiming: "10",
+              //
+              // badgeVisibility: widget.listofRestaurant[index]["inPromotion"] == "1" ? true : false,
+              //
+              // status: true,
+              //
+              // numReview: 12,
+              //
+              // uid: widget.uid.replaceAll("+", "").removeAllWhitespace,
 
             )
         );

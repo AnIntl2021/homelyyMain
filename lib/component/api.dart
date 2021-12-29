@@ -57,9 +57,9 @@ class AllApi {
 
 
   Future getRestaurant(String lat,String lon) async {
-
+    print("recieving api");
     var userGetURL = Uri.parse("${conurl}restrogetnearme?lat=$lat&lng=$lon");
-
+    print("recieving api $userGetURL");
     var response = await http.get(userGetURL);
     print("got restaurant ${response.body}");
 
@@ -79,13 +79,13 @@ class AllApi {
     //
     // String user = jsonEncode(UserModel().fromJson(json));
 
-    var newList = list.length == 0 ? null : list.map((e) {
+    var newList = list.length == 0 ? [] : list.map((e) {
       return restaurantModel().fromJson(e);
     });
 
 
 
-    return newList == null ? [] : newList.toList();
+    return newList == [] ? [] : newList.toList();
 
   }
 
@@ -233,6 +233,7 @@ class AllApi {
 
   Future getcatfood(String vendorid , String catid) async {
     var userGetURL = Uri.parse("${conurl}getcatfood?vendorid=$vendorid&catid=$catid");
+    print(userGetURL);
     var response = await http.get(userGetURL);
 
     List list = json.decode(response.body);

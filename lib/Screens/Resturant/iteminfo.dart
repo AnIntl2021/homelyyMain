@@ -248,7 +248,7 @@ class _ItemInfoState extends State<ItemInfo> {
 
                                         List<ProductModel> foodList =
                                             snapshot1.requireData;
-                                        print("foodList lenght = ${foodList[0].status}");
+                                        print("foodList lenght = ${foodList}");
 
                                         return Padding(
                                           padding: const EdgeInsets.all(8.0),

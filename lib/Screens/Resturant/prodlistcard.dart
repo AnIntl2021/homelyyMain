@@ -100,6 +100,24 @@ class _ProductListCardState extends State<ProductListCard> {
                           child: Card(
                             child: Image.network(
                               widget.img,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    color: kblackcolor,
+                                    value: loadingProgress
+                                        .expectedTotalBytes != null
+                                        ? loadingProgress
+                                        .cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes
+                                        : null,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),

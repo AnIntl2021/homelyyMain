@@ -91,7 +91,22 @@ class CatCard extends StatelessWidget {
 
                         width: 70,
 
-
+                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+    if (loadingProgress == null) {
+    return child;
+    }
+    return Center(
+      child: CircularProgressIndicator(
+        color: kblackcolor,
+        value: loadingProgress
+            .expectedTotalBytes != null
+            ? loadingProgress
+            .cumulativeBytesLoaded /
+            loadingProgress.expectedTotalBytes
+            : null,
+      ),
+    );
+                        }
                         // size.width * 0.18 means it use 18% of total width
 
 
@@ -148,7 +163,7 @@ class _CatListState extends State<CatList> {
         itemCount: widget.catList.length,
         itemBuilder: (context, index) {
           var title = widget.streamTitle;
-          // var catogry = product[index]["catogry"];
+          var image = "https://thehomelyy.com/images/category/${widget.catList[index].image}";
           // var collection = product[index]["collection"];
           // var recipe = product[index]["recipe"];
           var img =
@@ -157,8 +172,8 @@ class _CatListState extends State<CatList> {
           // var price = product[index]["price"];
           return CatCard(
             title: widget.catList[index].name,
-            svgSrc: img, price: '', shopName: '', key: Key("cartList"),
-            catid:widget.catList[index].catid,
+            svgSrc: image, price: '', shopName: '', key: Key("cartList"),
+            catid:widget.catList[index].name,
               type:widget.type,uid: widget.uid,count: widget.catList.length.toString(),latlng: widget.latlng,
             // price: "\â‚¹ $price",
           );

@@ -46,7 +46,7 @@ AppBar homeAppBar(BuildContext context,String title,String ref,from) {
 
     var pref = await SharedPreferences.getInstance();
     pref.setString("address", first.addressLine);
-    pref.setString("code", first.postalCode);
+    pref.setString("code", first.countryCode);
     return addresses;
 
   }
@@ -65,7 +65,7 @@ AppBar homeAppBar(BuildContext context,String title,String ref,from) {
 
       var pref = await SharedPreferences.getInstance();
       pref.setString("address", first.addressLine);
-      pref.setString("code", first.postalCode);
+      pref.setString("code", first.countryCode);
       return addresses;
     });
 
@@ -128,7 +128,7 @@ AppBar homeAppBar(BuildContext context,String title,String ref,from) {
                           ),
                           Container(
                             child: Text(
-                              adresses.first.postalCode,
+                              adresses.first.countryCode,
                                 style: GoogleFonts.arvo(fontSize: 10),
                               overflow: TextOverflow.ellipsis,
 

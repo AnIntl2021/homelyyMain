@@ -80,6 +80,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
         'amount': int.parse(widget.total) * 100,
         'name': 'Homelyy',
         'description': 'Order no: $id}',
+        'order_id': 'Order no: $id}',
         'prefill': {'contact': '$phone', 'email': '$email'},
         'external': {
           'wallets': ['paytm']

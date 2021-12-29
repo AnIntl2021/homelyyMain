@@ -11,6 +11,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/get_utils/src/extensions/dynamic_extensions.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -37,6 +38,8 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  List searchModel ;
+  String search ;
   var catTitle = "South Indian";
   var pizzanon = false;
   var pizzaveg = false;
@@ -165,11 +168,12 @@ class _BodyState extends State<Body> {
       var addresses =
       await Geocoder.local.findAddressesFromCoordinates(coordinates);
       var first = addresses.first;
-      print(" : ${first.addressLine}");
+      var code = first.postalCode ?? first.countryCode;
+      print(" : ${first.countryCode}");
 
       var pref = await SharedPreferences.getInstance();
       pref.setString("address", first.addressLine);
-      pref.setString("code", first.postalCode);
+      pref.setString("code", code);
       return addresses;
 
 
@@ -223,14 +227,13 @@ class _BodyState extends State<Body> {
 
               ]),
               builder: (context, snapshot1) {
-                // var restoModel = snapshot.requireData[0];
-                //
+
                 if (!snapshot1.hasData) {
                   return Center(child: CircularProgressIndicator(color: kgreen,));
                 }
 
-
-                var restomodel = snapshot1.requireData[0];
+                print("restomodel1 ${snapshot1.requireData}");
+                List restomodel = snapshot1.requireData[0];
                 List<Address> addresses = snapshot1.requireData[1];
                 print("restomodel $restomodel");
 
@@ -268,7 +271,7 @@ class _BodyState extends State<Body> {
                                 ),
                                 Container(
                                   child: Text(
-                                    addresses.first.postalCode,
+                                    addresses.first.postalCode ?? addresses.first.countryCode,
                                     style: GoogleFonts.arvo(fontSize: 10),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -280,13 +283,54 @@ class _BodyState extends State<Body> {
                         )
                       ],
                     ),
-                    AnimatedContainer(
-                      duration: Duration(milliseconds: 200),
-                      child: SearchBox(
-                        onChanged: (value) {},
-                        key: Key("searchBox"),
-                      ),
-                    ),
+
+                          Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                cursorColor: kgreen,
+                decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                color: kgreen.withOpacity(0.6), width: 3)),
+                disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                color: kgreen.withOpacity(0.6), width: 3)),
+                border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                color: kgreen.withOpacity(0.6), width: 3)),
+                focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: kgreen, width: 3)),
+                suffixIcon: Icon(
+                Icons.search,
+                color: kgreen,
+                ),
+                contentPadding: EdgeInsets.all(11.25),
+                hintText: "Search",
+                hintStyle: TextStyle(
+                color: Colors.black.withOpacity(0.4),
+                ),
+                ),
+                style: TextStyle(color: kblackcolor),
+                onChanged: (value) {
+                setState(() {
+                search = value.removeAllWhitespace;
+                        searchModel = restomodel;
+
+
+
+                searchModel = restomodel.where((element) => element.name.toLowerCase().contains(value.removeAllWhitespace.toLowerCase() ?? "")).toList();
+
+                print(searchModel );
+                });
+                },
+                ),
+                ),
+
                     AnimatedContainer(
                       duration: Duration(milliseconds: 200),
                       child: Row(
@@ -462,7 +506,7 @@ class _BodyState extends State<Body> {
                       type: selectedType.toString(),
                       userGeoPoint: userGeoPoint,
                       status: true,
-                      listofRestaurant: restomodel,
+                      listofRestaurant:search == null || search.toString().isBlank ? restomodel : searchModel,
                       uid:
                           usersList.ref.replaceAll("+", "").removeAllWhitespace,
 
