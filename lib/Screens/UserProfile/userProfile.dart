@@ -12,6 +12,7 @@ import 'package:homelyy/Screens/UserProfile/wallet.dart';
 import 'package:homelyy/Screens/login/loginScreen.dart';
 import 'package:homelyy/Screens/orders/orderpage.dart';
 import 'package:homelyy/component/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile extends StatefulWidget {
   final String id;
@@ -28,13 +29,14 @@ class _UserProfileState extends State<UserProfile> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text("User Name"),
-                TextButton(onPressed: () {}, child: Text("EDIT"))
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     Text("User Name"),
+            //     TextButton(onPressed: () {}, child: Text("EDIT"))
+            //   ],
+            // ),
+
             buildListTile("MY ORDERS", FontAwesomeIcons.list, () {
               Get.to(
                   OrderPage(
@@ -66,7 +68,7 @@ class _UserProfileState extends State<UserProfile> {
               Fluttertoast.showToast(msg: "Available in Next Update");
             }),
             Divider(),
-            buildListTile("LOGOUT", FontAwesomeIcons.doorClosed, () {
+            buildListTile("LOGOUT", FontAwesomeIcons.doorClosed, () async {
               // FirebaseAuth.instance
               //     .signOut()
               //     .then((value) => Navigator.pushAndRemoveUntil<dynamic>(
@@ -75,6 +77,9 @@ class _UserProfileState extends State<UserProfile> {
               //           (route) =>
               //               false, //if you want to disable back feature set to false
               //         ));
+               SharedPreferences pref =  await SharedPreferences.getInstance();
+               pref.clear();
+               Get.offAll(LoginScreen());
             }),
           ],
         ),

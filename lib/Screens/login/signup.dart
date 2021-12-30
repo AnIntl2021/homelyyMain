@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:currency_picker/currency_picker.dart';
 import 'package:dropdown_below/dropdown_below.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -92,23 +93,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-          future: Future.wait([
-            buildDropdownTestItems(countryList),
-          ]),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: kgreen,
-                ),
-              );
-            }
-
-
-            var countryTestItems = snapshot.requireData[0];
-            print("weare getting agelist ${countryTestItems}");
-            return Center(
+      body: Center(
               child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
@@ -135,74 +120,51 @@ class _SignUpState extends State<SignUp> {
                             style: GoogleFonts.arvo(
                                 color: kdarkgreen, fontSize: 18),
                           ),
-                          // Container(
-                          //   margin: EdgeInsets.all(15),
-                          //   child:DropdownBelow(
-                          //     itemWidth: 250,
-                          //     itemTextstyle: TextStyle(
-                          //         fontSize: 14,
-                          //         fontWeight: FontWeight.w400,
-                          //         color: Colors.black),
-                          //     boxTextstyle: TextStyle(
-                          //         fontSize: 14,
-                          //         fontWeight: FontWeight.w400,
-                          //         color: Colors.white.withOpacity(0.4)),
-                          //     boxPadding:
-                          //     EdgeInsets.fromLTRB(13, 12, 13, 12),
-                          //     boxWidth: Get.width,
-                          //     boxHeight: 45,
-                          //     boxDecoration: BoxDecoration(
-                          //         color: Colors.green,
-                          //         border: Border.all(
-                          //             width: 1, color: Colors.black)),
-                          //     icon: Icon(
-                          //       Icons.arrow_downward,
-                          //       color: Colors.white54,
-                          //     ),
-                          //     hint: Text('Country'),
-                          //     value: country,
-                          //     items: countryTestItems,
-                          //     onChanged: (selectedTest) {
-                          //       print("selectedTest $selectedTest");
-                          //       //
-                          //     },
-                          //   ),
-                          // ),
-                          Container(
-                            margin: EdgeInsets.all(15),
-                            child: TextFormField(
-                              // The validator receives the text that the user has entered.
-                              decoration: InputDecoration(
-                                hintText: "Your Country",
-                                labelText: "Your Country Name",
-                                // hintStyle: TextStyle(color: Colors.white30),
-                                labelStyle: TextStyle(color: kgreen),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: kgreen),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: kgreen),
-                                ),
 
-                                // errorText: isdiscountAvailable ? erroText : null
+                          InkWell(
+                            onTap: (){
+                              showCurrencyPicker(
+                                context: context,
+                                showFlag: true,
+                                showCurrencyName: true,
+                                showCurrencyCode: true,
+                                onSelect: (Currency currency) {
+                                  print('Select currency: ${currency.name}');
+                                  setState(() {
+
+                                    country = currency.code;
+                                  });
+
+                                },
+                                favorite: ['INR'],
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(15),
+                              child: TextFormField(
+                                enabled: false,
+                                // The validator receives the text that the user has entered.
+                                decoration: InputDecoration(
+                                  hintText:  country == "" || country == null ? "Your Country" : country,
+                                  labelText: country == "" || country == null ? "Your Country" : country,
+                                  // hintStyle: TextStyle(color: Colors.white30),
+                                  labelStyle: TextStyle(color: kgreen),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: kgreen),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: kgreen),
+                                  ),
+                                  disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: kgreen),
+                                  ),
+                                  // errorText: isdiscountAvailable ? erroText : null
+                                ),
+                                validator: (value) {
+                                  return null;
+                                },
+
                               ),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter Correct Phone Number';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                setState(() {
-                                  country = value;
-                                });
-                              },
-
-                              onChanged: (value) {
-                                setState(() {
-                                  country = value;
-                                });
-                              },
                             ),
                           ),
                           Container(
@@ -261,7 +223,6 @@ class _SignUpState extends State<SignUp> {
                                 counterText: ""
                                 // errorText: isdiscountAvailable ? erroText : null
                               ),
-                              maxLength: 10,
                               validator: (value) {
                                 if (value.isEmpty || !value.isPhoneNumber) {
                                   return 'Please enter Correct Phone Number';
@@ -431,70 +392,74 @@ class _SignUpState extends State<SignUp> {
                                   //
                                   // });
                                   //
-
-                                  AllApi()
-                                      .postUser(UserModel(
-                                    country: country,
-                                          name: userName ?? "",
-                                          address: "",
-                                          ref: userPhone
-                                                  .replaceAll("+", "")
-                                                  .removeAllWhitespace ??
-                                              "",
-                                          email: userEmail ?? "",
-                                          dob: userDOB
-                                                  .toLocal()
-                                                  .toString()
-                                                  .split(' ')[0] ??
-                                              "",
-                                          member: "",
-                                          phone: userPhone
-                                              .replaceAll("+", "")
-                                              .removeAllWhitespace,
-                                          token: "",
-                                          wallet: "0",
-                                          refFrom: refercode,password: userPassword))
-                                      .then((value) async {
-                                    if (value == "\"User Already Exist\"") {
-                                      Fluttertoast.showToast(
-                                          msg: "User Already Exist");
-                                      Get.snackbar("User Already Exist",
-                                          "Use another number",
-                                          snackPosition: SnackPosition.BOTTOM,
-                                          colorText: Colors.red);
-
-                                      //  AllApi().getUser(widget.phone).then((value) {
-                                      //    print("UserError ${widget.phone}  ${value}}");
-                                      //
-                                      //         AllApi().updateLocalUsers(value).then((value) {
-                                      //
-                                      //           addBoolToSF().then((value) {
-                                      //             Get.offAll(Homepage());
-                                      //           });
-                                      //
-                                      //
-                                      //         });
-                                      //
-                                      // });
-                                    } else {
-                                      var result = jsonDecode(value);
-
-                                      UserModel users =
-                                          UserModel().fromJson(result);
-
-                                      AllApi()
-                                          .updateLocalUsers(jsonEncode(users),users.phone);
-
-                                      print(
-                                          "getting user ${users.phone.replaceAll("+", "")}");
-
-                                      Get.off(Homepage(
-                                        userRef: users.phone
+                                  if(country != null){
+                                    AllApi()
+                                        .postUser(UserModel(
+                                        country: country,
+                                        name: userName ?? "",
+                                        address: "",
+                                        ref: userPhone
+                                            .replaceAll("+", "")
+                                            .removeAllWhitespace ??
+                                            "",
+                                        email: userEmail ?? "",
+                                        dob: userDOB
+                                            .toLocal()
+                                            .toString()
+                                            .split(' ')[0] ??
+                                            "",
+                                        member: "",
+                                        phone: userPhone
                                             .replaceAll("+", "")
                                             .removeAllWhitespace,
-                                      ));
-                                    }
-                                  });
+                                        token: "",
+                                        wallet: "0",
+                                        refFrom: refercode,password: userPassword))
+                                        .then((value) async {
+                                      if (value == "\"User Already Exist\"") {
+                                        Fluttertoast.showToast(
+                                            msg: "User Already Exist");
+                                        Get.snackbar("User Already Exist",
+                                            "Use another number",
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            colorText: Colors.red);
+
+                                        //  AllApi().getUser(widget.phone).then((value) {
+                                        //    print("UserError ${widget.phone}  ${value}}");
+                                        //
+                                        //         AllApi().updateLocalUsers(value).then((value) {
+                                        //
+                                        //           addBoolToSF().then((value) {
+                                        //             Get.offAll(Homepage());
+                                        //           });
+                                        //
+                                        //
+                                        //         });
+                                        //
+                                        // });
+                                      } else {
+                                        var result = jsonDecode(value);
+
+                                        UserModel users =
+                                        UserModel().fromJson(result);
+
+                                        AllApi()
+                                            .updateLocalUsers(jsonEncode(users),users.phone);
+
+                                        print(
+                                            "getting user ${users.phone.replaceAll("+", "")}");
+
+                                        Get.off(Homepage(
+                                          userRef: users.phone
+                                              .replaceAll("+", "")
+                                              .removeAllWhitespace,
+                                        ));
+                                      }
+                                    });
+                                  }else{
+                                    Fluttertoast.showToast(msg: "Please Add Country");
+                                  }
+
                                 }
                               },
                               style: ButtonStyle(
@@ -509,8 +474,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-            );
-          }),
+            )
     );
   }
 }

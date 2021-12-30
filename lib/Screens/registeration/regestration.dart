@@ -23,10 +23,12 @@ class _RegisterationState extends State<Registeration> {
   var isloggedin = false ;
 
   addBoolToSF() async {
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('loggedin', true).then((value) {
       prefs.setBool("token", true);
     });
+
   }
 
   _selectstartDate(BuildContext context) async {
