@@ -29,6 +29,7 @@ class PaymentDiaolog extends StatefulWidget {
 }
 
 class _PaymentDiaologState extends State<PaymentDiaolog> {
+
   var paymentvalue;
 
   Razorpay _razorpay;
@@ -65,7 +66,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
     var email = "";
 
 
-    List a = ["CASH ON DELIVERY", "PAY ONLINE"];
+    List a = ["CASH ON DELIVERY"];
 
     var listoforders = [];
 

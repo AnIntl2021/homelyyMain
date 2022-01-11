@@ -648,7 +648,7 @@ class AllApi {
 
 
   Future addOrderTotal(UserModel users,CartTotalModel cartTotal,String shopName,String uaddress,String rNum) async {
-    var date =DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
+    var date =DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
 
     var userGetURL = Uri.parse("${conurl}addOrderTotal");
     print("orderToital $rNum");
