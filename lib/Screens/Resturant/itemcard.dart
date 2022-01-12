@@ -188,7 +188,7 @@ class _ItemCardState extends State<ItemCard> {
                                       ),
                                       onPressed: () {
 
-
+                                        Get.isSnackbarOpen ? Get.closeAllSnackbars() : print("sd");
                                         Get.to(CartShopPage(ref:widget.uid));
 
                                       }),

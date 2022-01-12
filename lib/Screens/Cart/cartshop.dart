@@ -24,6 +24,7 @@ class _CartShopPageState extends State<CartShopPage> {
 
   @override
   Widget build(BuildContext context) {
+    Get.closeAllSnackbars();
     // var stream = FirebaseFirestore.instance
     //     .collection("users")
     //     .doc(uid)
