@@ -27,7 +27,7 @@ class TitlePriceRating extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: InkWell(
         onTap: (){
-          Get.to(ReviewScreen(shopName: name));
+          // Get.to(ReviewScreen(shopName: name));
         },
         child: Row(
           children: <Widget>[

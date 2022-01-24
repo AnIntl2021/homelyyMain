@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,6 +8,7 @@ import 'package:homelyy/Screens/homepage/homepage.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
+import 'package:homelyy/component/models.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'orderdetailpage.dart';
@@ -84,10 +87,14 @@ class _OrderPageState extends State<OrderPage> {
 
   }){
     return InkWell(
-      onTap: (){
+      onTap: () async {
+       var data = await AllApi().getUser(uid);
+
+       var usermodel = UserModel().fromJson(jsonDecode(data));
+
         Get.to(() => OrderDetailScreen(id: orderId,status: status,subTotal: subTotal,
           wallet: wallet,discount: discount,savings: savings,total: total,delivery: "0",reason: reason
-          ,shopname:shopname,name:name,date:date,uid:uid
+          ,shopname:shopname,name:name,date:date,uid:uid,symbol:usermodel.symbol
           ,));
       },
       child: Container(

@@ -25,7 +25,7 @@ class ProductListCard extends StatefulWidget {
       recipe,
       discount,
       vid,
-      foodid;
+      foodid,symbol;
   final Function press;
   final bool tagVisibility;
   final bool stock;
@@ -49,7 +49,7 @@ class ProductListCard extends StatefulWidget {
     this.cutprice,
     this.totalorders,
     this.vid,
-    this.foodid, this.setting,
+    this.foodid, this.setting, this.symbol,
   }) : super(key: key);
 
   @override
@@ -176,7 +176,7 @@ class _ProductListCardState extends State<ProductListCard> {
                               child: Text(
                                 widget.cutprice == ""
                                     ? ""
-                                    : "\$ ${widget.cutprice}",
+                                    : "${widget.symbol} ${widget.cutprice}",
                                 style: TextStyle(fontSize: 16, color: kgreen),
                               ),
                             ),
@@ -184,7 +184,7 @@ class _ProductListCardState extends State<ProductListCard> {
                               width: 10,
                             ),
                             Text(
-                              "\$ ${widget.price}",
+                              "${widget.symbol} ${widget.price}",
                               style: widget.discountVisibility
                                   ? TextStyle(
                                       fontSize: 14,
@@ -392,7 +392,7 @@ class _ProductListCardState extends State<ProductListCard> {
                       height: 25,
                       child: Center(
                           child: Text(
-                        "\$ ${widget.discount} OFF",
+                        "${widget.symbol} ${widget.discount} OFF",
                         style:
                             GoogleFonts.arvo(fontSize: 12, color: Colors.white),
                       )),

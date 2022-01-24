@@ -56,11 +56,16 @@ class _CartShopPageState extends State<CartShopPage> {
                       return Column(
                         children: [
                           InkWell(
-                            onTap: () {
+                            onTap: () async {
+                            var status =  await AllApi().getVendorbyid1(shopList[index]["vendorid"].toString().replaceAll("}", ""));
+
+                            if(status == false){
+                              Get.snackbar('SHOP CLOSED', 'YOU CAN ORDER AFTER SHOP OPENS',backgroundColor: Colors.red);
+                            }else{
                               Get.to(
                                   CartPage(
-                                  shopname: shopList[index]["vendorid"].toString().replaceAll("}", ""),
-                                  uid: widget.ref,
+                                    shopname: shopList[index]["vendorid"].toString().replaceAll("}", ""),
+                                    uid: widget.ref,
 
                                     // shopaddress: shopaddress,
                                     // shopnumber: shopnumber,
@@ -69,6 +74,8 @@ class _CartShopPageState extends State<CartShopPage> {
 
                                   )
                               );
+                            }
+
                             },
                             child: Container(
                               height: 100,

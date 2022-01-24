@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:homelyy/component/api.dart';
@@ -34,7 +36,7 @@ class _RecommendedListState extends State<RecommendedList> {
     //     .snapshots();
 
     return FutureBuilder(
-      future:   widget.type == "restro" ? AllApi().getrestrecfood(widget.shopuid) : AllApi().getrecproduct(widget.shopuid),
+      future:  Future.wait([ widget.type == "restro" ? AllApi().getrestrecfood(widget.shopuid) : AllApi().getrecproduct(widget.shopuid),AllApi().getUser(widget.uid)]),
       builder: (context, snapshot) {
 
         if (!snapshot.hasData) {
@@ -45,8 +47,10 @@ class _RecommendedListState extends State<RecommendedList> {
           );
         }
 
+        UserModel usermodel = UserModel().fromJson(jsonDecode(snapshot.requireData[1]));
+      var   symbol = usermodel.symbol;
         
-        print("catlist lenght 11= ${snapshot.requireData}");
+        // print("catlist lenght 11= ${snapshot.requireData}");
 
 
         return ListView.builder(
@@ -55,14 +59,14 @@ class _RecommendedListState extends State<RecommendedList> {
             itemCount: snapshot.requireData.length,
             itemBuilder: (context, index) {
 
-              var title =  widget.type == "restro" ? snapshot.requireData[index].name  :  snapshot.requireData[index].name;
+              var title =  widget.type == "restro" ? snapshot.requireData[0][index].name  :  snapshot.requireData[0][index].name;
               // var catogry = "catogry";
-              var cutprice =  widget.type == "restro" ?snapshot.requireData[index].cutprice : snapshot.requireData[index].cutprice ;
-              var recipe =   widget.type == "restro" ? snapshot.requireData[index].description:  snapshot.requireData[index].description;
-              bool stock = widget.type == "restro" ?  snapshot.requireData[index].status: snapshot.requireData[index].status;
-              var img =   widget.type == "restro" ? snapshot.requireData[index].image:  snapshot.requireData[index].image;
-              var price =  widget.type == "restro" ? snapshot.requireData[index].price: snapshot.requireData[index].price;
-              var fid =  widget.type == "restro" ? snapshot.requireData[index].foodid: snapshot.requireData[index].productid;
+              var cutprice =  widget.type == "restro" ?snapshot.requireData[0][index].cutprice : snapshot.requireData[0][index].cutprice ;
+              var recipe =   widget.type == "restro" ? snapshot.requireData[0][index].description:  snapshot.requireData[0][index].description;
+              bool stock = widget.type == "restro" ?  snapshot.requireData[0][index].status: snapshot.requireData[0][index].status;
+              var img =   widget.type == "restro" ? snapshot.requireData[0][index].image:  snapshot.requireData[0][index].image;
+              var price =  widget.type == "restro" ? snapshot.requireData[0][index].price: snapshot.requireData[0][index].price;
+              var fid =  widget.type == "restro" ? snapshot.requireData[0][index].foodid: snapshot.requireData[0][index].productid;
 
               //
               // var title = product[index]["title"];
@@ -85,6 +89,7 @@ class _RecommendedListState extends State<RecommendedList> {
                 },
                 price: price,
                 uid: widget.uid, key: Key(""), shopName: widget.shopTitle,img: "${imageURL}products/$img", recipe: recipe, discountVisibility:  cutprice ==  "" ? false : true, tagVisibility: true, stock: stock, cutprice: cutprice == "" ? "" : cutprice, discount: cutprice ==  "" ? "" : (int.parse(price) - int.parse(cutprice)).toString(),
+                symbol:symbol
                 // price: "\â‚¹ $price",
               );
             });

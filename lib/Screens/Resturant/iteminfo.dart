@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -235,8 +237,8 @@ class _ItemInfoState extends State<ItemInfo> {
                                 title: Text(catList),
                                 children: [
                                   FutureBuilder(
-                                      future: AllApi().getcatfood(
-                                          widget.id, widget.category[index]),
+                                      future: Future.wait([AllApi().getcatfood(
+                                          widget.id, widget.category[index]),AllApi().getUser(widget.uid)]),
                                       builder: (context, snapshot1) {
                                         if (!snapshot1.hasData) {
                                           return Center(
@@ -245,9 +247,12 @@ class _ItemInfoState extends State<ItemInfo> {
                                             ),
                                           );
                                         }
+                                        UserModel usermodel = UserModel().fromJson(jsonDecode(snapshot1.requireData[1]));
+
+                                      var  symbol = usermodel.symbol;
 
                                         List<ProductModel> foodList =
-                                            snapshot1.requireData;
+                                            snapshot1.requireData[0];
                                         print("foodList lenght = ${foodList}");
 
                                         return Padding(
@@ -297,7 +302,7 @@ class _ItemInfoState extends State<ItemInfo> {
                                                             vid: widget.id,
                                                             cutprice:  foodList[index]
                                                                 .cutprice,
-                                                            setting:calling
+                                                            setting:calling,symbol:symbol
 
                                                         );
                                                       })),

@@ -16,7 +16,7 @@ import 'package:intl/intl.dart';
 
 
 class ItemCard extends StatefulWidget {
-  final String title, shopName, price, uid,img,cutprice,recipe,discount,type,vid,foodid;
+  final String title, shopName, price, uid,img,cutprice,recipe,discount,type,vid,foodid,symbol;
   final Function press;
   final bool tagVisibility;
   final bool stock;
@@ -28,7 +28,7 @@ class ItemCard extends StatefulWidget {
      this.shopName,
      this.press,
      this.price,
-     this.uid,  this.img,  this.cutprice,  this.recipe,  this.tagVisibility,  this.stock,  this.discountVisibility,  this.discount,  this.totalorders, this.type, this.vid, this.foodid,
+     this.uid,  this.img,  this.cutprice,  this.recipe,  this.tagVisibility,  this.stock,  this.discountVisibility,  this.discount,  this.totalorders, this.type, this.vid, this.foodid, this.symbol,
   }) : super(key: key);
 
   @override
@@ -89,7 +89,7 @@ class _ItemCardState extends State<ItemCard> {
                     Visibility(
                       visible: widget.cutprice == "" ? false : true,
                       child: Text(
-                        widget.cutprice == "" ? "" : "\$ ${widget
+                        widget.cutprice == "" ? "" : "${widget.symbol} ${widget
                             .cutprice}",
                         style:
                         TextStyle(
@@ -98,7 +98,7 @@ class _ItemCardState extends State<ItemCard> {
                     ),
                     SizedBox(width: 10,),
                     Text(
-                      "\$ ${widget.price}",
+                      "${widget.symbol} ${widget.price}",
                       style:
                       widget.discountVisibility
                           ? TextStyle(fontSize: 14,
@@ -305,7 +305,7 @@ class _ItemCardState extends State<ItemCard> {
             child: Container(
               width: 60,
               height: 25,
-              child: Center(child: Text("\$ ${widget.discount} OFF",
+              child: Center(child: Text("${widget.symbol} ${widget.discount} OFF",
                 style: GoogleFonts.arvo(
                     fontSize: 12, color: Colors.white),)),
               decoration: BoxDecoration(

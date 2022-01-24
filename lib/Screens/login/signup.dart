@@ -39,6 +39,7 @@ class _SignUpState extends State<SignUp> {
   var phone = "";
 
   var country;
+  var symbol ;
   bool obsecureText = true;
 
   List countryList = [
@@ -133,6 +134,7 @@ class _SignUpState extends State<SignUp> {
                                   setState(() {
 
                                     country = currency.code;
+                                    symbol = currency.symbol;
                                   });
 
                                 },
@@ -414,7 +416,7 @@ class _SignUpState extends State<SignUp> {
                                             .removeAllWhitespace,
                                         token: "",
                                         wallet: "0",
-                                        refFrom: refercode,password: userPassword))
+                                        refFrom: refercode,password: userPassword,symbol:symbol))
                                         .then((value) async {
                                       if (value == "\"User Already Exist\"") {
                                         Fluttertoast.showToast(

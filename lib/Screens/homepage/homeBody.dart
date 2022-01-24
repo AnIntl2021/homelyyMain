@@ -59,20 +59,6 @@ class _BodyState extends State<Body> {
 
   var selectedType = 0;
 
-  setSearchParam(String caseNumber) {
-    List<String> caseSearchList = [];
-    String temp = "";
-    caseNumber.characters.forEach((element) {
-      temp = temp + element;
-      caseSearchList.add(temp.toUpperCase());
-      caseSearchList.add(element.toUpperCase());
-    });
-    print(caseSearchList);
-    FirebaseFirestore.instance
-        .collection("Restaurant")
-        .doc(caseNumber)
-        .update({"search": caseSearchList});
-  }
 
 
   Location location = Location();
@@ -232,12 +218,21 @@ class _BodyState extends State<Body> {
                   return Center(child: CircularProgressIndicator(color: kgreen,));
                 }
 
-                print("restomodel1 ${snapshot1.requireData}");
+                // print("restomodel1 ${snapshot1.requireData[0][0].status}");
                 List restomodel = snapshot1.requireData[0];
+
                 List<Address> addresses = snapshot1.requireData[1];
-                print("restomodel $restomodel");
+
+                var closedrestomodel =  restomodel.where((element) => element.status == false).toList();
+
+                var promorestomodel =  restomodel.where((element) => element.status == true && element.inPromotion == '1').toList();
+
+                restomodel = restomodel.where((element) => element.status == true&& element.inPromotion == '0').toList();
+                print("opendrestomodel $restomodel");
 
 
+
+                print("closedrestomodel $closedrestomodel");
 
                 return  ListView(
                   children: [
@@ -491,7 +486,29 @@ class _BodyState extends State<Body> {
                         ),
                       ],
                     )),
-                    restomodel.length == 0 ? Container(child: Padding(
+
+                    promorestomodel.length == 0 ?SizedBox() :  PopularRestaurantList(
+
+                      type: selectedType.toString(),
+                      userGeoPoint: userGeoPoint,
+                      status: true,
+                      listofRestaurant:promorestomodel,
+                      uid:
+                      usersList.ref.replaceAll("+", "").removeAllWhitespace,
+
+                    ),
+
+                    restomodel.length == 0 ? closedrestomodel.length != 0 ? Container(child: Padding(
+                      padding: const EdgeInsets.only(bottom: 30.0,left: 30),
+                      child: Row(
+                        children: [
+                          Icon(FontAwesomeIcons.sadCry),
+                          SizedBox(width: 10,),
+                          Text("NO RESTAURANT ARE LIVE NOW",style:  GoogleFonts.basic(
+                              fontWeight: FontWeight.bold, fontSize: 18,color: Colors.red.shade800),)
+                        ],
+                      ),
+                    )): Container(child: Padding(
                       padding: const EdgeInsets.only(bottom: 30.0,left: 30),
                       child: Row(
                         children: [
@@ -509,6 +526,16 @@ class _BodyState extends State<Body> {
                       listofRestaurant:search == null || search.toString().isBlank ? restomodel : searchModel,
                       uid:
                           usersList.ref.replaceAll("+", "").removeAllWhitespace,
+
+                    ),
+                    closedrestomodel.length == 0 ?SizedBox() :  PopularRestaurantList(
+
+                      type: selectedType.toString(),
+                      userGeoPoint: userGeoPoint,
+                      status: false,
+                      listofRestaurant:closedrestomodel,
+                      uid:
+                      usersList.ref.replaceAll("+", "").removeAllWhitespace,
 
                     )
                     // Divider(thickness: 2,),

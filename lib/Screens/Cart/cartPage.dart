@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'dart:collection';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,6 +52,7 @@ class _CartPageState extends State<CartPage> {
   //     .collection("cart")
   //     .snapshots();
   bool loading = false;
+  String symbol;
 
   @override
   void initState() {
@@ -128,7 +130,7 @@ class _CartPageState extends State<CartPage> {
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
         body: loading ? Center(child: Image.asset("assets/preloader.gif"),) : FutureBuilder(
-          future: AllApi().getCart(widget.uid, widget.shopname),
+          future: Future.wait([AllApi().getCart(widget.uid, widget.shopname),AllApi().getUser(widget.uid)]),
           builder: (context, snapshot) {
 
 
@@ -137,8 +139,10 @@ class _CartPageState extends State<CartPage> {
             }
 
 
-            List<CartModel> cartList = snapshot.requireData;
-            print("cartList in $cartList ${widget.uid} ${widget.shopname}");
+            List<CartModel> cartList = snapshot.requireData[0];
+            UserModel usermodel = UserModel().fromJson(jsonDecode(snapshot.requireData[1]));
+            symbol = usermodel.symbol;
+            // print("cartList in $cartList ${widget.uid} ${widget.shopname}");
 
 
             return FutureBuilder(
@@ -697,7 +701,7 @@ class _CartPageState extends State<CartPage> {
                                   Row(
                                     children: [
                                       Text(
-                                        cutprice == "" ? "" :"\$ ${(int.parse(cutprice)).toString()}",
+                                        cutprice == "" ? "" :"${symbol} ${(int.parse(cutprice)).toString()}",
                                         style:
                                         TextStyle(fontSize: 16, color: Colors.purple.shade400),
                                       ),
@@ -705,7 +709,7 @@ class _CartPageState extends State<CartPage> {
                                       SizedBox(width: 10,),
 
                                       Text(
-                                        "\$ ${price}",
+                                        "$symbol ${price}",
                                         style:
                                         discountVisibility ? TextStyle(fontSize: 14, color: Colors.blueGrey,decoration: TextDecoration.lineThrough,) : TextStyle(fontSize: 16, color: Colors.purple.shade400),
                                       ),
@@ -844,7 +848,7 @@ class _CartPageState extends State<CartPage> {
                 child: Container(
                   width: 60,
                   height: 25,
-                  child: Center(child: Text("\$ ${discount} OFF",style: GoogleFonts.arvo(fontSize: 12,color: Colors.white),)),
+                  child: Center(child: Text("$symbol ${discount} OFF",style: GoogleFonts.arvo(fontSize: 12,color: Colors.white),)),
                   decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6)), color: Colors.green,),
                 )),
           )
@@ -1022,7 +1026,7 @@ class _CartPageState extends State<CartPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "\$",
+                "$symbol",
                 style: CustomTextStyle.textFormFieldBlack
                     .copyWith(color: Colors.deepOrange.shade700, fontSize: 14),
               ),

@@ -26,7 +26,7 @@ class OrderDetailScreen extends StatefulWidget {
       savings,
       reason,
       shopname,
-      name,date,uid;
+      name,date,uid,symbol;
 
   const OrderDetailScreen(
       {Key key,
@@ -39,7 +39,7 @@ class OrderDetailScreen extends StatefulWidget {
       this.delivery,
       this.savings,
       this.reason,
-      this.shopname, this.name, this.date, this.uid})
+      this.shopname, this.name, this.date, this.uid,this.symbol})
       : super(key: key);
 
   @override
@@ -353,7 +353,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "\$",
+                "${widget.symbol}",
                 style: CustomTextStyle.textFormFieldBlack
                     .copyWith(color: Colors.deepOrange.shade700, fontSize: 14),
               ),
@@ -554,7 +554,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                       Text(
                                         cutprice == ""
                                             ? ""
-                                            : "\$ ${(int.parse(cutprice)).toString()}",
+                                            : "${widget.symbol} ${(int.parse(cutprice)).toString()}",
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.purple.shade400),
@@ -563,7 +563,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         width: 10,
                                       ),
                                       Text(
-                                        "\$ ${price}",
+                                        "${widget.symbol} ${price}",
                                         style: discountVisibility
                                             ? TextStyle(
                                                 fontSize: 14,
@@ -600,7 +600,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   height: 25,
                   child: Center(
                       child: Text(
-                    "\$ ${discount} OFF",
+                    "${widget.symbol} ${discount} OFF",
                     style: GoogleFonts.arvo(fontSize: 12, color: Colors.white),
                   )),
                   decoration: BoxDecoration(

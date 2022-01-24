@@ -158,7 +158,7 @@ class _UserWalletState extends State<UserWallet> {
                     child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text("GrocPod WALLET"),
+                    Text("Homelyy WALLET"),
                     SizedBox(
                       width: 10,
                     ),
@@ -237,7 +237,7 @@ class _UserWalletState extends State<UserWallet> {
                         style: GoogleFonts.arvo(color: Colors.black),
                       ),
                       Text(
-                        "\$ ${usersList.wallet}",
+                        "${usersList.symbol} ${usersList.wallet}",
                         style: GoogleFonts.arvo(color: Colors.blueGrey),
                       ),
                     ],

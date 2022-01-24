@@ -62,7 +62,7 @@ class RestaurentListCard extends StatelessWidget {
                   rating: rating,
                   numReview: numReview,
                   shopUid: shopid, key: Key("shopDetailPage"), opentiming:opentiming, closetiming: closetiming,
-                    uid:uid.replaceAll("+", "").removeAllWhitespace
+                    uid:uid.replaceAll("+", "").removeAllWhitespace,status:status
             )
             );
       // status ? Get.to(DetailsScreen(
@@ -188,7 +188,7 @@ class RestaurentListCard extends StatelessWidget {
                           ),
                         ),
                         Visibility(
-                          visible: !status,
+                          visible: status,
                           child: Positioned(
                             width: 120,
                             height: 120,
@@ -207,7 +207,7 @@ class RestaurentListCard extends StatelessWidget {
                           ),
                         ),
                         Visibility(
-                          visible: !status,
+                          visible: status,
                           child: Positioned(
                             top: 40,
                             right: 30,

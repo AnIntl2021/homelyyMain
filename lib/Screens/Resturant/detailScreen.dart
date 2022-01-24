@@ -18,13 +18,14 @@ class DetailsScreen extends StatefulWidget {
   final String shopUid,opentiming,closetiming,uid;
   final int numReview;
   final List category;
+  final bool status;
 
   const DetailsScreen({
      Key key,
      this.rating,
      this.shoptitle,
      this.cuisine,
-     this.shopUid,  this.opentiming,  this.closetiming,  this.numReview, this.type, this.category, this.uid,
+     this.shopUid,  this.opentiming,  this.closetiming,  this.numReview, this.type, this.category, this.uid, this.status,
   }) : super(key: key);
   @override
   _DetailsScreenState createState() => _DetailsScreenState();
@@ -49,7 +50,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           rating: widget.rating,
           numReviews: widget.numReview,
           cuisine: widget.cuisine, key: Key("shopBody"),id: widget.shopUid, opentiming: widget.opentiming, closetiming: widget.closetiming, shopname: widget.shoptitle ,
-        uid:widget.uid.replaceAll("+", "").removeAllWhitespace
+        uid:widget.uid.replaceAll("+", "").removeAllWhitespace,status : widget.status
         ),
     );
   }

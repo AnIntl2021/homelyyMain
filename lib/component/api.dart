@@ -173,7 +173,7 @@ class AllApi {
       "wallet" : usermodel.wallet,
     "email" : usermodel.email,
       "country":usermodel.country,
-      "password": usermodel.password
+      "password": usermodel.password,'symbol':usermodel.symbol
     });
 
     // var list = json.decode(response.body);
@@ -199,15 +199,15 @@ class AllApi {
     var userGetURL = Uri.parse("${conurl}userget?ref=$ref");
 
 
-    var response = await http.get(userGetURL);
+    var response = await http.get(userGetURL,headers: {'Content-Type': 'application/json'});
 
-    print("prionting ref users = ${response.body} $ref");
+    print("prionting ref users = ${utf8.decode(response.bodyBytes)} $ref");
 
-    print("response for userpost ${response.body}");
+    // print("response for userpost ${response.body}");
 
 
 
-    return response.body;
+    return utf8.decode(response.bodyBytes);
 
   }
 
@@ -772,6 +772,22 @@ class AllApi {
    // var checkMap = LifeProductModel().fromJson(list);
     print("checkmap ${list["name"]}");
     return list["name"];
+
+
+  }
+
+  Future getVendorbyid1(String vid) async {
+
+    var userGetURL = Uri.parse("${conurl}vendorgetid?vendorid=$vid");
+    var response = await http.get(userGetURL);
+
+    var list = json.decode(response.body);
+
+    print("vebndordetaukl1 ${userGetURL}");
+    print("venodr nmaem ${list}");
+    // var checkMap = LifeProductModel().fromJson(list);
+    print("checkmap ${list["name"]}");
+    return list["status"];
 
 
   }

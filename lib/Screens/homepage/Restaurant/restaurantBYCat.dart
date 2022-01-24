@@ -35,38 +35,36 @@ class _RestaurantByCatState extends State<RestaurantByCat> {
               shrinkWrap: true,
               itemCount: widget.restomodel.length,
               itemBuilder: (context,index) {
-
+                print('resto ${widget.restomodel}');
                 return  Padding(
 
                     padding:  EdgeInsets.all(8.0),
 
-                    child: RestaurentListCard(
-                      category:widget.restomodel[index]["category"],
-                      title: widget.restomodel[index]["name"],
+                    child: widget.restomodel.isEmpty ? Center(child: Text('No Restaurant Available'),) :RestaurentListCard(
+                      category:widget.restomodel[index].category,
+                      title: widget.restomodel[index].name,
 
-                      type:widget.restomodel[index]["type"],
+                      type:widget.restomodel[index].type,
 
                       img:
-                      widget.type == "0" ?"https://firebasestorage.googleapis.com/v0/b/food-app-b497c.appspot.com/o/Restaurant-logo-design-webp.webp?alt=media&token=847033e4-0e4b-4987-ac99-253736f10487"
-                          : "https://firebasestorage.googleapis.com/v0/b/factory-club-cc524.appspot.com/o/Slider%2Fpuma.jpg?alt=media&token=7790fda5-ee3c-4898-801c-f8a46ef93baa",
-
+                      widget.restomodel[index].image,
                       discount: "15",
 
-                      cuisine: widget.restomodel[index]["cuisine"],
+                      cuisine: widget.restomodel[index].cuisine,
 
-                      area: widget.restomodel[index]["address"],
+                      area: widget.restomodel[index].address,
 
                       deliveryTime: "15-20",
 
                       tag: "",
 
-                      rating: widget.restomodel[index]["rating"],
+                      rating: widget.restomodel[index].rating,
 
                       discountVisibility: true,
 
                       tagVisibility: false,
 
-                      shopid: widget.restomodel[index]["vendorid"],
+                      shopid: widget.restomodel[index].vendorid,
 
                       press: () {},
 
@@ -76,7 +74,7 @@ class _RestaurantByCatState extends State<RestaurantByCat> {
 
                       opentiming: "10",
 
-                      badgeVisibility:widget.restomodel[index]["inPromotion"] == "1" ? true : false,
+                      badgeVisibility:widget.restomodel[index].inPromotion == "1" ? true : false,
 
                       status: true,
 

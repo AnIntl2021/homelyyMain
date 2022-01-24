@@ -11,7 +11,8 @@ class Body extends StatefulWidget {
   final List<dynamic> cuisine;
   final int numReviews;
   final List category;
-  const Body({ Key key,  this.title,  this.rating,  this.cuisine,  this.id,  this.opentiming,  this.closetiming,  this.shopname,  this.numReviews, this.type, this.category, this.uid})
+  final bool status;
+  const Body({ Key key,  this.title,  this.rating,  this.cuisine,  this.id,  this.opentiming,  this.closetiming,  this.shopname,  this.numReviews, this.type, this.category, this.uid, this.status})
       : super(key: key);
   @override
   _BodyState createState() => _BodyState();

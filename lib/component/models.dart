@@ -11,6 +11,7 @@ class restaurantModel {
   String inPromotion;
   String description;
   String email,rating;
+  bool status;
   var category;
   var cuisine;
   var location;
@@ -27,7 +28,7 @@ class restaurantModel {
         this.vendorid,
         this.inPromotion,
         this.description,
-        this.email,this.location,this.category,this.cuisine,this.rating});
+        this.email,this.location,this.category,this.cuisine,this.rating,this.status});
 
   fromJson(Map<String, dynamic> json) {
 
@@ -58,6 +59,7 @@ class restaurantModel {
         category: json['category'],
         cuisine:json['cuisine'],
       rating:json['rating'],
+        status:json['status']
     );
 
 
@@ -93,6 +95,7 @@ class  UserModel {
   String refFrom;
   String country;
   String password;
+  String symbol;
 
   UserModel(
       {
@@ -108,7 +111,7 @@ class  UserModel {
         this.wallet,
         this.refFrom,
         this.country,
-        this.password
+        this.password,this.symbol
       });
 
   fromJson(Map<String, dynamic> json) {
@@ -140,7 +143,8 @@ class  UserModel {
       wallet : json['wallet'],
       refFrom: json["refForm"],
       country: json["country"],
-        password: json["password"]
+        password: json["password"],
+      symbol: json['symbol']
 
     );
 
