@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/Screens/Cart/cartshop.dart';
+import 'package:homelyy/Screens/login/loginScreen.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/counterNumber.dart';
@@ -208,108 +209,115 @@ class _ProductListCardState extends State<ProductListCard> {
                       right: 0,
                       child: ElevatedButton(
                           onPressed: () async {
-                            var itemInitoal =
-                                DateTime.now().millisecond.toString();
-                            setState(() {
-                              _defaultvalue = 1;
-                              widget.setting;
-                            });
-                            await AllApi().postCart(CartModel(
-                              img: widget.img.replaceAll("https://thehomelyy.com/images/products/", ""),
-                              price: widget.price,
-                              title: widget.title,
-                              recipe: widget.recipe,
-                              quantity: _defaultvalue.toString(),
-                              requirement: "",
-                              itemnumber: newUid[0] + newUid[4],
-                              cutprice: widget.cutprice,
-                              ogprice: widget.price,
-                              ogcutprice: widget.cutprice,
-                              discount: widget.discount,
-                              shop: widget.shopName,
-                              date: DateFormat('dd-MM-yyyy')
-                                  .format(DateTime.now()),
-                              time: DateFormat('hh-MM-yyyy')
-                                  .format(DateTime.now()),
-                              ref: widget.uid.toString().replaceAll(" ", ""),
-                              vendorid: widget.vid.toString().replaceAll(" ", ""),
-                              foodid: widget.foodid.toString().replaceAll(" ", ""),
-                            ),"Add");
-                            await AllApi().postShopCart(CartModel(
-                              shop: widget.shopName,
-                              ref: widget.uid.toString().replaceAll(" ", ""),
-                              vendorid: widget.vid.toString().replaceAll(" ", ""),
-                            ));
 
-                            setState(() {
+                            if(widget.uid == 'Guest'){
+                              Get.to(LoginScreen());
+                            }else{
+                              var itemInitoal =
+                              DateTime.now().millisecond.toString();
+                              setState(() {
+                                _defaultvalue = 1;
+                                widget.setting;
+                              });
+                              await AllApi().postCart(CartModel(
+                                img: widget.img.replaceAll("https://thehomelyy.com/images/products/", ""),
+                                price: widget.price,
+                                title: widget.title,
+                                recipe: widget.recipe,
+                                quantity: _defaultvalue.toString(),
+                                requirement: "",
+                                itemnumber: newUid[0] + newUid[4],
+                                cutprice: widget.cutprice,
+                                ogprice: widget.price,
+                                ogcutprice: widget.cutprice,
+                                discount: widget.discount,
+                                shop: widget.shopName,
+                                date: DateFormat('dd-MM-yyyy')
+                                    .format(DateTime.now()),
+                                time: DateFormat('hh-MM-yyyy')
+                                    .format(DateTime.now()),
+                                ref: widget.uid.toString().replaceAll(" ", ""),
+                                vendorid: widget.vid.toString().replaceAll(" ", ""),
+                                foodid: widget.foodid.toString().replaceAll(" ", ""),
+                              ),"Add");
+                              await AllApi().postShopCart(CartModel(
+                                shop: widget.shopName,
+                                ref: widget.uid.toString().replaceAll(" ", ""),
+                                vendorid: widget.vid.toString().replaceAll(" ", ""),
+                              ));
 
-                              Get.isSnackbarOpen ? Get.back() : print("sd");
+                              setState(() {
 
-                              Get.snackbar("Go to Cart", "message",duration: Duration(minutes: 15),snackPosition: SnackPosition.BOTTOM,snackbarStatus: (value){
+                                Get.isSnackbarOpen ? Get.back() : print("sd");
+
+                                Get.snackbar("Go to Cart", "message",duration: Duration(minutes: 15),snackPosition: SnackPosition.BOTTOM,snackbarStatus: (value){
                                   print("snackbar status $value");
 
-                              },backgroundColor: kgreen,icon:FutureBuilder(
-                                  future: AllApi().getCartCount(widget.uid,),
-                                  builder: (context, snapshot) {
+                                },backgroundColor: kgreen,icon:FutureBuilder(
+                                    future: AllApi().getCartCount(widget.uid,),
+                                    builder: (context, snapshot) {
 
-                                    if(!snapshot.hasData){
+                                      if(!snapshot.hasData){
 
-                                      return Center(
-                                        child: CircularProgressIndicator(color: kgreen,),
+                                        return Center(
+                                          child: CircularProgressIndicator(color: kgreen,),
+                                        );
+                                      }
+
+                                      var cartCount = snapshot.requireData;
+
+                                      print("councart = ${widget.uid} $cartCount");
+
+                                      return Stack(
+
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.only(right: 10),
+                                            child: Stack(children: [
+                                              IconButton(
+                                                  icon: Icon(
+                                                    FontAwesomeIcons.opencart,
+                                                    color: kdarkgreen,
+                                                  ),
+                                                  onPressed: () {
+
+
+                                                    Get.to(CartShopPage(ref:widget.uid));
+
+                                                  }),
+                                              Positioned(
+                                                right: 0,
+                                                child: Badge(
+                                                  badgeContent: Text(
+                                                    cartCount,
+                                                    style: GoogleFonts.arvo(color: Colors.white),
+                                                  ),
+                                                  // child: Icon(
+                                                  //   FontAwesomeIcons.opencart,
+                                                  //   color: Colors.white,
+                                                  // ),
+                                                ),
+                                              )
+                                            ]),
+                                          ),
+                                        ],
                                       );
                                     }
+                                ), );
+                                // final snackBar = SnackBar(
+                                //   content:
+                                //   backgroundColor: Colors.green,
+                                //   duration: Duration(minutes: 15),
+                                //
+                                // );
+                                // ScaffoldMessenger.of(context)
+                                //     .showSnackBar(snackBar);
+                                print("addedto cart");
+                                _defaultvalue = 1;
+                                widget.setting;
+                              });
+                            }
 
-                                    var cartCount = snapshot.requireData;
-
-                                    print("councart = ${widget.uid} $cartCount");
-
-                                    return Stack(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(right: 10),
-                                          child: Stack(children: [
-                                            IconButton(
-                                                icon: Icon(
-                                                  FontAwesomeIcons.opencart,
-                                                  color: kdarkgreen,
-                                                ),
-                                                onPressed: () {
-
-
-                                                  Get.to(CartShopPage(ref:widget.uid));
-
-                                                }),
-                                            Positioned(
-                                              right: 0,
-                                              child: Badge(
-                                                badgeContent: Text(
-                                                  cartCount,
-                                                  style: GoogleFonts.arvo(color: Colors.white),
-                                                ),
-                                                // child: Icon(
-                                                //   FontAwesomeIcons.opencart,
-                                                //   color: Colors.white,
-                                                // ),
-                                              ),
-                                            )
-                                          ]),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                              ), );
-                              // final snackBar = SnackBar(
-                              //   content:
-                              //   backgroundColor: Colors.green,
-                              //   duration: Duration(minutes: 15),
-                              //
-                              // );
-                              // ScaffoldMessenger.of(context)
-                              //     .showSnackBar(snackBar);
-                              print("addedto cart");
-                              _defaultvalue = 1;
-                              widget.setting;
-                            });
                           },
                           child: Text("ADD"),
                           style:

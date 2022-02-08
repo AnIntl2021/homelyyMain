@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:homelyy/Screens/login/loginScreen.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/models.dart';
@@ -17,7 +18,7 @@ class Vouchers extends StatefulWidget {
 class _VouchersState extends State<Vouchers> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return widget.ref == 'Guest' ? LoginScreen() : FutureBuilder(
 
       future: AllApi().getUser(widget.ref),
 

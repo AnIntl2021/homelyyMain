@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -149,9 +150,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             if(users.password == passwordController.text){
 
                               await getAddress();
+                              var token =
+                              await FirebaseMessaging.instance.getToken();
+                              print('token: $token');
+                              
+                             await  AllApi().updateToken(users.phone, token); // for updating token
 
                               await AllApi().updateLocalUsers(
                                   jsonEncode(users), users.phone);
+                              
                               print("getting user ${users.name}");
 
                               Get.off(Homepage(
@@ -198,6 +205,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 10,
                 ),
+
+                ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.white)
+                    ),
+                    onPressed: () {
+
+                      Get.to(Homepage(
+                        userRef: 'Guest',
+                      ));
+
+                    },
+                    child: Text("Login as Guest",style: TextStyle(color: Colors.grey),)),
               ],
             ),
           ),

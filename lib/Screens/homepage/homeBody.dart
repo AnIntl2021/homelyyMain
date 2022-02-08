@@ -1,5 +1,7 @@
 // @dart=2.9
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +24,7 @@ import 'package:homelyy/component/map.dart';
 import 'package:homelyy/component/models.dart';
 import 'package:homelyy/component/searchBoxx.dart';
 import 'package:homelyy/component/typecard.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -92,7 +95,7 @@ class _BodyState extends State<Body> {
     }
 
     _locationData = await location.getLocation();
-
+    print('getting location = $_locationData');
     return _locationData;
   }
 
@@ -134,6 +137,15 @@ class _BodyState extends State<Body> {
     prefs.setBool('locConfirmed', true);
   }
 
+  String getCurrency(String code) {
+
+    var format = NumberFormat.simpleCurrency(locale: Platform.localeName, name: code,decimalDigits: 3);
+
+    return format.currencySymbol;
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -160,6 +172,13 @@ class _BodyState extends State<Body> {
       var pref = await SharedPreferences.getInstance();
       pref.setString("address", first.addressLine);
       pref.setString("code", code);
+
+     var curSymbol = getCurrency(first.countryCode == 'IN' ? 'INR'  : first.countryCode == 'KW' ?'KWT' : first.countryCode == 'QA' ? "QAT" : "USD" );
+
+     pref.setString('gsymbol', curSymbol);
+     print('currency symbol $curSymbol');
+
+
       return addresses;
 
 
@@ -171,6 +190,7 @@ class _BodyState extends State<Body> {
 
     print(
         "userGetttinghomwebody ${widget.userref.replaceAll("+", "").removeAllWhitespace}");
+
     print("location $myLocation $userAddress");
 
     return FutureBuilder(
@@ -178,7 +198,7 @@ class _BodyState extends State<Body> {
           getLocation(),
           AllApi().getBanner(selectedType == 0 ? "restro" : "lifestyle"),
           selectedType == 0 ? AllApi().getRestoCat() : AllApi().getLifeCat(),
-          AllApi().getLocalUsers()
+        widget.userref == 'Guest' ? AllApi().getLifeCat() :  AllApi().getLocalUsers()
         ]),
         builder: (context, snapshot) {
 
@@ -195,12 +215,11 @@ class _BodyState extends State<Body> {
 
           List<CatModel> catList = snapshot.requireData[2];
 
-          UserModel usersList = snapshot.requireData[3];
+          UserModel usersList =  widget.userref == 'Guest' ? UserModel(ref: 'Guest') :snapshot.requireData[3];
 
           print("lat = $latlng.latitude long = $latlng.longitude");
           print("banners = ${banners[0].name}");
           print("cat = ${catList[0].name}");
-          print("users,${usersList.name}");
 
           return FutureBuilder(
 
@@ -476,7 +495,7 @@ class _BodyState extends State<Body> {
                               ),
                               Text(
                                 selectedType == 0
-                                    ? "POPULAR RESTAURANT NEAR YOU"
+                                    ? "POPULAR FOOD SERVICE NEAR YOU"
                                     : "POPULAR SHOP NEAR YOU",
                                 style: GoogleFonts.basic(
                                     fontWeight: FontWeight.bold, fontSize: 18),

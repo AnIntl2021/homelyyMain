@@ -14,6 +14,7 @@ import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
 import 'package:homelyy/component/models.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 import 'itemlist.dart';
@@ -72,6 +73,7 @@ class _ItemInfoState extends State<ItemInfo> {
               child: Column(
                   children: [
                   shopeName(name: widget.cuisine),
+
               TitlePriceRating(
                 name: widget.title,
                 numOfReviews: widget.numReview,
@@ -82,6 +84,8 @@ class _ItemInfoState extends State<ItemInfo> {
               ),
 
               SizedBox(height: 5),
+
+
               Row(
                 children: [
                   Text(
@@ -212,6 +216,7 @@ class _ItemInfoState extends State<ItemInfo> {
                   itemCount: widget.category.length,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
+
                     return FutureBuilder(
                         future: AllApi().getcat(widget.category[index]),
                         builder: (context, snapshot) {
@@ -236,7 +241,80 @@ class _ItemInfoState extends State<ItemInfo> {
                                 },
                                 title: Text(catList),
                                 children: [
-                                  FutureBuilder(
+                             widget.uid == 'Guest' ? FutureBuilder(
+                                 future: Future.wait([AllApi().getcatfood(
+                                     widget.id, widget.category[index]),SharedPreferences.getInstance()]),
+                                 builder: (context, snapshot1) {
+                                   if (!snapshot1.hasData) {
+                                     return Center(
+                                       child: CircularProgressIndicator(
+                                         color: Colors.white,
+                                       ),
+                                     );
+                                   }
+                                   SharedPreferences usermodel = snapshot1.requireData[1];
+
+                                   var  symbol = usermodel.get('gsymbol');
+
+                                   List<ProductModel> foodList =
+                                   snapshot1.requireData[0];
+                                   print("foodList lenght = ${foodList}");
+
+                                   return Padding(
+                                     padding: const EdgeInsets.all(8.0),
+                                     child: Column(
+                                       children: [
+                                         RefreshIndicator(
+                                             onRefresh: () async {
+                                               refreshChangeListener2
+                                                   .refreshed = true;
+                                               print("Refreshed");
+                                             },
+                                             child: ListView.builder(
+                                                 itemCount:
+                                                 foodList.length,
+                                                 shrinkWrap: true,
+                                                 physics: NeverScrollableScrollPhysics(),
+                                                 itemBuilder:
+                                                     (context, index) {
+                                                   return ProductListCard(
+                                                       title: foodList[index]
+                                                           .name,
+                                                       totalorders: 1,
+                                                       price: foodList[index]
+                                                           .price,
+                                                       recipe:
+                                                       foodList[index]
+                                                           .description,
+                                                       stock: foodList[index]
+                                                           .status,
+                                                       tagVisibility: true,
+                                                       img:"${imageURL}products/${foodList[index].image}",
+                                                       press: () {},
+                                                       discount: (int.parse(
+                                                           "100") -
+                                                           int.parse(
+                                                               "80"))
+                                                           .toString(),
+                                                       discountVisibility:
+                                                       true,
+                                                       uid: widget.uid,
+                                                       foodid:
+                                                       foodList[index]
+                                                           .foodid,
+                                                       shopName:
+                                                       widget.shopname,
+                                                       vid: widget.id,
+                                                       cutprice:  foodList[index]
+                                                           .cutprice,
+                                                       setting:calling,symbol:symbol
+
+                                                   );
+                                                 })),
+                                       ],
+                                     ),
+                                   );
+                                 }) :     FutureBuilder(
                                       future: Future.wait([AllApi().getcatfood(
                                           widget.id, widget.category[index]),AllApi().getUser(widget.uid)]),
                                       builder: (context, snapshot1) {

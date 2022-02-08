@@ -14,7 +14,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:homelyy/Screens/homepage/homepage.dart';
-import 'package:location/location.dart';
 
 
 

@@ -15,11 +15,13 @@ import 'package:homelyy/Screens/Cart/cartshop.dart';
 import 'package:homelyy/Screens/UserProfile/userProfile.dart';
 import 'package:homelyy/Screens/Vouchers/vouchers.dart';
 import 'package:homelyy/Screens/homepage/homeBody.dart';
+import 'package:homelyy/Screens/login/loginScreen.dart';
 import 'package:homelyy/Screens/orders/orderpage.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
 import 'package:homelyy/component/models.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart' as coder;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,9 +76,34 @@ Future<LocationData> getLocation() async {
 
 class _HomepageState extends State<Homepage> {
   var currentIndex = 0;
+
+  AppUpdateInfo _updateInfo;
+
+  bool _flexibleUpdateAvailable = false;
+
+  Future<void> checkForUpdate() async {
+    InAppUpdate.checkForUpdate().then((info) {
+      info.updateAvailability ==
+          UpdateAvailability.updateAvailable
+          ? () {
+
+        InAppUpdate.performImmediateUpdate()
+            .catchError((e) => print(e.toString(),));
+
+      }
+          : null;
+    }).catchError((e) {
+
+      print(e.toString(),);
+
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
+    checkForUpdate();
 
     final List<Widget> viewContainer = [
 
@@ -90,7 +117,7 @@ class _HomepageState extends State<Homepage> {
 
       Vouchers(ref:widget.userRef.replaceAll("+", "").removeAllWhitespace),
 
-      UserProfile(id: widget.userRef.replaceAll("+", "").removeAllWhitespace,),
+     widget.userRef == 'Guest' ? LoginScreen() : UserProfile(id: widget.userRef.replaceAll("+", "").removeAllWhitespace,),
 
       Container(),
 
@@ -111,7 +138,35 @@ class _HomepageState extends State<Homepage> {
 
             elevation: 0,
             actions: <Widget>[
-              FutureBuilder(
+            widget.userRef == 'Guest' ? Container(
+              margin: EdgeInsets.only(right: 10),
+        child: Stack(children: [
+          IconButton(
+              icon: Icon(
+                FontAwesomeIcons.opencart,
+                color: kdarkgreen,
+              ),
+              onPressed: () {
+
+
+                Get.to(LoginScreen());
+
+              }),
+          Positioned(
+            right: 0,
+            child: Badge(
+              badgeContent: Text(
+                '0',
+                style: GoogleFonts.arvo(color: Colors.white),
+              ),
+              // child: Icon(
+              //   FontAwesomeIcons.opencart,
+              //   color: Colors.white,
+              // ),
+            ),
+          )
+        ]),
+      ) :  FutureBuilder(
 
                   future: Future.wait([AllApi().getCartCount(widget.userRef,)]),
 
@@ -180,7 +235,7 @@ class _HomepageState extends State<Homepage> {
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 35),
-      height: 75,
+      height: 65,
       width: double.infinity,
       // double.infinity means it cove the available width
       decoration: BoxDecoration(
@@ -201,11 +256,12 @@ class _HomepageState extends State<Homepage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
                 icon: Icon(
                   FontAwesomeIcons.home,
-                  size: currentIndex == 0 ? 30 : 24,
+                  size: currentIndex == 0 ? 24 : 16,
                   color: currentIndex == 0 ?  kgreen : kblackcolor.withOpacity(0.5),
                 ),
                 onPressed: () {
@@ -214,7 +270,7 @@ class _HomepageState extends State<Homepage> {
                   });
                 },
               ),
-              Text("Home")
+              Text("Home",style: TextStyle(fontSize: 12),)
             ],
           ),
           Stack(children: [
@@ -223,7 +279,7 @@ class _HomepageState extends State<Homepage> {
                 IconButton(
                   icon: Icon(
                     FontAwesomeIcons.toriiGate,
-                    size: currentIndex == 1 ? 30 : 24,
+                    size: currentIndex == 1 ? 24 : 16,
                     color: currentIndex == 1 ?  kgreen : kblackcolor.withOpacity(0.5),
                   ),
                   onPressed: () {
@@ -232,7 +288,7 @@ class _HomepageState extends State<Homepage> {
                     });
                   },
                 ),
-                Text("Offers")
+                Text("Offers",style: TextStyle(fontSize: 12),)
               ],
             ),
           ]),
@@ -241,7 +297,7 @@ class _HomepageState extends State<Homepage> {
               IconButton(
                 icon: Icon(
                   FontAwesomeIcons.user,
-                  size: currentIndex == 2 ? 30 : 24,
+                  size: currentIndex == 2 ? 24 : 16,
                   color: currentIndex == 2 ?  kgreen : kblackcolor.withOpacity(0.5),
                 ),
                 onPressed: () {
@@ -250,7 +306,7 @@ class _HomepageState extends State<Homepage> {
                   });
                 },
               ),
-              Text("Profile")
+              Text("Profile",style: TextStyle(fontSize: 12),)
             ],
           ),
           Column(
@@ -258,7 +314,7 @@ class _HomepageState extends State<Homepage> {
               IconButton(
                   icon: Icon(
                     FontAwesomeIcons.heart,
-                    size: currentIndex == 3 ? 30 : 24,
+                    size: currentIndex == 3 ? 24 : 16,
                     color: currentIndex == 3 ?  kgreen : kblackcolor.withOpacity(0.5),
                   ),
                   onPressed: (){
@@ -273,7 +329,7 @@ class _HomepageState extends State<Homepage> {
                     });
                   }),
 
-              Text("Rate Us")
+              Text("Rate Us",style: TextStyle(fontSize: 12),)
 
             ],
           ),

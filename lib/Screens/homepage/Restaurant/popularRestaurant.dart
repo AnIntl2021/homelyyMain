@@ -82,7 +82,7 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
 
               badgeVisibility: widget.listofRestaurant[index].inPromotion == "1" ? true : false,
 
-              status: true,
+              status: !widget.status,
 
               numReview: 12,
 

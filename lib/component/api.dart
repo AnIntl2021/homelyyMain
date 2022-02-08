@@ -824,6 +824,24 @@ class AllApi {
     return response.body;
   }
 
+  Future updateToken(String ref,String token) async {
+
+    var userGetURL = Uri.parse("${conurl}updateUserWallet?ref=$ref");
+
+    var response = await http.put(userGetURL,body: {
+
+      "token" : token,
+
+    });
+
+    print("response of wallet ${response.body}");
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+
+
+    return response.body;
+  }
+
   Future<double> getAllRatings(String vid,int userRating) async {
 
 
