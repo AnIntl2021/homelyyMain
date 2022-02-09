@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
+import 'package:homelyy/component/models.dart';
 import 'lifeproductpage.dart';
 
 class LifestylePage extends StatefulWidget {
@@ -22,42 +23,49 @@ class _LifestylePageState extends State<LifestylePage> {
       onTap: () {
 
       },
-      child: GridView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 5,
-            childAspectRatio: 0.9,),
-          itemCount: widget.category.length,
-          itemBuilder: (context,index){
-            return InkWell(onTap:(){
-              Get.to(LifeProductPage(
-                id: widget.id,
-                vid:widget.vid,
-                uid:widget.uid,
-                shopName:widget.shopName,
-                catid: widget.category[index],
-              ));
-            },child: buildContainer(widget.category[index]));
-          },
+      child: FutureBuilder<List<CatModel>>(
+        future: AllApi().getCategory(vendorId:widget.id),
+        builder: (context, snapshot) {
 
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            );
+          }
+
+          var catList = snapshot.requireData;
+          print("catlist lenght = ${catList}");
+
+          return GridView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 5,
+                childAspectRatio: 0.9,),
+              itemCount: catList.length,
+              itemBuilder: (context,index){
+                return InkWell(onTap:(){
+                  Get.to(LifeProductPage(
+                    id: widget.id,
+                    vid:widget.vid,
+                    uid:widget.uid,
+                    shopName:widget.shopName,
+                    catid: catList[index].catid,
+                  ));
+                },child: buildContainer(catList[index].name,catList[index].image));
+              },
+
+          );
+        }
       ),
     );
 
   }
 
-  Widget buildContainer(String catid) {
-    return FutureBuilder(
-      future: Future.wait([AllApi().getCatImage(catid),AllApi().getcat(catid)]) ,
-      builder: (context, snapshot) {
-        if(!snapshot.hasData){
-          return CircularProgressIndicator(color: kgreen,);
-        }
-
-        var catimage = snapshot.requireData[0];
-        var catname = snapshot.requireData[1];
-
+  Widget buildContainer(String catname,String catimage) {
         return Container(
           decoration:
           BoxDecoration(border: Border.all(color: Colors.black)),
@@ -86,7 +94,5 @@ class _LifestylePageState extends State<LifestylePage> {
             ),
           ),
         );
-      }
-    );
   }
 }

@@ -66,7 +66,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
     var email = "";
 
 
-    List a = ["CASH ON DELIVERY"];
+    List a = ["CASH ON DELIVERY",'ONLINE'];
 
     var listoforders = [];
 
@@ -83,6 +83,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
         'description': 'Order no: $id}',
         'order_id': 'Order no: $id}',
         'prefill': {'contact': '$phone', 'email': '$email'},
+
         'external': {
           'wallets': ['paytm']
         }
@@ -93,7 +94,8 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
         _razorpay.open(options);
 
       } catch (e) {
-        debugPrint('Error: e');
+        print('ErrorPayment: $e');
+
         Fluttertoast.showToast(msg: "Error $e");
       }
 
@@ -101,46 +103,46 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
 
     Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
 
-
-
-      setState(() {
-        loading = true;
-      });
-
-
-
-      print("paymentvale ${jsonEncode(widget.listofcart).toString()} COD");
-      int min = 100000; //min and max values act as your 6 digit range
-      int max = 999999;
-      var randomizer = new Random();
-      var rNum = min + randomizer.nextInt(max - min);
-
-      await Future.forEach(widget.listofcart,(CartModel element) {
-        AllApi().postOrders(element, rNum.toString());
-
-
-      });
-
-      // await AllApi().postOrders(jsonEncode(widget.listofcart).toString());
-
-      await AllApi().addOrderTotal(data, CartTotalModel(
-        discount:widget.discount,
-        total: widget.total,
-        savings: widget.savings,
-        subTotal: widget.subTotal,
-        ref: data.ref,
-      ), widget.shopname, widget.address,rNum.toString());
-
-      await AllApi().removeAllCart(data.phone, widget.shopname);
-      await AllApi().removeShopCart(data.phone, widget.shopname);
+      //
+      //
       // setState(() {
-      //   loading = false;
+      //   loading = true;
       // });
+      //
+      //
+      //
+      // print("paymentvale ${jsonEncode(widget.listofcart).toString()} COD");
+      // int min = 100000; //min and max values act as your 6 digit range
+      // int max = 999999;
+      // var randomizer = new Random();
+      // var rNum = min + randomizer.nextInt(max - min);
+      //
+      // await Future.forEach(widget.listofcart,(CartModel element) {
+      //   AllApi().postOrders(element, rNum.toString());
+      //
+      //
+      // });
+      //
+      // // await AllApi().postOrders(jsonEncode(widget.listofcart).toString());
+      //
+      // await AllApi().addOrderTotal(data, CartTotalModel(
+      //   discount:widget.discount,
+      //   total: widget.total,
+      //   savings: widget.savings,
+      //   subTotal: widget.subTotal,
+      //   ref: data.ref,
+      // ), widget.shopname, widget.address,rNum.toString());
+      //
+      // await AllApi().removeAllCart(data.phone, widget.shopname);
+      // await AllApi().removeShopCart(data.phone, widget.shopname);
+
+     Fluttertoast.showToast(msg: 'SUCCESSFULL');
       Get.offAll(ThankScreen(ref:data.phone));
 
     }
 
     void _handlePaymentError(PaymentFailureResponse response) {
+      print('ErrorPayment: ${response.code.toString()} ${ response.message}');
       Fluttertoast.showToast(
           msg: "ERROR: " + response.code.toString() + " - " + response.message,
           toastLength: Toast.LENGTH_SHORT);

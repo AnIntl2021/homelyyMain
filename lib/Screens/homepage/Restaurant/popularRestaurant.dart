@@ -47,6 +47,7 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
             padding:  EdgeInsets.all(8.0),
 
             child: RestaurentListCard(
+
               category:widget.listofRestaurant[index].category,
               title: widget.listofRestaurant[index].name,
 

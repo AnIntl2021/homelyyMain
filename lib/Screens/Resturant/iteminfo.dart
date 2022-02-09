@@ -158,7 +158,7 @@ class _ItemInfoState extends State<ItemInfo> {
               //
               // })
 
-              : LifestylePage(id: widget.id,vid: widget.id,uid:widget.uid,shopName:widget.title,category: widget.category,)
+              : LifestylePage(id: widget.id,vid: widget.id,uid:widget.uid,shopName:widget.title,category: [],)
         ]),)
     ,
     )
@@ -211,190 +211,200 @@ class _ItemInfoState extends State<ItemInfo> {
                 refreshChangeListener.refreshed = true;
                 print("Refreshed");
               },
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.category.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
+              child: FutureBuilder<List<CatModel>>(
+                future: AllApi().getCategory(vendorId: widget.id),
+                builder: (context, snapshot) {
 
-                    return FutureBuilder(
-                        future: AllApi().getcat(widget.category[index]),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                              ),
-                            );
-                          }
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    );
+                  }
 
-                          var catList = snapshot.requireData;
-                          print("catlist lenght = ${catList}");
+                  var catList = snapshot.requireData;
+                  print("catlist lenght = ${catList}");
 
-                          return Column(
-                            children: [
-                              ExpansionTile(
-                                onExpansionChanged: (result) {
-                                  if (result == true) {
-                                    setState(() {calling;});
-                                  }
-                                },
-                                title: Text(catList),
+
+
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: catList.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+
+
+
+                              return Column(
+
                                 children: [
-                             widget.uid == 'Guest' ? FutureBuilder(
-                                 future: Future.wait([AllApi().getcatfood(
-                                     widget.id, widget.category[index]),SharedPreferences.getInstance()]),
-                                 builder: (context, snapshot1) {
-                                   if (!snapshot1.hasData) {
-                                     return Center(
-                                       child: CircularProgressIndicator(
-                                         color: Colors.white,
-                                       ),
-                                     );
-                                   }
-                                   SharedPreferences usermodel = snapshot1.requireData[1];
 
-                                   var  symbol = usermodel.get('gsymbol');
+                                  ExpansionTile(
+                                    onExpansionChanged: (result) {
+                                      if (result == true) {
+                                        setState(() {calling;});
+                                      }
+                                    },
+                                    title: Text(catList[index].name),
 
-                                   List<ProductModel> foodList =
-                                   snapshot1.requireData[0];
-                                   print("foodList lenght = ${foodList}");
+                                    children: [
 
-                                   return Padding(
-                                     padding: const EdgeInsets.all(8.0),
-                                     child: Column(
-                                       children: [
-                                         RefreshIndicator(
-                                             onRefresh: () async {
-                                               refreshChangeListener2
-                                                   .refreshed = true;
-                                               print("Refreshed");
-                                             },
-                                             child: ListView.builder(
-                                                 itemCount:
-                                                 foodList.length,
-                                                 shrinkWrap: true,
-                                                 physics: NeverScrollableScrollPhysics(),
-                                                 itemBuilder:
-                                                     (context, index) {
-                                                   return ProductListCard(
-                                                       title: foodList[index]
-                                                           .name,
-                                                       totalorders: 1,
-                                                       price: foodList[index]
-                                                           .price,
-                                                       recipe:
-                                                       foodList[index]
-                                                           .description,
-                                                       stock: foodList[index]
-                                                           .status,
-                                                       tagVisibility: true,
-                                                       img:"${imageURL}products/${foodList[index].image}",
-                                                       press: () {},
-                                                       discount: (int.parse(
-                                                           "100") -
-                                                           int.parse(
-                                                               "80"))
-                                                           .toString(),
-                                                       discountVisibility:
-                                                       true,
-                                                       uid: widget.uid,
-                                                       foodid:
-                                                       foodList[index]
-                                                           .foodid,
-                                                       shopName:
-                                                       widget.shopname,
-                                                       vid: widget.id,
-                                                       cutprice:  foodList[index]
-                                                           .cutprice,
-                                                       setting:calling,symbol:symbol
+                                 widget.uid == 'Guest' ? FutureBuilder(
+                                     future: Future.wait([AllApi().getcatfood(
+                                         widget.id, catList[index].catid),SharedPreferences.getInstance()]),
+                                     builder: (context, snapshot1) {
+                                       if (!snapshot1.hasData) {
+                                         return Center(
+                                           child: CircularProgressIndicator(
+                                             color: Colors.white,
+                                           ),
+                                         );
+                                       }
+                                       SharedPreferences usermodel = snapshot1.requireData[1];
 
-                                                   );
-                                                 })),
-                                       ],
-                                     ),
-                                   );
-                                 }) :     FutureBuilder(
-                                      future: Future.wait([AllApi().getcatfood(
-                                          widget.id, widget.category[index]),AllApi().getUser(widget.uid)]),
-                                      builder: (context, snapshot1) {
-                                        if (!snapshot1.hasData) {
-                                          return Center(
-                                            child: CircularProgressIndicator(
-                                              color: Colors.white,
-                                            ),
-                                          );
-                                        }
-                                        UserModel usermodel = UserModel().fromJson(jsonDecode(snapshot1.requireData[1]));
+                                       var  symbol = usermodel.get('gsymbol');
 
-                                      var  symbol = usermodel.symbol;
+                                       List<ProductModel> foodList =
+                                       snapshot1.requireData[0];
+                                       print("foodList lenght = ${foodList}");
 
-                                        List<ProductModel> foodList =
-                                            snapshot1.requireData[0];
-                                        print("foodList lenght = ${foodList}");
+                                       return Padding(
+                                         padding: const EdgeInsets.all(8.0),
+                                         child: Column(
+                                           children: [
+                                             RefreshIndicator(
+                                                 onRefresh: () async {
+                                                   refreshChangeListener2
+                                                       .refreshed = true;
+                                                   print("Refreshed");
+                                                 },
+                                                 child: ListView.builder(
+                                                     itemCount:
+                                                     foodList.length,
+                                                     shrinkWrap: true,
+                                                     physics: NeverScrollableScrollPhysics(),
+                                                     itemBuilder:
+                                                         (context, index) {
+                                                       return ProductListCard(
+                                                           title: foodList[index]
+                                                               .name,
+                                                           totalorders: 1,
+                                                           price: foodList[index]
+                                                               .price,
+                                                           recipe:
+                                                           foodList[index]
+                                                               .description,
+                                                           stock: foodList[index]
+                                                               .status,
+                                                           tagVisibility: true,
+                                                           img:"${imageURL}products/${foodList[index].image}",
+                                                           press: () {},
+                                                           discount: (int.parse(
+                                                               "100") -
+                                                               int.parse(
+                                                                   "80"))
+                                                               .toString(),
+                                                           discountVisibility:
+                                                           true,
+                                                           uid: widget.uid,
+                                                           foodid:
+                                                           foodList[index]
+                                                               .foodid,
+                                                           shopName:
+                                                           widget.shopname,
+                                                           vid: widget.id,
+                                                           cutprice:  foodList[index]
+                                                               .cutprice,
+                                                           setting:calling,symbol:symbol
 
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            children: [
-                                              RefreshIndicator(
-                                                  onRefresh: () async {
-                                                    refreshChangeListener2
-                                                        .refreshed = true;
-                                                    print("Refreshed");
-                                                  },
-                                                  child: ListView.builder(
-                                                      itemCount:
-                                                      foodList.length,
-                                                      shrinkWrap: true,
-                                                      physics: NeverScrollableScrollPhysics(),
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return ProductListCard(
-                                                            title: foodList[index]
-                                                                .name,
-                                                            totalorders: 1,
-                                                            price: foodList[index]
-                                                                .price,
-                                                            recipe:
-                                                            foodList[index]
-                                                                .description,
-                                                            stock: foodList[index]
-                                                                .status,
-                                                            tagVisibility: true,
-                                                            img:"${imageURL}products/${foodList[index].image}",
-                                                            press: () {},
-                                                            discount: (int.parse(
-                                                                "100") -
-                                                                int.parse(
-                                                                    "80"))
-                                                                .toString(),
-                                                            discountVisibility:
-                                                            true,
-                                                            uid: widget.uid,
-                                                            foodid:
-                                                            foodList[index]
-                                                                .foodid,
-                                                            shopName:
-                                                            widget.shopname,
-                                                            vid: widget.id,
-                                                            cutprice:  foodList[index]
-                                                                .cutprice,
-                                                            setting:calling,symbol:symbol
+                                                       );
+                                                     })),
+                                           ],
+                                         ),
+                                       );
+                                     }) :     FutureBuilder(
+                                          future: Future.wait([AllApi().getcatfood(
+                                              widget.id, catList[index].catid),AllApi().getUser(widget.uid)]),
+                                          builder: (context, snapshot1) {
+                                            if (!snapshot1.hasData) {
+                                              return Center(
+                                                child: CircularProgressIndicator(
+                                                  color: Colors.white,
+                                                ),
+                                              );
+                                            }
+                                            UserModel usermodel = UserModel().fromJson(jsonDecode(snapshot1.requireData[1]));
 
-                                                        );
-                                                      })),
-                                            ],
-                                          ),
-                                        );
-                                      })
+                                          var  symbol = usermodel.symbol;
+
+                                            List<ProductModel> foodList =
+                                                snapshot1.requireData[0];
+                                            print("foodList lenght = ${foodList}");
+
+                                            return Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Column(
+                                                children: [
+                                                  RefreshIndicator(
+                                                      onRefresh: () async {
+                                                        refreshChangeListener2
+                                                            .refreshed = true;
+                                                        print("Refreshed");
+                                                      },
+                                                      child: ListView.builder(
+                                                          itemCount:
+                                                          foodList.length,
+                                                          shrinkWrap: true,
+                                                          physics: NeverScrollableScrollPhysics(),
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return ProductListCard(
+                                                                title: foodList[index]
+                                                                    .name,
+                                                                totalorders: 1,
+                                                                price: foodList[index]
+                                                                    .price,
+                                                                recipe:
+                                                                foodList[index]
+                                                                    .description,
+                                                                stock: foodList[index]
+                                                                    .status,
+                                                                tagVisibility: true,
+                                                                img:"${imageURL}products/${foodList[index].image}",
+                                                                press: () {},
+                                                                discount: (int.parse(
+                                                                    "100") -
+                                                                    int.parse(
+                                                                        "80"))
+                                                                    .toString(),
+                                                                discountVisibility:
+                                                                true,
+                                                                uid: widget.uid,
+                                                                foodid:
+                                                                foodList[index]
+                                                                    .foodid,
+                                                                shopName:
+                                                                widget.shopname,
+                                                                vid: widget.id,
+                                                                cutprice:  foodList[index]
+                                                                    .cutprice,
+                                                                setting:calling,symbol:symbol
+
+                                                            );
+                                                          })),
+                                                ],
+                                              ),
+                                            );
+                                          })
+                                    ],
+                                  ),
+                                  Divider()
                                 ],
-                              ),
-                              Divider()
-                            ],
-                          );
-                        });
-                  })),
+                              );
+                      });
+                }
+              )),
         ],
       ),
     );

@@ -231,6 +231,23 @@ class AllApi {
     return jsonDecode(response.body);
   }
 
+  Future<List<CatModel>> getCategory({ String vendorId,}) async {
+    var getCategoryUrl = Uri.parse(
+        "https://webhooks.mongodb-realm.com/api/client/v2.0/app/application-0-aveoz/service/Homelyy/incoming_webhook/getCategoryVendor?vendorId=$vendorId");
+    var response = await http.get(getCategoryUrl);
+    if (response.body != "null") {
+      List categoryList = json.decode(response.body);
+      Iterable<CatModel> category = categoryList.map((e) {
+        return CatModel().fromJson(e);
+      });
+      return category.toList();
+    } else {
+      return null;
+    }
+  }
+
+
+
   Future getcatfood(String vendorid , String catid) async {
     var userGetURL = Uri.parse("${conurl}getcatfood?vendorid=$vendorid&catid=$catid");
     print(userGetURL);
