@@ -93,6 +93,7 @@ class  UserModel {
   String token;
   String wallet;
   String refFrom;
+  String referid;
   String country;
   String password;
   String symbol;
@@ -111,6 +112,7 @@ class  UserModel {
         this.wallet,
         this.refFrom,
         this.country,
+        this.referid,
         this.password,this.symbol
       });
 
@@ -142,6 +144,7 @@ class  UserModel {
 
       wallet : json['wallet'],
       refFrom: json["refForm"],
+        referid: json["referid"],
       country: json["country"],
         password: json["password"],
       symbol: json['symbol']

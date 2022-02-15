@@ -64,9 +64,6 @@ class _UserProfileState extends State<UserProfile> {
                   .push(MaterialPageRoute(builder: (context) => MyContactUs())
               );
             }),
-            buildListTile("HELP & FAQ", FontAwesomeIcons.phone, () {
-              Fluttertoast.showToast(msg: "Available in Next Update");
-            }),
             Divider(),
             buildListTile("LOGOUT", FontAwesomeIcons.doorClosed, () async {
               // FirebaseAuth.instance

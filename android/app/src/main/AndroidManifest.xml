@@ -75,7 +75,7 @@
            android:value="high_importance_channel" />
 
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="p63pzz2DeWIGacYlQQ3QQzgk"/>
+           android:value="AIzaSyC_c4I_uGb5OzVDwAmliHdjCEC_U2UGAJk"/>
 
 
     </application>

@@ -8,9 +8,10 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class TitlePriceRating extends StatelessWidget {
   final String price;
-  final int numOfReviews;
+  final  numOfReviews;
   final double rating;
   final String name;
+  final String vid;
   final RatingChangeCallback onRatingChanged;
   const TitlePriceRating({
      Key key,
@@ -18,7 +19,7 @@ class TitlePriceRating extends StatelessWidget {
      this.numOfReviews,
      this.rating,
      this.name,
-     this.onRatingChanged,
+     this.onRatingChanged, this.vid,
   }) : super(key: key);
 
   @override
@@ -27,7 +28,7 @@ class TitlePriceRating extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: InkWell(
         onTap: (){
-          // Get.to(ReviewScreen(shopName: name));
+           Get.to(ReviewScreen(vendorid: vid));
         },
         child: Row(
           children: <Widget>[
@@ -49,7 +50,7 @@ class TitlePriceRating extends StatelessWidget {
                         color: Colors.yellow.shade800,
                       ),
                       SizedBox(width: 10),
-                      Text("$numOfReviews reviews"),
+                      Text("$numOfReviews Star Ratings"),
                     ],
                   ),
                 ],

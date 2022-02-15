@@ -60,71 +60,65 @@ class CatCard extends StatelessWidget {
               onTap: (){
                 Get.to(RestaurantByCat(type: type,catid: title,uid: uid,restomodel: restomodel,));
               },
-              child: Padding(
-                padding: const EdgeInsets.all(1.0),
+              child: CircleAvatar(
+                backgroundColor: kgreen.withOpacity(0.4),
+                radius: 50,
                 child: Column(
-                  children: <Widget>[
-                    Container(
-
-                      width: 110,
-
-                      margin: EdgeInsets.only(bottom: 15),
-
-                      padding: EdgeInsets.all(5),
-
-                      decoration: BoxDecoration(
-
-                        color: kgreen,
-
-                        shape: BoxShape.circle,
-
-                      ),
-
-                      child: Image.network(
-
-
-                        svgSrc,
-
-
-                        height: 70,
-
-
-                        width: 70,
-
-                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
-    if (loadingProgress == null) {
-    return child;
-    }
-    return Center(
-      child: CircularProgressIndicator(
-        color: kblackcolor,
-        value: loadingProgress
-            .expectedTotalBytes != null
-            ? loadingProgress
-            .cumulativeBytesLoaded /
-            loadingProgress.expectedTotalBytes
-            : null,
-      ),
-    );
-                        }
-                        // size.width * 0.18 means it use 18% of total width
-
-
-                      ),
-                    ),
-                    Text(title),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(title,style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
                     SizedBox(height: 10),
                     // Text(
                     //   shopName,
                     //   style: TextStyle(fontSize: 12),
                     // ),
                     Text(
-                     type == 0 ? "${restomodel.length.toString()} Restaurant" : "${restomodel.length.toString()} Shops",
+                      type == 0 ? "${restomodel.length.toString()} Restaurant" : "${restomodel.length.toString()} Shops",
                       // style: TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                        style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 12)
                     ),
                   ],
                 ),
-              ),
+              )
+
+              // Padding(
+              //   padding: const EdgeInsets.all(1.0),
+              //   child: Column(
+              //     children: <Widget>[
+              //       Container(
+              //
+              //         width: 110,
+              //
+              //         margin: EdgeInsets.only(bottom: 15),
+              //
+              //         padding: EdgeInsets.all(5),
+              //
+              //         decoration: BoxDecoration(
+              //
+              //           color: kgreen,
+              //
+              //           shape: BoxShape.circle,
+              //
+              //         ),
+              //
+              //         child: Column(
+              //           children: [ Text(title),
+              //             SizedBox(height: 10),
+              //             // Text(
+              //             //   shopName,
+              //             //   style: TextStyle(fontSize: 12),
+              //             // ),
+              //             Text(
+              //               type == 0 ? "${restomodel.length.toString()} Restaurant" : "${restomodel.length.toString()} Shops",
+              //               // style: TextStyle(fontSize: 16, color: Colors.purple.shade400),
+              //             ),],
+              //         )
+              //       ),
+              //
+              //     ],
+              //   ),
+              // ),
             ),
           ),
         );

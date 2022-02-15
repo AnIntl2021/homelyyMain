@@ -8,6 +8,7 @@ class LifeProductPage extends StatefulWidget {
 
   @override
   _LifeProductPageState createState() => _LifeProductPageState();
+
 }
 
 class _LifeProductPageState extends State<LifeProductPage> {

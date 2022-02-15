@@ -387,13 +387,15 @@ class _SignUpState extends State<SignUp> {
                                 // Validate returns true if the form is valid, or false otherwise.
                                 if (_formKey.currentState.validate()) {
                                   print(
-                                      "Got all text = user = $userName ref = $refercode email = $userEmail ");
+                                      "Got all text = user = $userName ref = $refercode email = $userEmail nme =$userName phone = $userPhone ");
 
                                   // AllApi().getUser(widget.phone.replaceAll("+", "").removeAllWhitespace?? "").then((value){
                                   //
                                   //
                                   // });
                                   //
+                                  var referId = userName.substring(1,3) + userPhone.substring(6,10);
+
                                   if(country != null){
                                     AllApi()
                                         .postUser(UserModel(
@@ -416,8 +418,11 @@ class _SignUpState extends State<SignUp> {
                                             .removeAllWhitespace,
                                         token: "",
                                         wallet: "0",
-                                        refFrom: refercode,password: userPassword,symbol:symbol))
+                                        refFrom: refercode ?? '',
+                                        referid: referId.toUpperCase(),
+                                        password: userPassword,symbol:symbol))
                                         .then((value) async {
+
                                       if (value == "\"User Already Exist\"") {
                                         Fluttertoast.showToast(
                                             msg: "User Already Exist");

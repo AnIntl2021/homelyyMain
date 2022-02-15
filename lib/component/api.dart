@@ -1,10 +1,5 @@
 import 'dart:convert';
 import 'dart:math';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
-import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
-import 'package:homelyy/Screens/homepage/homepage.dart';
 import 'package:homelyy/component/models.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -173,7 +168,7 @@ class AllApi {
       "wallet" : usermodel.wallet,
     "email" : usermodel.email,
       "country":usermodel.country,
-      "password": usermodel.password,'symbol':usermodel.symbol
+      "password": usermodel.password,'symbol':usermodel.symbol,'refFrom':usermodel.refFrom,'referid':usermodel.referid
     });
 
     // var list = json.decode(response.body);
@@ -231,7 +226,42 @@ class AllApi {
     return jsonDecode(response.body);
   }
 
+  Future getReviews(String vid ) async {
+    var userGetURL = Uri.parse("${conurl}ratingall?vendorid=$vid");
+
+    print('reviewurl $userGetURL');
+
+
+    var response = await http.get(userGetURL);
+
+
+
+    print(response.body);
+
+
+    // List list = json.decode(response.body);
+    print("listofreviewws ${jsonDecode(response.body)}");
+
+    return jsonDecode(response.body);
+  }
+
+  Future getUserName(String uid ) async {
+    var userGetURL = Uri.parse("${conurl}usersRateName?ref=$uid");
+    var response = await http.get(userGetURL);
+
+
+
+    print(response.body);
+
+
+    // List list = json.decode(response.body);
+    print("usename ${jsonDecode(response.body)}");
+
+    return jsonDecode(response.body);
+  }
+
   Future<List<CatModel>> getCategory({ String vendorId,}) async {
+
     var getCategoryUrl = Uri.parse(
         "https://webhooks.mongodb-realm.com/api/client/v2.0/app/application-0-aveoz/service/Homelyy/incoming_webhook/getCategoryVendor?vendorId=$vendorId");
     var response = await http.get(getCategoryUrl);
@@ -242,8 +272,11 @@ class AllApi {
       });
       return category.toList();
     } else {
+
       return null;
+
     }
+
   }
 
 
@@ -363,7 +396,27 @@ class AllApi {
 
     var userGetURL = Uri.parse("${conurl}addCart?ref=${cartModel.ref}&vendorid=${cartModel.vendorid}&foodid=${cartModel.foodid}");
 
-    print("cartFoofid=");
+    var bodtest = {
+
+      "img" : cartModel.img,
+      "price" : cartModel.price,
+      "ref" : cartModel.ref,
+      "title" : cartModel.title,
+      // "location" : json.encode({"j":"k"}),
+      "recipe" : cartModel.recipe ,
+      "quantity" : cartModel.quantity,
+      "requirement" : cartModel.requirement,
+      "itemnumber" : cartModel.itemnumber,
+      "cutprice" : cartModel.cutprice,
+      "ogprice" : cartModel.ogprice,
+      "ogcutprice" : cartModel.ogcutprice,
+      "discount" : cartModel.discount,
+      "shop" : cartModel.shop,
+
+    };
+    print("cartFoofid=$bodtest");
+
+
     var response = type == "Add" ?await http.put(userGetURL,body: {
 
       "img" : cartModel.img,

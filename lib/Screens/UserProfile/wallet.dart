@@ -158,28 +158,31 @@ class _UserWalletState extends State<UserWallet> {
                     child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text("Homelyy WALLET"),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("Homelyy WALLET",style: TextStyle(color: kgreen,fontSize: 22),),
+                    ),
                     SizedBox(
                       width: 10,
                     ),
-                    ElevatedButton(
-                        onPressed: () {
-                          addClicked
-                              ? openCheckout(
-                                  phone: usersList.phone,
-                                  id:  "HOMELYY"+  DateTime.now()
-                                      .millisecondsSinceEpoch
-                                      .toString(),
-                                  amount: int.parse(enteredAmount),
-                                  email: usersList.email)
-                              : setState(() {
-                                  addClicked = true;
-                                });
-                        },
-                        child: Text(
-                          "ADD MONEY",
-                          style: GoogleFonts.arvo(color: Colors.white),
-                        ))
+                    // ElevatedButton(
+                    //     onPressed: () {
+                    //       // addClicked
+                    //       //     ? openCheckout(
+                    //       //         phone: usersList.phone,
+                    //       //         id:  "HOMELYY"+  DateTime.now()
+                    //       //             .millisecondsSinceEpoch
+                    //       //             .toString(),
+                    //       //         amount: int.parse(enteredAmount),
+                    //       //         email: usersList.email)
+                    //       //     : setState(() {
+                    //       //         addClicked = true;
+                    //       //       });
+                    //     },
+                    //     child: Text(
+                    //       "ADD MONEY",
+                    //       style: GoogleFonts.arvo(color: Colors.white),
+                    //     ))
                   ],
                 )),
                 Visibility(

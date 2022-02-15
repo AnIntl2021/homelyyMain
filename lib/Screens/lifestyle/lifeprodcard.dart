@@ -100,9 +100,16 @@ class _LifeProdCardState extends State<LifeProdCard> {
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Image.network(
-                                "${imageURL}/products/${prod[index].image}",fit: BoxFit.fill,width: 90,),
+                              Container(
+                                height: 100,
+                                width: 100,
+                                child: ClipRect(
+                                  child: Image.network(
+                                    "${imageURL}/products/${prod[index].image}",fit: BoxFit.fill),
+                                ),
+                              ),
                               Text(prod[index].name),
                               SizedBox(height: 3),
                               // Text(
@@ -110,20 +117,24 @@ class _LifeProdCardState extends State<LifeProdCard> {
                               //   style: TextStyle(fontSize: 12),
                               // ),
                               SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Rs.${prod[index].cutprice}",
-                                    style:
-                                    TextStyle(fontSize: 16, color: Colors.purple.shade400),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  Text(
-                                    "Rs.${prod[index].price}",
-                                    style:
-                                    TextStyle(fontSize: 14, color: Colors.blueGrey,decoration: TextDecoration.lineThrough,),
-                                  ),
-                                ],
+                              Align(
+                                alignment: Alignment.center,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Rs.${prod[index].cutprice}",
+                                      style:
+                                      TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    Text(
+                                      "Rs.${prod[index].price}",
+                                      style:
+                                      TextStyle(fontSize: 14, color: Colors.blueGrey,decoration: TextDecoration.lineThrough,),
+                                    ),
+                                  ],
+                                ),
                               ),
                               SizedBox(height: 5),
                               Text(""),
@@ -322,8 +333,9 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                                                             });
                                                                                             var uuid = Uuid();
                                                                                             var newUid = uuid.v1().toString().split("-");
+
                                                                                             await AllApi().postCart(CartModel(
-                                                                                              img: img,
+                                                                                              img: prod[index].image,
                                                                                               price:prodprice,
                                                                                               title: title,
                                                                                               recipe: "recipe",
@@ -343,6 +355,7 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                                                               vendorid: widget.vid.toString().replaceAll(" ", ""),
                                                                                               foodid: prod1[index].productid.toString().replaceAll(" ", ""),
                                                                                             ),"Add");
+
                                                                                             await AllApi().postShopCart(CartModel(
                                                                                               shop: widget.shopName,
                                                                                               ref: widget.uid.toString().replaceAll(" ", ""),
@@ -615,68 +628,57 @@ class _LifeProdCardState extends State<LifeProdCard> {
                               style: ElevatedButton.styleFrom(primary: Colors.pink)
   )),
                     ),
-                    Visibility(
-                      visible: _defaultvalue < 1 ? false : true,
-                      child: Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: CounterNumberButton(
-                          initialValue: _defaultvalue,
-                          minValue: 0,
-                          maxValue: 10,
-                          step: 1,
-                          onChanged: (value) {
+                    // Visibility(
+                    //   visible: _defaultvalue < 1 ? false : true,
+                    //   child: Positioned(
+                    //     bottom: 0,
+                    //     right: 0,
+                    //     child: CounterNumberButton(
+                    //       initialValue: _defaultvalue,
+                    //       minValue: 0,
+                    //       maxValue: 10,
+                    //       step: 1,
+                    //       onChanged: (value) {
+                    //
+                    //         // get the latest value from here
+                    //
+                    //         print(value);
+                    //         // if(value < 1){
+                    //         //   print("lesthnone");
+                    //         //   FirebaseFirestore.instance.collection("users").doc(widget.uid).collection("cart").doc(widget.shopName).collection("products").doc("${widget.title} ${widget.unit}").delete().then((value) {
+                    //         //     FirebaseFirestore.instance.collection("users").doc(widget.uid).collection("cart").doc(widget.shopName).collection("products").get().then((value) {
+                    //         //       value.size == 0 ? FirebaseFirestore.instance.collection("users").doc(widget.uid).collection("cart").doc(widget.shopName).delete() : print("hasdata");
+                    //         //       Fluttertoast.showToast(msg: "Removed from Cart");
+                    //         //     });
+                    //         //   });
+                    //         // }
+                    //         setState(() {
+                    //           _defaultvalue = int.parse(value.toString());
+                    //         });
+                    //         // Map<String, String> updateQuantity = new Map();
+                    //         // updateQuantity['quantity'] = value.toString();
+                    //         // var changedprice = value * int.parse(widget.price);
+                    //         // var changedcutprice = widget.cutprice == "" ? "" : value * int.parse(widget.cutprice);
+                    //         // updateQuantity['price'] = changedprice.toString();
+                    //         // updateQuantity['cutprice'] = changedcutprice.toString();
+                    //         // FirebaseFirestore.instance
+                    //         //     .collection("users")
+                    //         //     .doc(widget.uid)
+                    //         //     .collection("cart").doc(widget.shopName).collection("products")
+                    //         //     .doc(widget.title)
+                    //         //     .update(updateQuantity).then((value) {
+                    //         //   Fluttertoast.showToast(msg: "Quantity Updated");
+                    //         // });
+                    //       },
+                    //       decimalPlaces: 0,
+                    //       color: kgreen,
+                    //       buttonSizeHeight: 30,
+                    //       buttonSizeWidth: 30,
+                    //       textStyle: TextStyle(fontSize: 18, color: Colors.white), key: Key(""),
+                    //     ),
+                    //   ),
+                    // ),
 
-                            // get the latest value from here
-
-                            print(value);
-                            // if(value < 1){
-                            //   print("lesthnone");
-                            //   FirebaseFirestore.instance.collection("users").doc(widget.uid).collection("cart").doc(widget.shopName).collection("products").doc("${widget.title} ${widget.unit}").delete().then((value) {
-                            //     FirebaseFirestore.instance.collection("users").doc(widget.uid).collection("cart").doc(widget.shopName).collection("products").get().then((value) {
-                            //       value.size == 0 ? FirebaseFirestore.instance.collection("users").doc(widget.uid).collection("cart").doc(widget.shopName).delete() : print("hasdata");
-                            //       Fluttertoast.showToast(msg: "Removed from Cart");
-                            //     });
-                            //   });
-                            // }
-                            setState(() {
-                              _defaultvalue = int.parse(value.toString());
-                            });
-                            // Map<String, String> updateQuantity = new Map();
-                            // updateQuantity['quantity'] = value.toString();
-                            // var changedprice = value * int.parse(widget.price);
-                            // var changedcutprice = widget.cutprice == "" ? "" : value * int.parse(widget.cutprice);
-                            // updateQuantity['price'] = changedprice.toString();
-                            // updateQuantity['cutprice'] = changedcutprice.toString();
-                            // FirebaseFirestore.instance
-                            //     .collection("users")
-                            //     .doc(widget.uid)
-                            //     .collection("cart").doc(widget.shopName).collection("products")
-                            //     .doc(widget.title)
-                            //     .update(updateQuantity).then((value) {
-                            //   Fluttertoast.showToast(msg: "Quantity Updated");
-                            // });
-                          },
-                          decimalPlaces: 0,
-                          color: kgreen,
-                          buttonSizeHeight: 30,
-                          buttonSizeWidth: 30,
-                          textStyle: TextStyle(fontSize: 18, color: Colors.white), key: Key(""),
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: true,
-                      child: Positioned(
-                          top: 10,
-                          left: 20,
-                          child: Container(
-                            width: 60,
-                            height: 25,
-                            child: Center(child: Text("${20} % OFF",style: GoogleFonts.arvo(fontSize: 12,color: Colors.white),)),
-                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6)), color: Colors.green,),
-                          )),
-                    ),
                     // Visibility(
                     //   visible:  true,
                     //   child: Positioned(

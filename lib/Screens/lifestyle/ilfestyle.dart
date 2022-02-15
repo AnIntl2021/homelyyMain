@@ -17,6 +17,7 @@ class LifestylePage extends StatefulWidget {
 }
 
 class _LifestylePageState extends State<LifestylePage> {
+
   @override
   Widget build(BuildContext context) {
     return  InkWell(
@@ -48,13 +49,17 @@ class _LifestylePageState extends State<LifestylePage> {
               itemCount: catList.length,
               itemBuilder: (context,index){
                 return InkWell(onTap:(){
-                  Get.to(LifeProductPage(
+
+                  Get.to(
+                      LifeProductPage(
                     id: widget.id,
                     vid:widget.vid,
                     uid:widget.uid,
                     shopName:widget.shopName,
-                    catid: catList[index].catid,
-                  ));
+                    catid: catList[index].name,
+                  )
+                  );
+
                 },child: buildContainer(catList[index].name,catList[index].image));
               },
 
@@ -76,7 +81,7 @@ class _LifestylePageState extends State<LifestylePage> {
                 Container(
                   child: Image(
                     width: Get.width*0.25,
-                    image: NetworkImage("$imageURL/category/$catimage"),
+                    image: NetworkImage("${imageURL}category/$catimage"),
                   ),
                 ),
                 Container(

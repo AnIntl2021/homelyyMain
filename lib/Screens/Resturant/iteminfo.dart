@@ -76,11 +76,12 @@ class _ItemInfoState extends State<ItemInfo> {
 
               TitlePriceRating(
                 name: widget.title,
-                numOfReviews: widget.numReview,
+                numOfReviews:double.parse(widget.rating).toStringAsPrecision(1),
                 rating: double.parse(widget.rating),
                 onRatingChanged: (value) {},
                 price: '',
                 key: Key("shopRatingPage"),
+                vid:widget.id
               ),
 
               SizedBox(height: 5),
@@ -92,13 +93,6 @@ class _ItemInfoState extends State<ItemInfo> {
                     "Open Now",
                     style: GoogleFonts.arvo(color: Colors.blueAccent.shade100),
                   ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    "${widget.opentiming}am - ${widget.closetiming}pm",
-                    style: GoogleFonts.arvo(color: kdarkgreen),
-                  )
                 ],
               ),
               Divider(),

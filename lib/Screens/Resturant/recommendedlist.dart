@@ -53,10 +53,10 @@ class _RecommendedListState extends State<RecommendedList> {
         // print("catlist lenght 11= ${snapshot.requireData}");
 
 
-        return ListView.builder(
+        return  snapshot.requireData[0].isEmpty ? Container() : ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
-            itemCount: snapshot.requireData.length,
+            itemCount: snapshot.requireData[0].length,
             itemBuilder: (context, index) {
 
               var title =  widget.type == "restro" ? snapshot.requireData[0][index].name  :  snapshot.requireData[0][index].name;
