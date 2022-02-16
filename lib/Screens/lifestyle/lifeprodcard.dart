@@ -14,6 +14,7 @@ import 'package:homelyy/component/homeAppbar.dart';
 import 'package:homelyy/component/models.dart';
 import 'package:homelyy/component/searchBoxx.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class LifeProdCard extends StatefulWidget {
@@ -55,7 +56,11 @@ class _LifeProdCardState extends State<LifeProdCard> {
 
 
     return FutureBuilder(
-      future: AllApi().getlifeProdAll(widget.vid, widget.catId),
+      future: Future.wait([ AllApi().getlifeProdAll(widget.vid, widget.catId),
+        SharedPreferences.getInstance()
+        ]),
+
+
       builder: (context, snapshot1) {
 
 
@@ -67,11 +72,13 @@ class _LifeProdCardState extends State<LifeProdCard> {
           );
         }
 
-        List<LifeProductModel> prod =
-            snapshot1.requireData;
+        List prod =
+            snapshot1.requireData[0];
         print("foodList lenght = ${prod} ${widget.catId}");
 
+        SharedPreferences usermodel = snapshot1.requireData[1];
 
+        var  symbol = usermodel.get('gsymbol');
 
 
         return GridView.builder(
@@ -122,16 +129,24 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "Rs.${prod[index].cutprice}",
-                                      style:
-                                      TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                                    Visibility(
+                                      visible:prod[index].cutprice != '0',
+                                      child: Text(
+                                        "$symbol${prod[index].cutprice}",
+                                        style:
+                                        TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                                      ),
                                     ),
                                     SizedBox(width: 10,),
                                     Text(
-                                      "Rs.${prod[index].price}",
-                                      style:
-                                      TextStyle(fontSize: 14, color: Colors.blueGrey,decoration: TextDecoration.lineThrough,),
+                                      "${symbol} ${prod[index].price}",
+                                      style:prod[index].cutprice != '0'
+                                          ? TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.blueGrey,
+                                        decoration: TextDecoration.lineThrough,
+                                      )
+                                          : TextStyle(fontSize: 16, color: kgreen),
                                     ),
                                   ],
                                 ),
@@ -197,7 +212,7 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                             var prodcutprice =
                                                                 prod1[index].cutprice;
                                                             var discountVisibility =
-                                                            prodcutprice == ""
+                                                            prodcutprice != "0"
                                                                 ? false
                                                                 : true;
                                                             var prodDiscount = prodcutprice ==
@@ -285,9 +300,9 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                                                           MainAxisAlignment.start,
                                                                                           children: [
                                                                                             Visibility(
-                                                                                              visible: prodcutprice == "" ? false : true,
+                                                                                              visible: prodcutprice == "0" ? false : true,
                                                                                               child: Text(
-                                                                                                prodcutprice == "" ? "" : "Rs.${prodcutprice}",
+                                                                                                 "$symbol${prodcutprice}",
                                                                                                 style: TextStyle(fontSize: 16, color: kdarkgreen),
                                                                                               ),
                                                                                             ),
@@ -295,8 +310,8 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                                                               width: 10,
                                                                                             ),
                                                                                             Text(
-                                                                                              "Rs.${prodprice}",
-                                                                                              style: discountVisibility
+                                                                                              "$symbol${prodprice}",
+                                                                                              style: prodcutprice != "0"
                                                                                                   ? TextStyle(
                                                                                                 fontSize: 14,
                                                                                                 color: Colors.blueGrey,

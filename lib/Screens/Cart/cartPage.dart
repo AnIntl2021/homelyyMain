@@ -700,10 +700,13 @@ class _CartPageState extends State<CartPage> {
                                 children: [
                                   Row(
                                     children: [
-                                      Text(
-                                        cutprice == "" ? "" :"${symbol} ${(int.parse(cutprice)).toString()}",
-                                        style:
-                                        TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                                      Visibility(
+                                        visible:cutprice != "0"  ,
+                                        child: Text(
+                                          "${symbol} ${(int.parse(cutprice)).toString()}",
+                                          style:
+                                          TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                                        ),
                                       ),
 
                                       SizedBox(width: 10,),
@@ -711,7 +714,7 @@ class _CartPageState extends State<CartPage> {
                                       Text(
                                         "$symbol ${price}",
                                         style:
-                                        discountVisibility ? TextStyle(fontSize: 14, color: Colors.blueGrey,decoration: TextDecoration.lineThrough,) : TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                                        cutprice != "0" ? TextStyle(fontSize: 14, color: Colors.blueGrey,decoration: TextDecoration.lineThrough,) : TextStyle(fontSize: 16, color: Colors.purple.shade400),
                                       ),
 
                                     ],
@@ -841,14 +844,14 @@ class _CartPageState extends State<CartPage> {
             ),
           ),
           Visibility(
-            visible: discountVisibility,
+            visible: cutprice != "0",
             child: Positioned(
                 top: 10,
                 left: 20,
                 child: Container(
                   width: 60,
                   height: 25,
-                  child: Center(child: Text("$symbol ${discount} OFF",style: GoogleFonts.arvo(fontSize: 12,color: Colors.white),)),
+                  child: Center(child: Text("$symbol ${double.parse(price) - double.parse(cutprice)} OFF",style: GoogleFonts.arvo(fontSize: 12,color: Colors.white),)),
                   decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6)), color: Colors.green,),
                 )),
           )

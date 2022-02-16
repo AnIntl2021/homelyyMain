@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,10 +27,10 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-
 class _LoginScreenState extends State<LoginScreen> {
   var phoneText = TextEditingController();
   var passwordController = TextEditingController();
+  var emailController = TextEditingController();
   var passwordErrorText;
   var passwordError;
   var phoneerrorText;
@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var codeError = false;
   bool obsecureText = true;
 
-  Location location = Location() ;
+  Location location = Location();
 
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
@@ -52,7 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
       if (!_serviceEnabled) {
-        Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
+        Get.snackbar("Error",
+            "'Location service is disabled. Please enable it to check-in.'");
         return null;
       }
     }
@@ -61,7 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
       if (_permissionGranted != PermissionStatus.granted) {
-        Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
+        Get.snackbar("Error",
+            "'Location service is disabled. Please enable it to check-in.'");
         return null;
       }
     }
@@ -71,12 +73,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return _locationData;
   }
 
-
-
-  Future<List<coder.Address>>getAddress() async {
+  Future<List<coder.Address>> getAddress() async {
     getLocation().then((value) async {
-      final coordinates =  coder.Coordinates(value.latitude, value.longitude);
-      var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      final coordinates = coder.Coordinates(value.latitude, value.longitude);
+      var addresses =
+          await Geocoder.local.findAddressesFromCoordinates(coordinates);
       var first = addresses.first;
       print(" : ${first.addressLine}");
 
@@ -85,19 +86,14 @@ class _LoginScreenState extends State<LoginScreen> {
       pref.setString("code", first.postalCode);
       return addresses;
     });
-
-
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-
         padding: EdgeInsets.all(16),
-
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -107,8 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   tag: "logo",
                   child: Image(
                     image: AssetImage("assets/homelyy.png"),
-                    width:  Get.width*0.7,
-
+                    width: Get.width * 0.7,
                   ),
                 ),
                 Text(
@@ -118,69 +113,61 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 10,
                 ),
-
-                buildTextField("Enter Registered Phone Number","Phone",phoneText),
-                buildTextField("Enter Password","Password",passwordController),
-
+                buildTextField(
+                    "Enter Registered Phone Number", "Phone", phoneText),
+                buildTextField(
+                    "Enter Password", "Password", passwordController),
                 SizedBox(
                   height: 30,
                 ),
-
                 ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kdarkgreen)
-                  ),
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(kdarkgreen)),
                     onPressed: () {
                       print("+${phoneText.text}");
 
-                      if (phoneText.text.length == 10 && passwordController.text.isNotEmpty) {
+                      if (phoneText.text.length == 10 &&
+                          passwordController.text.isNotEmpty) {
+                        AllApi()
+                            .getUser(phoneText.text
+                                .replaceAll("+", "")
+                                .removeAllWhitespace)
+                            .then((value) async {
+                          if (value == "\"User Not Exist\"") {
+                            Fluttertoast.showToast(
+                                msg: "User Not Exist Please Signup");
+                          } else {
+                            UserModel users =
+                                UserModel().fromJson(jsonDecode(value));
 
-                        AllApi().getUser(phoneText.text.replaceAll("+", "").removeAllWhitespace).then((value) async {
-
-                          if(value == "\"User Not Exist\""){
-
-                            Fluttertoast.showToast(msg: "User Not Exist Please Signup");
-
-                          }
-                          else{
-
-                            UserModel users = UserModel().fromJson(jsonDecode(value));
-
-
-                            if(users.password == passwordController.text){
-
+                            if (users.password == passwordController.text) {
                               await getAddress();
                               var token =
-                              await FirebaseMessaging.instance.getToken();
+                                  await FirebaseMessaging.instance.getToken();
                               print('token: $token');
-                              
-                             await  AllApi().updateToken(users.phone, token); // for updating token
+
+                              await AllApi().updateToken(
+                                  users.phone, token); // for updating token
 
                               await AllApi().updateLocalUsers(
                                   jsonEncode(users), users.phone);
-                              
+
                               print("getting user ${users.name}");
 
                               Get.off(Homepage(
                                 userRef: users.phone,
                               ));
-
-                            }else{
-
+                            } else {
                               Fluttertoast.showToast(msg: "Incorrect Password");
-
                             }
                           }
-
                         });
-
                       } else {
-
                         setState(() {
                           phoneError = true;
-                          phoneerrorText = "Enter Correct Mobile Number with country code";
+                          phoneerrorText =
+                              "Enter Correct Mobile Number with country code";
                         });
-
                       }
                     },
                     child: Text("Login")),
@@ -188,7 +175,72 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 10,
                 ),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
+                    Get.dialog(
+                      Scaffold(
+                        body: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('We will send your password on your registered Email',style: TextStyle(fontWeight:FontWeight.bold ),),
+                                buildTextField("Enter Registered Email Id",
+                                    "Email", emailController),
+                                ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                        MaterialStateProperty.all(Colors.white)),
+                                    onPressed: () async {
+
+                                      if(emailController.text.isNotEmpty){
+                                        var userGetURL = Uri.parse("https://thehomelyy.com/forgotmail.php?email=${emailController.value.text}");
+                                      print('user ${emailController.value.text}');
+                                        var response = await http.get(userGetURL);
+                                        Fluttertoast.showToast(msg: 'Password sent on your mail');
+                                        Get.to(LoginScreen(
+
+                                        ));
+                                      }else{
+
+                                        Fluttertoast.showToast(msg: 'Enter Email');
+
+                                      }
+
+
+
+
+
+
+                                    },
+                                    child: Text(
+                                      "Send",
+                                      style: TextStyle(color: Colors.grey),
+                                    )),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Forgot Password ? "),
+                      Text(
+                        "Reset now",
+                        style:
+                            GoogleFonts.arvo(color: Colors.red, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                InkWell(
+                  onTap: () {
                     Get.to(SignUp());
                   },
                   child: Row(
@@ -197,7 +249,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text("Dont have an Account ? "),
                       Text(
                         "Signup",
-                        style: GoogleFonts.arvo(color: Colors.red, fontSize: 16),
+                        style:
+                            GoogleFonts.arvo(color: Colors.red, fontSize: 16),
                       ),
                     ],
                   ),
@@ -205,47 +258,51 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 10,
                 ),
-
                 ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.white)
-                    ),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white)),
                     onPressed: () {
-
                       Get.to(Homepage(
                         userRef: 'Guest',
                       ));
-
                     },
-                    child: Text("Login as Guest",style: TextStyle(color: Colors.grey),)),
+                    child: Text(
+                      "Login as Guest",
+                      style: TextStyle(color: Colors.grey),
+                    )),
               ],
             ),
           ),
         ),
       ),
     );
-
   }
 
-
-
-  Widget buildTextField(String hint,String label,TextEditingController controller) {
+  Widget buildTextField(
+      String hint, String label, TextEditingController controller) {
     return TextField(
-      style: TextStyle(color:kdarkgreen),
+      style: TextStyle(color: kdarkgreen),
       controller: controller,
-      keyboardType: label == "Phone"?TextInputType.number:TextInputType.text,
+      keyboardType:
+          label == "Phone" ? TextInputType.number : TextInputType.text,
       obscureText: label == "Phone" ? false : obsecureText,
       textAlign: TextAlign.center,
 
       // autofocus: true,
       decoration: InputDecoration(
-        suffixIcon: label == "Phone"? null :IconButton(onPressed: (){
-          setState(() {
-
-            obsecureText ?obsecureText = false :obsecureText = true ;
-
-          });
-        }, icon: Icon(FontAwesomeIcons.eye,size: 18,)),
+        suffixIcon: label == "Phone" || label == "Email"
+            ? null
+            : IconButton(
+                onPressed: () {
+                  setState(() {
+                    obsecureText ? obsecureText = false : obsecureText = true;
+                  });
+                },
+                icon: Icon(
+                  FontAwesomeIcons.eye,
+                  size: 18,
+                )),
         hintText: hint,
         labelText: label,
         hintStyle: TextStyle(),

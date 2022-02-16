@@ -300,7 +300,8 @@ class _ItemInfoState extends State<ItemInfo> {
                                                                    "80"))
                                                                .toString(),
                                                            discountVisibility:
-                                                           true,
+                                                           foodList[index]
+                                                               .cutprice != '0',
                                                            uid: widget.uid,
                                                            foodid:
                                                            foodList[index]
@@ -373,7 +374,8 @@ class _ItemInfoState extends State<ItemInfo> {
                                                                         "80"))
                                                                     .toString(),
                                                                 discountVisibility:
-                                                                true,
+                                                                foodList[index]
+                                                                    .cutprice != '0',
                                                                 uid: widget.uid,
                                                                 foodid:
                                                                 foodList[index]

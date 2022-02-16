@@ -173,11 +173,8 @@ class _ProductListCardState extends State<ProductListCard> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Visibility(
-                              visible: widget.cutprice == "" ? false : true,
-                              child: Text(
-                                widget.cutprice == ""
-                                    ? ""
-                                    : "${widget.symbol} ${widget.cutprice}",
+                              visible: widget.discountVisibility,
+                              child: Text("${widget.symbol} ${widget.cutprice}",
                                 style: TextStyle(fontSize: 16, color: kgreen),
                               ),
                             ),
@@ -400,7 +397,7 @@ class _ProductListCardState extends State<ProductListCard> {
                       height: 25,
                       child: Center(
                           child: Text(
-                        "${widget.symbol} ${widget.discount} OFF",
+                        "${widget.symbol} ${double.parse(widget.price) - double.parse(widget.cutprice)} OFF",
                         style:
                             GoogleFonts.arvo(fontSize: 12, color: Colors.white),
                       )),
