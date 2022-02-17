@@ -176,53 +176,62 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Get.dialog(
-                      Scaffold(
-                        body: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('We will send your password on your registered Email',style: TextStyle(fontWeight:FontWeight.bold ),),
-                                buildTextField("Enter Registered Email Id",
-                                    "Email", emailController),
-                                ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                        MaterialStateProperty.all(Colors.white)),
-                                    onPressed: () async {
 
-                                      if(emailController.text.isNotEmpty){
-                                        var userGetURL = Uri.parse("https://thehomelyy.com/forgotmail.php?email=${emailController.value.text}");
-                                      print('user ${emailController.value.text}');
-                                        var response = await http.get(userGetURL);
-                                        Fluttertoast.showToast(msg: 'Password sent on your mail');
-                                        Get.to(LoginScreen(
-
-                                        ));
-                                      }else{
-
-                                        Fluttertoast.showToast(msg: 'Enter Email');
-
-                                      }
+                    showDialog(context: context, builder: (context) {
+                      return AlertDialog(
+                        content:
+                        Scaffold(
+                          body: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('We will send your password on your registered Email',style: TextStyle(fontWeight:FontWeight.bold ),),
 
 
+                                  buildTextFieldNew("Enter Registered Email Id",
+                                      "Email", emailController),
+
+
+                                  ElevatedButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                          MaterialStateProperty.all(Colors.white)),
+                                      onPressed: () async {
+
+                                        if(emailController.text.isNotEmpty){
+                                          var userGetURL = Uri.parse("https://thehomelyy.com/forgotmail.php?email=${emailController.value.text}");
+                                          print('user ${emailController.value.text}');
+                                          var response = await http.get(userGetURL);
+                                          Fluttertoast.showToast(msg: 'Password sent on your mail ${response.body}');
+                                          Get.to(LoginScreen(
+
+                                          ));
+                                        }else{
+
+                                          Fluttertoast.showToast(msg: 'Enter Email');
+
+                                        }
 
 
 
 
-                                    },
-                                    child: Text(
-                                      "Send",
-                                      style: TextStyle(color: Colors.grey),
-                                    )),
-                              ],
+
+
+                                      },
+                                      child: Text(
+                                        "Send",
+                                        style: TextStyle(color: Colors.grey),
+                                      )),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
+                      );
+                    });
+
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -319,4 +328,36 @@ class _LoginScreenState extends State<LoginScreen> {
       showCursor: true,
     );
   }
+
+
+  Widget buildTextFieldNew(
+      String hint, String label, TextEditingController controller) {
+    return TextField(
+      style: TextStyle(color: kdarkgreen),
+      controller: controller,
+      keyboardType:
+      label == "Phone" ? TextInputType.number : TextInputType.text,
+      obscureText: false ,
+      textAlign: TextAlign.center,
+
+      // autofocus: true,
+      decoration: InputDecoration(
+
+        hintText: hint,
+        labelText: label,
+        hintStyle: TextStyle(),
+        labelStyle: TextStyle(color: kgreen),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: kgreen),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: kgreen),
+        ),
+
+        // errorText: isdiscountAvailable ? erroText : null
+      ),
+      showCursor: true,
+    );
+  }
+
 }

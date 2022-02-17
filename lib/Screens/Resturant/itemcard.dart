@@ -87,9 +87,9 @@ class _ItemCardState extends State<ItemCard> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Visibility(
-                      visible: widget.cutprice == "" ? false : true,
+                      visible: widget.cutprice == "0" ? false : true,
                       child: Text(
-                        widget.cutprice == "" ? "" : "${widget.symbol} ${widget
+                        widget.cutprice == "0" ? "" : "${widget.symbol} ${widget
                             .cutprice}",
                         style:
                         TextStyle(
@@ -100,7 +100,7 @@ class _ItemCardState extends State<ItemCard> {
                     Text(
                       "${widget.symbol} ${widget.price}",
                       style:
-                      widget.discountVisibility
+                      widget.cutprice != "0"
                           ? TextStyle(fontSize: 14,
                         color: Colors.blueGrey,
                         decoration: TextDecoration.lineThrough,)

@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:homelyy/Screens/lifestyle/lifeprodcard.dart';
 import 'package:homelyy/component/searchBoxx.dart';
+
+import '../../component/constants.dart';
 
 class LifeItemList extends StatefulWidget {
   final String vid,uid,shopName,catid;
@@ -17,15 +21,7 @@ class _LifeItemListState extends State<LifeItemList> {
     return SingleChildScrollView(
       child:  Column(
 
-        children: [   AnimatedContainer(
-          duration: Duration(milliseconds: 200),
-          child: SearchBox(
-            onChanged: (value) {
-
-            },
-            key: Key("searchBox"),
-          ),
-        ),
+        children: [   
 
 
               LifeProdCard(vid:widget.vid,uid:widget.uid,shopName:widget.shopName,catId: widget.catid,),

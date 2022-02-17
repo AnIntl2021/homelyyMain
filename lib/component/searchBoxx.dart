@@ -8,6 +8,7 @@ import 'package:homelyy/component/constants.dart';
 
 class SearchBox extends StatelessWidget {
   final ValueChanged<String> onChanged;
+
   const SearchBox({
     Key key,
     this.onChanged,
