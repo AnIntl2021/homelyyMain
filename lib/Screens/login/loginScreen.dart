@@ -124,9 +124,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(kdarkgreen)),
                     onPressed: () {
+
                       print("+${phoneText.text}");
 
-                      if (phoneText.text.length == 10 &&
+                      if (phoneText.text.isNotEmpty &&
                           passwordController.text.isNotEmpty) {
                         AllApi()
                             .getUser(phoneText.text
@@ -161,6 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Fluttertoast.showToast(msg: "Incorrect Password");
                             }
                           }
+
                         });
                       } else {
                         setState(() {
