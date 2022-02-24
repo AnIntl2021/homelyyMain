@@ -46,6 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
   LocationData _locationData;
   var userLatitude = "";
   var userLongitude = "";
+  bool loading = false;
 
   Future<LocationData> getLocation() async {
     _serviceEnabled = await location.serviceEnabled();
@@ -114,13 +115,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 10,
                 ),
                 buildTextField(
-                    "Enter Registered Phone Number", "Phone", phoneText),
+                    "Enter Registered Phone or Email id", "Phone/Email Id", phoneText),
                 buildTextField(
                     "Enter Password", "Password", passwordController),
                 SizedBox(
                   height: 30,
                 ),
-                ElevatedButton(
+              loading ? Center(
+                child: CircularProgressIndicator(color: kgreen,),
+              )  : ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(kdarkgreen)),
                     onPressed: () {
@@ -129,6 +132,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       if (phoneText.text.isNotEmpty &&
                           passwordController.text.isNotEmpty) {
+                        setState(() {
+                          loading = true;
+                        });
                         AllApi()
                             .getUser(phoneText.text
                                 .replaceAll("+", "")
@@ -154,11 +160,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                   jsonEncode(users), users.phone);
 
                               print("getting user ${users.name}");
-
+                            setState(() {
+                              loading = false;
+                            });
                               Get.off(Homepage(
                                 userRef: users.phone,
                               ));
                             } else {
+                              setState(() {
+                                loading = false;
+                              });
                               Fluttertoast.showToast(msg: "Incorrect Password");
                             }
                           }
@@ -296,13 +307,13 @@ class _LoginScreenState extends State<LoginScreen> {
       style: TextStyle(color: kdarkgreen),
       controller: controller,
       keyboardType:
-          label == "Phone" ? TextInputType.number : TextInputType.text,
-      obscureText: label == "Phone" ? false : obsecureText,
+          TextInputType.text,
+      obscureText: label != "Password" ? false : obsecureText,
       textAlign: TextAlign.center,
 
       // autofocus: true,
       decoration: InputDecoration(
-        suffixIcon: label == "Phone" || label == "Email"
+        suffixIcon: label != "Password" || label == "Email"
             ? null
             : IconButton(
                 onPressed: () {

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:contactus/contactus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +16,9 @@ import 'package:homelyy/Screens/login/loginScreen.dart';
 import 'package:homelyy/Screens/orders/orderpage.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../component/api.dart';
+import '../../component/models.dart';
 
 class UserProfile extends StatefulWidget {
   final String id;
@@ -52,12 +58,24 @@ class _UserProfileState extends State<UserProfile> {
             }
             ),
             buildListTile("REFER & EARN", FontAwesomeIcons.share, () async {
-              await FlutterShare.share(
-                  title: 'Download Homelyy App Referal Code: ${widget.id.substring(6,10)}',
-                  text: 'Download Homelyy App Referal Code:  ${widget.id.substring(6,10)}',
-                  linkUrl: 'https://play.google.com/store/apps/details?id=com.an.homelyy.homelyy',
-                  chooserTitle: 'Example Chooser Title'
-              );
+             var value = await AllApi()
+                  .getUser(widget.id
+                  .replaceAll("+", "")
+                  .removeAllWhitespace);
+
+              UserModel users =
+              UserModel().fromJson(jsonDecode(value));
+              if(GetPlatform.isAndroid){
+                await FlutterShare.share(
+                    title: 'Download Homelyy App Referal Code: ${users.referid} Get upto 5% Cashback on Every Order',
+                    text: 'Download Homelyy App Referal Code:  ${users.referid} Get upto 5% Cashback on Every Order',
+                    linkUrl: 'https://play.google.com/store/apps/details?id=com.an.homelyy.homelyy',
+                    chooserTitle: 'Example Chooser Title'
+                );
+              }else{
+
+              }
+
             }),
             buildListTile("CONTACT US", FontAwesomeIcons.phone, () {
               Navigator.of(context)
