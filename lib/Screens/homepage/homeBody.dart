@@ -3,14 +3,12 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder/geocoder.dart' as coder;
 import 'package:geocoder/geocoder.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_utils/src/extensions/dynamic_extensions.dart';
@@ -53,7 +51,7 @@ class _BodyState extends State<Body> {
   var scrollController = ScrollController();
   var closeContainer = false;
   // var uid = FirebaseAuth.instance.currentUser.uid;
-  GeoFirePoint myLocation;
+  // GeoFirePoint myLocation;
   var userAddressFeature = "";
   var userAddress = "";
   var locationAvailable = "";
@@ -93,8 +91,13 @@ class _BodyState extends State<Body> {
         return null;
       }
     }
+    print("location ENABLED");
+
 
     _locationData = await location.getLocation();
+
+    print("location ${_locationData.latitude.toString()} $userAddress");
+
     print('getting location = $_locationData');
     return _locationData;
   }
@@ -191,7 +194,6 @@ class _BodyState extends State<Body> {
     print(
         "userGetttinghomwebody ${widget.userref.replaceAll("+", "").removeAllWhitespace}");
 
-    print("location $myLocation $userAddress");
 
     return FutureBuilder(
         future: Future.wait([

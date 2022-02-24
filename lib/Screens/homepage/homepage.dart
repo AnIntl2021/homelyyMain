@@ -36,39 +36,39 @@ class Homepage extends StatefulWidget {
   _HomepageState createState() => _HomepageState();
 }
 
-Location location = Location() ;
-
-bool _serviceEnabled;
-PermissionStatus _permissionGranted;
-LocationData _locationData;
-var userLatitude = "";
-var userLongitude = "";
-GeoPoint userGeoPoint ;
-
-Future<LocationData> getLocation() async {
-  _serviceEnabled = await location.serviceEnabled();
-
-  if (!_serviceEnabled) {
-    _serviceEnabled = await location.requestService();
-    if (!_serviceEnabled) {
-      Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
-      return null;
-    }
-  }
-
-  _permissionGranted = await location.hasPermission();
-  if (_permissionGranted == PermissionStatus.denied) {
-    _permissionGranted = await location.requestPermission();
-    if (_permissionGranted != PermissionStatus.granted) {
-      Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
-      return null;
-    }
-  }
-
-  _locationData = await location.getLocation();
-
-  return _locationData;
-}
+// Location location = Location() ;
+//
+// bool _serviceEnabled;
+// PermissionStatus _permissionGranted;
+// LocationData _locationData;
+// var userLatitude = "";
+// var userLongitude = "";
+// GeoPoint userGeoPoint ;
+//
+// Future<LocationData> getLocation() async {
+//   _serviceEnabled = await location.serviceEnabled();
+//
+//   if (!_serviceEnabled) {
+//     _serviceEnabled = await location.requestService();
+//     if (!_serviceEnabled) {
+//       Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
+//       return null;
+//     }
+//   }
+//
+//   _permissionGranted = await location.hasPermission();
+//   if (_permissionGranted == PermissionStatus.denied) {
+//     _permissionGranted = await location.requestPermission();
+//     if (_permissionGranted != PermissionStatus.granted) {
+//       Get.snackbar("Error", "'Location service is disabled. Please enable it to check-in.'");
+//       return null;
+//     }
+//   }
+//
+//   _locationData = await location.getLocation();
+//
+//   return _locationData;
+// }
 
 
 

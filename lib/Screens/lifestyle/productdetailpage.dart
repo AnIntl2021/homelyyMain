@@ -1,7 +1,6 @@
 // @dart=2.9
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -631,10 +630,10 @@ Text(
   @override
   Widget build(BuildContext context) {
     print("stock ${widget.stock}");
-    var currentUser = FirebaseAuth.instance.currentUser.uid;
+    // var currentUser = FirebaseAuth.instance.currentUser.uid;
     return Scaffold(
       appBar: AppBar(backgroundColor: kgreen,),
-      floatingActionButton: _flotingButton(currentUser),
+      floatingActionButton: _flotingButton(''),
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(

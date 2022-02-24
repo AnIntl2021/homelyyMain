@@ -1,9 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,44 +13,44 @@ import 'Screens/login/loginScreen.dart';
 import 'component/constants.dart';
 import 'component/splashscreenMY.dart';
 
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title
-    description: 'This channel is used for important notifications.', // description
-    importance: Importance.max,
-    playSound: true,
-    // sound: RawResourceAndroidNotificationSound('notification'),
-    enableLights: true
-);
+// const AndroidNotificationChannel channel = AndroidNotificationChannel(
+//     'high_importance_channel', // id
+//     'High Importance Notifications', // title
+//     description: 'This channel is used for important notifications.', // description
+//     importance: Importance.max,
+//     playSound: true,
+//     // sound: RawResourceAndroidNotificationSound('notification'),
+//     enableLights: true
+// );
 
+//
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+// FlutterLocalNotificationsPlugin();
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
-
-Future<void> firebaseMessgaingBackgroundHandler(RemoteMessage message) async {
-
-  await Firebase.initializeApp();
-  print("a message bg : ${message.messageId}");
-
-}
+// Future<void> firebaseMessgaingBackgroundHandler(RemoteMessage message) async {
+//
+//   await Firebase.initializeApp();
+//   print("a message bg : ${message.messageId}");
+//
+// }
 
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  FirebaseMessaging.onBackgroundMessage(firebaseMessgaingBackgroundHandler);
+  // FirebaseMessaging.onBackgroundMessage(firebaseMessgaingBackgroundHandler);
 
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
+  // await flutterLocalNotificationsPlugin
+  //     .resolvePlatformSpecificImplementation<
+  //     AndroidFlutterLocalNotificationsPlugin>()
+  //     ?.createNotificationChannel(channel);
 
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true, // Required to display a heads up notification
-    badge: true,
-    sound: true,
-  );
+  // await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+  //   alert: true, // Required to display a heads up notification
+  //   badge: true,
+  //   sound: true,
+  // );
 
   runApp(const MyApp());
 
@@ -72,7 +69,7 @@ class _MyAppState extends State<MyApp> {
 
   var isloggedin = false;
   var phone ;
-  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  // final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   Future<List> getBoolValuesSF() async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -86,26 +83,26 @@ class _MyAppState extends State<MyApp> {
   }
 
 
-  Future<void> setupInteractedMessage() async {
-    // Get any messages which caused the application to open from
-    // a terminated state.
-    RemoteMessage initialMessage =
-    await FirebaseMessaging.instance.getInitialMessage();
-
-    // If the message also contains a data property with a "type" of "chat",
-    // navigate to a chat screen
-    if (initialMessage != null && initialMessage.data['order'] == 'order') {
-      Get.to(MyApp());
-    }
+  // Future<void> setupInteractedMessage() async {
+  //   // Get any messages which caused the application to open from
+  //   // a terminated state.
+  //   RemoteMessage initialMessage =
+  //   await FirebaseMessaging.instance.getInitialMessage();
+  //
+  //   // If the message also contains a data property with a "type" of "chat",
+  //   // navigate to a chat screen
+  //   if (initialMessage != null && initialMessage.data['order'] == 'order') {
+  //     Get.to(MyApp());
+  //   }
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (message.data['type'] == 'home') {
-        Get.to(MyApp());
-      }
-    });
-  }
+  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //     if (message.data['type'] == 'home') {
+  //       Get.to(MyApp());
+  //     }
+  //   });
+  // }
 
 
 
@@ -123,39 +120,39 @@ class _MyAppState extends State<MyApp> {
 
 
 
+    //
+    // firebaseMessaging.requestPermission(
+    //     alert: true, badge: true, provisional: true, sound: true);
+    //
+    // setupInteractedMessage();
 
-    firebaseMessaging.requestPermission(
-        alert: true, badge: true, provisional: true, sound: true);
-
-    setupInteractedMessage();
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
-      print("NOTIFICATION WORLKING $android");
-
-      if (notification != null && android != null) {
-
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                  channel.id,
-                  channel.name,
-                  channelDescription:channel.description,
-                  // icon: 'grocerylogo',
-                  // sound: RawResourceAndroidNotificationSound('notification'),
-                  // other properties...
-                  importance: channel.importance,
-                  priority: Priority.max
-              ),
-            ));
-
-      }
-    });
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //
+    //   RemoteNotification notification = message.notification;
+    //   AndroidNotification android = message.notification?.android;
+    //   print("NOTIFICATION WORLKING $android");
+    //
+    //   if (notification != null && android != null) {
+    //
+    //     flutterLocalNotificationsPlugin.show(
+    //         notification.hashCode,
+    //         notification.title,
+    //         notification.body,
+    //         NotificationDetails(
+    //           android: AndroidNotificationDetails(
+    //               channel.id,
+    //               channel.name,
+    //               channelDescription:channel.description,
+    //               // icon: 'grocerylogo',
+    //               // sound: RawResourceAndroidNotificationSound('notification'),
+    //               // other properties...
+    //               importance: channel.importance,
+    //               priority: Priority.max
+    //           ),
+    //         ));
+    //
+    //   }
+    // });
 
 
 
@@ -166,8 +163,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return FirebasePhoneAuthProvider(
-      child: GetMaterialApp(
+    return GetMaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -196,8 +192,8 @@ class _MyAppState extends State<MyApp> {
             backgroundColor: Colors.white,
             speed: 1, navigateRoute: isloggedin ? Homepage(userRef: phone,) : LoginScreen()
         )
-      ),
-    );
+      );
+
   }
 }
 

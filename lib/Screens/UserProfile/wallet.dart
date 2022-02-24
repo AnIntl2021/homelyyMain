@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +11,6 @@ import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/homeAppbar.dart';
 import 'package:homelyy/component/models.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 
 class UserWallet extends StatefulWidget {
@@ -31,7 +29,7 @@ class _UserWalletState extends State<UserWallet> {
   static const platform = const MethodChannel("razorpay_flutter");
 
   var shop = true;
-  Razorpay _razorpay;
+  // Razorpay _razorpay;
 
   var paymentSuccess = false;
 
@@ -44,7 +42,7 @@ class _UserWalletState extends State<UserWallet> {
   void dispose() {
 
     super.dispose();
-    _razorpay.clear();
+    // _razorpay.clear();
 
   }
 
@@ -54,81 +52,81 @@ class _UserWalletState extends State<UserWallet> {
 
   @override
   Widget build(BuildContext context) {
-    void openCheckout(
-        {String phone, String id, String email, int amount}) async {
+    // void openCheckout(
+    //     {String phone, String id, String email, int amount}) async {
+    //
+    //     print("amount = $amount");
+    //
+    //   var options = {
+    //     'key': 'rzp_live_TjQcOcMzLxnJ6j',
+    //     'amount': amount * 100 ,
+    //     'name': 'Homelyy',
+    //     'description': 'Order no: $id}',
+    //     'prefill': {'contact': '$phone', 'email': '$email'},
+    //     'external': {
+    //       'wallets': ['paytm']
+    //     }
+    //   };
+    //
+    //   try {
+    //     _razorpay.open(options);
+    //   } catch (e) {
+    //     debugPrint('Error: e');
+    //   }
+    // }
 
-        print("amount = $amount");
+    // Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    //
+    //   Fluttertoast.showToast(
+    //           msg: "SUCCESS: " + response.paymentId,
+    //           toastLength: Toast.LENGTH_SHORT)
+    //       .then((value) async => {
+    //
+    //    await  AllApi().updateWallet(widget.id,enteredAmount.toString()).then((value) async {
+    //
+    //
+    //
+    //
+    //
+    //    })
+    //
+    //
+    //
+    //
+    //           });
+    //
+    //
+    // }
 
-      var options = {
-        'key': 'rzp_live_TjQcOcMzLxnJ6j',
-        'amount': amount * 100 ,
-        'name': 'Homelyy',
-        'description': 'Order no: $id}',
-        'prefill': {'contact': '$phone', 'email': '$email'},
-        'external': {
-          'wallets': ['paytm']
-        }
-      };
+  // async  void _handlePaymentError(PaymentFailureResponse response) {
+  //
+  //     Fluttertoast.showToast(
+  //         msg: "ERROR: " + response.code.toString() + " - " + response.message,
+  //         toastLength: Toast.LENGTH_SHORT);
+  //     setState(() {
+  //       paymentSuccess = false;
+  //     });
+  //
+  //   }
 
-      try {
-        _razorpay.open(options);
-      } catch (e) {
-        debugPrint('Error: e');
-      }
-    }
-
-    Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
-
-      Fluttertoast.showToast(
-              msg: "SUCCESS: " + response.paymentId,
-              toastLength: Toast.LENGTH_SHORT)
-          .then((value) async => {
-
-       await  AllApi().updateWallet(widget.id,enteredAmount.toString()).then((value) async {
-
-
-
-
-
-       })
-
-
-
-
-              });
-
-
-    }
-
-    void _handlePaymentError(PaymentFailureResponse response) {
-
-      Fluttertoast.showToast(
-          msg: "ERROR: " + response.code.toString() + " - " + response.message,
-          toastLength: Toast.LENGTH_SHORT);
-      setState(() {
-        paymentSuccess = false;
-      });
-
-    }
-
-    void _handleExternalWallet(ExternalWalletResponse response) {
-
-      Fluttertoast.showToast(
-          msg: "EXTERNAL_WALLET: " + response.walletName,
-          toastLength: Toast.LENGTH_SHORT);
-
-      setState(() {
-        paymentSuccess = true;
-      });
-
-    }
-
-    _razorpay = Razorpay();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-
-    print("enteredamount $enteredAmount");
+    // void _handleExternalWallet(ExternalWalletResponse response) {
+    //
+    //   Fluttertoast.showToast(
+    //       msg: "EXTERNAL_WALLET: " + response.walletName,
+    //       toastLength: Toast.LENGTH_SHORT);
+    //
+    //   setState(() {
+    //     paymentSuccess = true;
+    //   });
+    //
+    // }
+    //
+    // _razorpay = Razorpay();
+    // _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    // _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    // _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    //
+    // print("enteredamount $enteredAmount");
 
     var amountController = TextEditingController();
 

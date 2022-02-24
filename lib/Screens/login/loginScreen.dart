@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -142,12 +141,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             if (users.password == passwordController.text) {
                               await getAddress();
-                              var token =
-                                  await FirebaseMessaging.instance.getToken();
-                              print('token: $token');
+                              // var token =
+                              //     await FirebaseMessaging.instance.getToken();
+                              // print('token: $token');
 
-                              await AllApi().updateToken(
-                                  users.phone, token); // for updating token
+                              // await AllApi().updateToken(
+                              //     users.phone, token); // for updating token
 
                               await AllApi().updateLocalUsers(
                                   jsonEncode(users), users.phone);
