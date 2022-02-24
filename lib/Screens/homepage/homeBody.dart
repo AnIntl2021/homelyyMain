@@ -218,7 +218,7 @@ class _BodyState extends State<Body> {
           UserModel usersList =  widget.userref == 'Guest' ? UserModel(ref: 'Guest') :snapshot.requireData[3];
 
           print("lat = $latlng.latitude long = $latlng.longitude");
-          print("banners = ${banners[0].name}");
+          // print("banners = ${banners[0].name}");
           print("cat = ${catList[0].name}");
 
           return FutureBuilder(

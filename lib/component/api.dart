@@ -348,7 +348,7 @@ class AllApi {
       return BannerModel().fromJson(e);
     });
 
-    print("bannerList = ${newList.toList()[0].image}");
+    // print("bannerList = ${newList.toList()[0].image}");
     //
      return newList.toList();
 
