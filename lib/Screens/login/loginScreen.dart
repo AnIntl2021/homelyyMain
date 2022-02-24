@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       print("+${phoneText.text}");
 
-                      if (phoneText.text.length == 10 &&
+                      if (phoneText.text.isNotEmpty &&
                           passwordController.text.isNotEmpty) {
                         AllApi()
                             .getUser(phoneText.text
