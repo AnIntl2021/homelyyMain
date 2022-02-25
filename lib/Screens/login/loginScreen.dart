@@ -47,15 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var userLongitude = "";
 
   Future<LocationData> getLocation() async {
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        Get.snackbar("Error",
-            "'Location service is disabled. Please enable it to check-in.'");
-        return null;
-      }
-    }
+
 
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
@@ -67,10 +59,26 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
 
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        Get.snackbar("Error",
+            "'Location service is disabled. Please enable it to check-in.'");
+        return null;
+      }
+    }
+
+
     _locationData = await location.getLocation();
 
     return _locationData;
   }
+
+
+
+
+
 
   Future<List<coder.Address>> getAddress() async {
     getLocation().then((value) async {
@@ -113,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 10,
                 ),
                 buildTextField(
-                    "Enter Registered Phone Number", "Phone", phoneText),
+                    "Enter Phone or Email Id", "Phone/Email Id", phoneText),
                 buildTextField(
                     "Enter Password", "Password", passwordController),
                 SizedBox(
@@ -136,11 +144,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             Fluttertoast.showToast(
                                 msg: "User Not Exist Please Signup");
                           } else {
+
+
                             UserModel users =
                                 UserModel().fromJson(jsonDecode(value));
 
                             if (users.password == passwordController.text) {
-                              await getAddress();
+                              // await getAddress();
                               // var token =
                               //     await FirebaseMessaging.instance.getToken();
                               // print('token: $token');
@@ -156,6 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Get.off(Homepage(
                                 userRef: users.phone,
                               ));
+
                             } else {
                               Fluttertoast.showToast(msg: "Incorrect Password");
                             }
@@ -293,13 +304,13 @@ class _LoginScreenState extends State<LoginScreen> {
       style: TextStyle(color: kdarkgreen),
       controller: controller,
       keyboardType:
-          label == "Phone" ? TextInputType.number : TextInputType.text,
-      obscureText: label == "Phone" ? false : obsecureText,
+         TextInputType.text,
+      obscureText: label != "Phone" ? false : obsecureText,
       textAlign: TextAlign.center,
 
       // autofocus: true,
       decoration: InputDecoration(
-        suffixIcon: label == "Phone" || label == "Email"
+        suffixIcon: label != "Password"
             ? null
             : IconButton(
                 onPressed: () {

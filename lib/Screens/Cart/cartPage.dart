@@ -95,7 +95,7 @@ class _CartPageState extends State<CartPage> {
       var getcutInt =
       getcut == "" ? int.parse("0") : int.parse(getcut);
 
-      savings += getcut == "" ? 0 : c - getcutInt;
+      savings += getcut == "0" ? 0 : c - getcutInt;
       subtotal += c;
       print("cartPriceLoop $c");
 

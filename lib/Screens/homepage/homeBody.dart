@@ -72,15 +72,6 @@ class _BodyState extends State<Body> {
   GeoPoint userGeoPoint;
 
   Future<LocationData> getLocation() async {
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        Get.snackbar("Error",
-            "'Location service is disabled. Please enable it to check-in.'");
-        return null;
-      }
-    }
 
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
@@ -92,6 +83,18 @@ class _BodyState extends State<Body> {
       }
     }
     print("location ENABLED");
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        Get.snackbar("Error",
+            "'Location service is disabled. Please enable it to check-in.'");
+        return null;
+      }
+    }
+
+
 
 
     _locationData = await location.getLocation();
@@ -220,8 +223,7 @@ class _BodyState extends State<Body> {
           UserModel usersList =  widget.userref == 'Guest' ? UserModel(ref: 'Guest') :snapshot.requireData[3];
 
           print("lat = $latlng.latitude long = $latlng.longitude");
-          print("banners = ${banners[0].name}");
-          print("cat = ${catList[0].name}");
+
 
           return FutureBuilder(
 

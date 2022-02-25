@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:contactus/contactus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,9 @@ import 'package:homelyy/Screens/login/loginScreen.dart';
 import 'package:homelyy/Screens/orders/orderpage.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../component/api.dart';
+import '../../component/models.dart';
 
 class UserProfile extends StatefulWidget {
   final String id;
@@ -51,9 +56,18 @@ class _UserProfileState extends State<UserProfile> {
             }
             ),
             buildListTile("REFER & EARN", FontAwesomeIcons.share, () async {
+
+            var value = await AllApi()
+                 .getUser(widget.id
+                  .replaceAll("+", "")
+                  .removeAllWhitespace);
+
+            UserModel users =
+            UserModel().fromJson(jsonDecode(value));
+
               await FlutterShare.share(
-                  title: 'Download Homelyy App Referal Code: ${widget.id.substring(6,10)}',
-                  text: 'Download Homelyy App Referal Code:  ${widget.id.substring(6,10)}',
+                  title: 'Download Homelyy App Referal Code: ${users.referid}',
+                  text: 'Download Homelyy App Referal Code:  ${users.referid}',
                   linkUrl: 'https://play.google.com/store/apps/details?id=com.an.homelyy.homelyy',
                   chooserTitle: 'Example Chooser Title'
               );

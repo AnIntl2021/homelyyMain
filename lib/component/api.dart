@@ -191,7 +191,7 @@ class AllApi {
   Future getUser(String ref) async {
     print("prionting ref = $ref");
 
-    var userGetURL = Uri.parse("${conurl}userget?ref=$ref");
+    var userGetURL = Uri.parse("https://data.mongodb-api.com/app/application-0-aveoz/endpoint/Homelyy/userget?ref=$ref");
 
 
     var response = await http.get(userGetURL,headers: {'Content-Type': 'application/json'});
