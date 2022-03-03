@@ -35,7 +35,7 @@ class _VouchersState extends State<Vouchers> {
         print("getting user ${users.name}");
        List offers = [];
 
-        return  offers.isEmpty ? Container(child: Center(child : Text("No Avaialable Vouchers\nYou can use your Wallet Amount to buy Great Vouchers\nFrom your Favorite brands")),) :ListView.builder(
+        return  offers.isEmpty ? Container(child: Center(child : Text("No Available Vouchers\nYou can use your Wallet Amount to buy Great Vouchers\nFrom your Favorite brands")),) :ListView.builder(
           itemCount: offers.length,
           itemBuilder: (context, index) {
             return Card(

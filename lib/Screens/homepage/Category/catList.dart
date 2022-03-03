@@ -17,12 +17,13 @@ class CatCard extends StatelessWidget {
   final int type;
   final String count;
   final LatLng latlng;
+  final String image;
   const CatCard({
      Key key,
      this.title,
      this.shopName,
      this.svgSrc,
-     this.price, this.catList, this.catid, this.type, this.uid, this.count, this.latlng,
+     this.price, this.catList, this.catid, this.type, this.uid, this.count, this.latlng, this.image,
   }) : super(key: key);
 
   @override
@@ -42,83 +43,100 @@ class CatCard extends StatelessWidget {
 
         var restomodel = snapshot.requireData;
 
-        return Container(
-          decoration: BoxDecoration(
-            // color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            // boxShadow: [
-            //   BoxShadow(
-            //     offset: Offset(0, 4),
-            //     blurRadius: 20,
-            //     color: Colors.yellow.withOpacity(0.32),
-            //   ),
-            // ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: (){
-                Get.to(RestaurantByCat(type: type,catid: title,uid: uid,restomodel: restomodel,));
-              },
-              child: CircleAvatar(
-                backgroundColor: kgreen.withOpacity(0.4),
-                radius: 50,
+        print('catefgory = $restomodel');
+
+        return Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              // color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              // boxShadow: [
+              //   BoxShadow(
+              //     offset: Offset(0, 4),
+              //     blurRadius: 20,
+              //     color: Colors.yellow.withOpacity(0.32),
+              //   ),
+              // ],
+            ),
+            child:
+
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: (){
+                  Get.to(RestaurantByCat(type: type,catid: title,uid: uid,restomodel: restomodel,));
+                },
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(title,style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                    SizedBox(height: 10),
-                    // Text(
-                    //   shopName,
-                    //   style: TextStyle(fontSize: 12),
-                    // ),
-                    Text(
-                      type == 0 ? "${restomodel.length.toString()} Restaurant" : "${restomodel.length.toString()} Shops",
-                      // style: TextStyle(fontSize: 16, color: Colors.purple.shade400),
-                        style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 12)
+                    CircleAvatar(
+                      backgroundColor: kgreen,
+                      radius: 40,
+                      child: ClipRRect(
+                        child: Image.network('https://thehomelyy.com/images/category/${image}'),
+                      )
+                    ),
+
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+
+                        Text(title,style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                        SizedBox(height: 10),
+                        // Text(
+                        //   shopName,
+                        //   style: TextStyle(fontSize: 12),
+                        // ),
+                        Text(
+                            type == 0 ? "${restomodel.length.toString()} Providers" : "${restomodel.length.toString()} Shops",
+                            // style: TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                            style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 12)
+                        ),
+
+                      ],
                     ),
                   ],
-                ),
-              )
+                )
 
-              // Padding(
-              //   padding: const EdgeInsets.all(1.0),
-              //   child: Column(
-              //     children: <Widget>[
-              //       Container(
-              //
-              //         width: 110,
-              //
-              //         margin: EdgeInsets.only(bottom: 15),
-              //
-              //         padding: EdgeInsets.all(5),
-              //
-              //         decoration: BoxDecoration(
-              //
-              //           color: kgreen,
-              //
-              //           shape: BoxShape.circle,
-              //
-              //         ),
-              //
-              //         child: Column(
-              //           children: [ Text(title),
-              //             SizedBox(height: 10),
-              //             // Text(
-              //             //   shopName,
-              //             //   style: TextStyle(fontSize: 12),
-              //             // ),
-              //             Text(
-              //               type == 0 ? "${restomodel.length.toString()} Restaurant" : "${restomodel.length.toString()} Shops",
-              //               // style: TextStyle(fontSize: 16, color: Colors.purple.shade400),
-              //             ),],
-              //         )
-              //       ),
-              //
-              //     ],
-              //   ),
-              // ),
+                // Padding(
+                //   padding: const EdgeInsets.all(1.0),
+                //   child: Column(
+                //     children: <Widget>[
+                //       Container(
+                //
+                //         width: 110,
+                //
+                //         margin: EdgeInsets.only(bottom: 15),
+                //
+                //         padding: EdgeInsets.all(5),
+                //
+                //         decoration: BoxDecoration(
+                //
+                //           color: kgreen,
+                //
+                //           shape: BoxShape.circle,
+                //
+                //         ),
+                //
+                //         child: Column(
+                //           children: [ Text(title),
+                //             SizedBox(height: 10),
+                //             // Text(
+                //             //   shopName,
+                //             //   style: TextStyle(fontSize: 12),
+                //             // ),
+                //             Text(
+                //               type == 0 ? "${restomodel.length.toString()} Restaurant" : "${restomodel.length.toString()} Shops",
+                //               // style: TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                //             ),],
+                //         )
+                //       ),
+                //
+                //     ],
+                //   ),
+                // ),
+              ),
             ),
           ),
         );
@@ -149,7 +167,11 @@ class _CatListState extends State<CatList> {
     // var collection =
     // FirebaseFirestore.instance.collection("product").snapshots();
 
-    var product = [];
+   widget.catList.sort((a,b)=>a.number.compareTo(b.number));
+
+ var indexofOther = widget.catList.indexWhere((element) => element.name == 'Others');
+
+
 
     return ListView.builder(
         shrinkWrap: true,
@@ -169,6 +191,7 @@ class _CatListState extends State<CatList> {
             svgSrc: image, price: '', shopName: '', key: Key("cartList"),
             catid:widget.catList[index].name,
               type:widget.type,uid: widget.uid,count: widget.catList.length.toString(),latlng: widget.latlng,
+            image:widget.catList[index].image ?? widget.catList[indexofOther].image
             // price: "\â‚¹ $price",
           );
         });

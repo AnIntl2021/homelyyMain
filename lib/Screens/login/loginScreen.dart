@@ -97,6 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    getLocation();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(

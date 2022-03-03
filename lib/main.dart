@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -13,44 +15,44 @@ import 'Screens/login/loginScreen.dart';
 import 'component/constants.dart';
 import 'component/splashscreenMY.dart';
 
-// const AndroidNotificationChannel channel = AndroidNotificationChannel(
-//     'high_importance_channel', // id
-//     'High Importance Notifications', // title
-//     description: 'This channel is used for important notifications.', // description
-//     importance: Importance.max,
-//     playSound: true,
-//     // sound: RawResourceAndroidNotificationSound('notification'),
-//     enableLights: true
-// );
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    description: 'This channel is used for important notifications.', // description
+    importance: Importance.max,
+    playSound: true,
+    // sound: RawResourceAndroidNotificationSound('notification'),
+    enableLights: true
+);
 
-//
-// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-// FlutterLocalNotificationsPlugin();
 
-// Future<void> firebaseMessgaingBackgroundHandler(RemoteMessage message) async {
-//
-//   await Firebase.initializeApp();
-//   print("a message bg : ${message.messageId}");
-//
-// }
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+
+Future<void> firebaseMessgaingBackgroundHandler(RemoteMessage message) async {
+
+  await Firebase.initializeApp();
+  print("a message bg : ${message.messageId}");
+
+}
 
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  // FirebaseMessaging.onBackgroundMessage(firebaseMessgaingBackgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(firebaseMessgaingBackgroundHandler);
 
-  // await flutterLocalNotificationsPlugin
-  //     .resolvePlatformSpecificImplementation<
-  //     AndroidFlutterLocalNotificationsPlugin>()
-  //     ?.createNotificationChannel(channel);
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
 
-  // await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-  //   alert: true, // Required to display a heads up notification
-  //   badge: true,
-  //   sound: true,
-  // );
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true, // Required to display a heads up notification
+    badge: true,
+    sound: true,
+  );
 
   runApp(const MyApp());
 
@@ -83,26 +85,26 @@ class _MyAppState extends State<MyApp> {
   }
 
 
-  // Future<void> setupInteractedMessage() async {
-  //   // Get any messages which caused the application to open from
-  //   // a terminated state.
-  //   RemoteMessage initialMessage =
-  //   await FirebaseMessaging.instance.getInitialMessage();
-  //
-  //   // If the message also contains a data property with a "type" of "chat",
-  //   // navigate to a chat screen
-  //   if (initialMessage != null && initialMessage.data['order'] == 'order') {
-  //     Get.to(MyApp());
-  //   }
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage initialMessage =
+    await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null && initialMessage.data['order'] == 'order') {
+      Get.to(MyApp());
+    }
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
-  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-  //     if (message.data['type'] == 'home') {
-  //       Get.to(MyApp());
-  //     }
-  //   });
-  // }
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if (message.data['type'] == 'home') {
+        Get.to(MyApp());
+      }
+    });
+  }
 
 
 
@@ -120,42 +122,32 @@ class _MyAppState extends State<MyApp> {
 
 
 
-    //
-    // firebaseMessaging.requestPermission(
-    //     alert: true, badge: true, provisional: true, sound: true);
-    //
-    // setupInteractedMessage();
+    FirebaseMessaging.onMessage.listen(
+          (RemoteMessage message) {
+        RemoteNotification notification = message.notification;
+        AndroidNotification android = message.notification?.android;
 
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //
-    //   RemoteNotification notification = message.notification;
-    //   AndroidNotification android = message.notification?.android;
-    //   print("NOTIFICATION WORLKING $android");
-    //
-    //   if (notification != null && android != null) {
-    //
-    //     flutterLocalNotificationsPlugin.show(
-    //         notification.hashCode,
-    //         notification.title,
-    //         notification.body,
-    //         NotificationDetails(
-    //           android: AndroidNotificationDetails(
-    //               channel.id,
-    //               channel.name,
-    //               channelDescription:channel.description,
-    //               // icon: 'grocerylogo',
-    //               // sound: RawResourceAndroidNotificationSound('notification'),
-    //               // other properties...
-    //               importance: channel.importance,
-    //               priority: Priority.max
-    //           ),
-    //         ));
-    //
-    //   }
-    // });
-
-
-
+        if (notification != null && android != null) {
+          flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription:channel.description,
+                // icon: 'zayka_pizza_hub',
+                sound:
+                const RawResourceAndroidNotificationSound('notification'),
+                // other properties...
+                importance: channel.importance,
+              ),
+            ),
+          );
+        }
+      },
+    );
 
     super.initState();
 
