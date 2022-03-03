@@ -207,8 +207,9 @@ class CatModel {
   String image;
   String type;
   String catid;
+  String number;
 
-  CatModel({ this.name, this.image, this.type, this.catid});
+  CatModel({ this.name, this.image, this.type, this.catid,this.number});
 
   fromJson(Map<String, dynamic> json) {
     return CatModel(
@@ -216,6 +217,7 @@ class CatModel {
         image : json['image'],
         type : json['type'],
     catid : json['catid'],
+      number : json['number'],
     );
 
 
