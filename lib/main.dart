@@ -146,7 +146,7 @@ class _MyAppState extends State<MyApp> {
                   channel.id,
                   channel.name,
                   channelDescription:channel.description,
-                  // icon: 'grocerylogo',
+                   icon: 'launcher_icon',
                   // sound: RawResourceAndroidNotificationSound('notification'),
                   // other properties...
                   importance: channel.importance,
