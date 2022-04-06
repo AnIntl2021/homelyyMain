@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:contactus/contactus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -56,21 +58,24 @@ class _UserProfileState extends State<UserProfile> {
             }
             ),
             buildListTile("REFER & EARN", FontAwesomeIcons.share, () async {
-
-            var value = await AllApi()
-                 .getUser(widget.id
+             var value = await AllApi()
+                  .getUser(widget.id
                   .replaceAll("+", "")
                   .removeAllWhitespace);
 
-            UserModel users =
-            UserModel().fromJson(jsonDecode(value));
+              UserModel users =
+              UserModel().fromJson(jsonDecode(value));
+              if(GetPlatform.isAndroid){
+                await FlutterShare.share(
+                    title: 'Download Homelyy App Referal Code: ${users.referid} Get upto 5% Cashback on Every Order',
+                    text: 'Download Homelyy App Referal Code:  ${users.referid} Get upto 5% Cashback on Every Order',
+                    linkUrl: 'https://play.google.com/store/apps/details?id=com.an.homelyy.homelyy',
+                    chooserTitle: 'Example Chooser Title'
+                );
+              }else{
 
-              await FlutterShare.share(
-                  title: 'Download Homelyy App Referal Code: ${users.referid}',
-                  text: 'Download Homelyy App Referal Code:  ${users.referid}',
-                  linkUrl: 'https://play.google.com/store/apps/details?id=com.an.homelyy.homelyy',
-                  chooserTitle: 'Example Chooser Title'
-              );
+              }
+
             }),
             buildListTile("CONTACT US", FontAwesomeIcons.phone, () {
               Navigator.of(context)

@@ -154,7 +154,7 @@ class AllApi {
 
   Future postUser(UserModel usermodel) async {
 
-    var userGetURL = Uri.parse("${conurl}userpost?ref=${usermodel.phone}");
+    var userGetURL = Uri.parse("https://data.mongodb-api.com/app/application-0-aveoz/endpoint/Homelyy/userpost?ref=${usermodel.phone}");
 
     var response = await http.post(userGetURL,body: {
       "name" : usermodel.name,
@@ -348,7 +348,7 @@ class AllApi {
       return BannerModel().fromJson(e);
     });
 
-    print("bannerList = ${newList.toList()[0].image}");
+    // print("bannerList = ${newList.toList()[0].image}");
     //
      return newList.toList();
 

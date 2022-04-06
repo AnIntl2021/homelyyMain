@@ -208,6 +208,7 @@ class CatModel {
   String type;
   String number;
   String catid;
+  String number;
 
   CatModel({ this.name, this.image, this.type, this.catid,this.number});
 
