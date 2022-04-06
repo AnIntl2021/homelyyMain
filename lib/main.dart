@@ -7,6 +7,18 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/Screens/NewScreens/Add_new_adress_new/New_adress_slide1.dart';
+import 'package:homelyy/Screens/NewScreens/Add_new_adress_new/New_adress_slide2.dart';
+import 'package:homelyy/Screens/NewScreens/Add_payment_method_new/add_payment_method_page1.dart';
+import 'package:homelyy/Screens/NewScreens/Add_payment_method_new/add_payment_method_page2.dart';
+import 'package:homelyy/Screens/NewScreens/Add_payment_method_new/add_payment_method_page3.dart';
+import 'package:homelyy/Screens/NewScreens/Homepage/homepage_new.dart';
+import 'package:homelyy/Screens/NewScreens/Homepage/chinese_new.dart';
+import 'package:homelyy/Screens/NewScreens/Homepage/imageworknew.dart';
+import 'package:homelyy/Screens/NewScreens/Homepage/pricerange.dart';
+import 'package:homelyy/Screens/NewScreens/Homepage/store_menu_new.dart';
+import 'package:homelyy/Screens/NewScreens/Homepage/storemenul_lifestylenew.dart';
+import 'package:homelyy/Screens/NewScreens/homellycolors.dart';
 import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -171,7 +183,10 @@ class _MyAppState extends State<MyApp> {
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          // This is the theme of your application.
+          scrollbarTheme: ScrollbarThemeData(
+trackColor: MaterialStateProperty.all(hmgray),
+            thumbColor: MaterialStateProperty.all(hmolive),
+          ),// This is the theme of your application.
           //
           // Try running your application with "flutter run". You'll see the
           // application has a blue toolbar. Then, without quitting the app, try
@@ -182,20 +197,8 @@ class _MyAppState extends State<MyApp> {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: SplashScreenMy(
-            duration: 6000,
-            imageSize: 180,
-            imageSrc: "assets/homelyy.png",
-            text: "HOMELYY -EVERYTHING FROM HOME",
-            colors: [Colors.amber],
-            textType: TextType1.ScaleAnimatedText,
-            textStyle: GoogleFonts.cabin(
-                fontSize: 30,
-                color: kgreen,
-                fontWeight: FontWeight.bold),
-            backgroundColor: Colors.white,
-            speed: 1, navigateRoute: isloggedin ? Homepage(userRef: phone,) : LoginScreen()
-        )
+        home: StoreMenuLifeStyle()
+
       ),
     );
   }

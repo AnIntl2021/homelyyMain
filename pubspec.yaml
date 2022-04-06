@@ -81,6 +81,8 @@ dependencies:
   currency_picker: ^2.0.6
   in_app_update: ^2.0.0
   google_maps_flutter_web: ^0.3.2+1
+  carousel_slider: ^4.0.0
+  draggable_scrollbar: 0.0.4
 
 
 dev_dependencies:
