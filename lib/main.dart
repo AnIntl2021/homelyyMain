@@ -7,14 +7,46 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/NewScreens/account.dart';
+import 'package:homelyy/NewScreens/deliverydetails.dart';
+import 'package:homelyy/NewScreens/greenscreen1.dart';
+import 'package:homelyy/NewScreens/greenscreen2.dart';
+import 'package:homelyy/NewScreens/menulist.dart';
+import 'package:homelyy/NewScreens/offers.dart';
+import 'package:homelyy/NewScreens/order.dart';
+import 'package:homelyy/NewScreens/profile.dart';
+import 'package:homelyy/NewScreens/register.dart';
+
+import 'package:homelyy/NewScreens/verify.dart';
+import 'package:homelyy/NewScreens/verify1.dart';
+import 'package:homelyy/NewScreens/wallet.dart';
 import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
 import 'package:homelyy/component/api.dart';
+import 'package:homelyy/NewScreens/loginpagea.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'NewScreens/aboutus.dart';
+import 'NewScreens/greenscreen.dart';
+import 'NewScreens/lifestylenew.dart';
+import 'NewScreens/contactus.dart';
+import 'NewScreens/newscreenA/trackeorder.dart';
+
+import 'NewScreens/orderhistory.dart';
+import 'NewScreens/pastorder.dart';
+import 'NewScreens/privacypolicy.dart';
+import 'NewScreens/profile2new.dart';
+import 'NewScreens/newscreensA/progressBarnew.dart';
+
+import 'NewScreens/register1.dart';
+import 'NewScreens/slider.dart';
+import 'NewScreens/test.dart';
+import 'NewScreens/verify2.dart';
 import 'Screens/homepage/homepage.dart';
 import 'Screens/login/loginScreen.dart';
 import 'component/constants.dart';
 import 'component/splashscreenMY.dart';
+
+import 'NewScreens/loginpage.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
@@ -182,20 +214,7 @@ class _MyAppState extends State<MyApp> {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: SplashScreenMy(
-            duration: 6000,
-            imageSize: 180,
-            imageSrc: "assets/homelyy.png",
-            text: "HOMELYY -EVERYTHING FROM HOME",
-            colors: [Colors.amber],
-            textType: TextType1.ScaleAnimatedText,
-            textStyle: GoogleFonts.cabin(
-                fontSize: 30,
-                color: kgreen,
-                fontWeight: FontWeight.bold),
-            backgroundColor: Colors.white,
-            speed: 1, navigateRoute: isloggedin ? Homepage(userRef: phone,) : LoginScreen()
-        )
+        home:  Trackordernew()
       ),
     );
   }

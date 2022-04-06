@@ -81,7 +81,10 @@ dependencies:
   currency_picker: ^2.0.6
   in_app_update: ^2.0.0
   google_maps_flutter_web: ^0.3.2+1
-
+  step_progress_indicator: ^1.0.2
+  country_picker: ^2.0.12
+  intro_slider: ^3.0.3
+#  delivery_tracker: ^1.0.0-Alpha
 
 dev_dependencies:
   flutter_test:
