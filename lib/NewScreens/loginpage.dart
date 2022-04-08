@@ -1,6 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:homelyy/NewScreens/register.dart';
+import 'package:homelyy/component/constants.dart';
+
+import '../Screens/NewScreens/homellycolors.dart';
+import '../Screens/homepage/homepage.dart';
+import '../component/api.dart';
+import '../component/models.dart';
 
 
 
@@ -12,6 +22,21 @@ class LoginpageNew extends StatefulWidget {
 }
 
 class _LoginpageNewState extends State<LoginpageNew> {
+  var phoneText = TextEditingController();
+  var passwordController = TextEditingController();
+  var emailController = TextEditingController();
+  var passwordErrorText;
+  var passwordError;
+  var phoneerrorText;
+  var codeerrorText;
+  var phoneError = false;
+  var codeError = false;
+  bool obsecureText = true;
+
+  bool loading  = false;
+
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,7 +65,7 @@ class _LoginpageNewState extends State<LoginpageNew> {
 
 
                             height: 30, width: Get.width * 0.5,
-                            decoration: BoxDecoration(color: Colors.lightGreen[50],
+                            decoration: BoxDecoration(color: hmgreen,
                             borderRadius:   BorderRadius.circular(30),
                             ),
                             child: Row(
@@ -83,10 +108,11 @@ class _LoginpageNewState extends State<LoginpageNew> {
                   ),
                   SizedBox(height: 20),
                   TextFormField(
+                    controller: phoneText,
                     decoration: InputDecoration(
 
                         filled: true,
-                        fillColor: Colors.lightGreen[100],
+                        fillColor: hmgreen,
                         hintText: "E-mail/Phone Number",
                         contentPadding: EdgeInsets.only(left: 100,right: 0,top: 0,bottom: 0),
 
@@ -107,10 +133,11 @@ class _LoginpageNewState extends State<LoginpageNew> {
                   ),
                   SizedBox(height: 20),
                   TextFormField(
+                    controller: passwordController,
                     decoration: InputDecoration(
 
                         filled: true,
-                        fillColor: Colors.lightGreen[100],
+                        fillColor: hmgreen,
                         hintText: "Password",
                         contentPadding: EdgeInsets.only(left: 150,right: 0,top: 0,bottom: 0),
 
@@ -131,12 +158,78 @@ class _LoginpageNewState extends State<LoginpageNew> {
                     ),
                   ),
                   SizedBox(height: 30),
-                  InkWell(
+               loading ? Center(
+                 child: CircularProgressIndicator(color: kgreen,),
+               ) :   InkWell(
+                    onTap: (){
+                        setState(() {
+                          loading = true;
+                        });
+                      print("+${phoneText.text}");
+
+                      if (phoneText.text.isNotEmpty &&
+                          passwordController.text.isNotEmpty) {
+                        AllApi()
+                            .getUser(phoneText.text
+                            .replaceAll("+", "")
+                            .removeAllWhitespace)
+                            .then((value) async {
+                          if (value == "\"User Not Exist\"") {
+                            Fluttertoast.showToast(
+                                msg: "User Not Exist Please Signup");
+                            setState(() {
+                              loading = false;
+                            });
+                          } else {
+
+
+                            UserModel users =
+                            UserModel().fromJson(jsonDecode(value));
+
+                            if (users.password == passwordController.text) {
+                              // await getAddress();
+                              // var token =
+                              //     await FirebaseMessaging.instance.getToken();
+                              // print('token: $token');
+
+                              // await AllApi().updateToken(
+                              //     users.phone, token); // for updating token
+
+                              await AllApi().updateLocalUsers(
+                                  jsonEncode(users), users.phone);
+
+                              print("getting user ${users.name}");
+
+                              setState(() {
+                                loading = false;
+                              });
+
+                              Get.off(Homepage(
+                                userRef: users.phone,
+                              ));
+
+
+                            } else {
+                              Fluttertoast.showToast(msg: "Incorrect Password");
+                            }
+                          }
+                        });
+                      }
+                      else
+                      {
+                        setState(() {
+                          phoneError = true;
+                          phoneerrorText =
+                          "Enter Correct Mobile Number with country code";
+                        });
+                      }
+
+                    },
                     child: Container(
                       child:  Center(child: Text('Login',style:TextStyle(color:Colors.white),)),
 
                       height: 40,width: Get.width * 0.5,
-                      decoration: (BoxDecoration(color: Colors.lightGreen[500], borderRadius: BorderRadius.circular(30))),
+                      decoration: (BoxDecoration(color: hmdarkolive, borderRadius: BorderRadius.circular(30))),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -153,7 +246,7 @@ class _LoginpageNewState extends State<LoginpageNew> {
                             return    StatefulBuilder(
                                 builder: (context, setState1) {
                                   return AlertDialog(
-                                    backgroundColor:Colors.lightGreen[50],
+                                    backgroundColor:hmgreen,
                                     contentPadding : EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                                     shape: RoundedRectangleBorder(
 
@@ -242,7 +335,12 @@ class _LoginpageNewState extends State<LoginpageNew> {
                           children: [
                             Text("Don't have an account?"),
                             SizedBox(width: 10),
-                            InkWell(child: Text('Register',style:TextStyle(color: Colors.lightGreen[500]) ,))
+                            InkWell(
+                                onTap: (){
+                                  Get.to(RegisterNew());
+                                }
+                                ,
+                                child: Text('Register',style:TextStyle(color: Colors.lightGreen[500]) ,))
 
                           ],
                         ),

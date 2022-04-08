@@ -119,6 +119,9 @@ class _RegisterNewState extends State<RegisterNew> {
                   SizedBox(height: 15),
                   Container(
                     child: TextFormField(
+
+
+
                       decoration: InputDecoration(
 
                           filled: true,
@@ -156,9 +159,11 @@ class _RegisterNewState extends State<RegisterNew> {
 
                             country = currency.code;
                             symbol = currency.symbol;
+
                           });
 
                         },
+
                         favorite: ['INR'],
                       );
                     },
@@ -172,7 +177,7 @@ class _RegisterNewState extends State<RegisterNew> {
                         hintText:  country == "" || country == null ? "Your Country" : country,
                         labelText: country == "" || country == null ? "Your Country" : country,
                         // hintStyle: TextStyle(color: Colors.white30),
-
+                          contentPadding: EdgeInsets.only(left: 40,right: 0,top: 0,bottom: 0),
 
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),

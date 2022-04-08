@@ -166,7 +166,9 @@ class _HomepageState extends State<Homepage> {
             ),
           )
         ]),
-      ) :  FutureBuilder(
+      ) :
+
+            FutureBuilder(
 
                   future: Future.wait([AllApi().getCartCount(widget.userRef,)]),
 

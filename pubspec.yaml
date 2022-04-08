@@ -82,6 +82,8 @@ dependencies:
   google_maps_flutter_web: ^0.3.2+1
   carousel_slider: ^4.0.0
   draggable_scrollbar: 0.0.4
+  step_progress_indicator: 1.0.2
+  intro_slider: ^3.0.3
 
 dev_dependencies:
   flutter_test:

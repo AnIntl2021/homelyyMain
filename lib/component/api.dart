@@ -52,10 +52,14 @@ class AllApi {
 
 
   Future getRestaurant(String lat,String lon) async {
+
     print("recieving api");
+
     var userGetURL = Uri.parse("https://data.mongodb-api.com/app/application-0-aveoz/endpoint/Homelyy/restrogetnearme?lat=$lat&lng=$lon");
     print("recieving api $userGetURL");
+
     var response = await http.get(userGetURL);
+
     print("got restaurant ${response.body}");
 
 

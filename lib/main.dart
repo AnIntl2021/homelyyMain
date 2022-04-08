@@ -6,6 +6,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/NewScreens/loginpage.dart';
+import 'package:homelyy/Screens/NewScreens/Homepage/homepage_new.dart';
 import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -182,7 +184,11 @@ class _MyAppState extends State<MyApp> {
                 color: kgreen,
                 fontWeight: FontWeight.bold),
             backgroundColor: Colors.white,
-            speed: 1, navigateRoute: isloggedin ? Homepage(userRef: phone,) : LoginScreen()
+            speed: 1, navigateRoute: isloggedin ?
+
+        HomePageNew1(
+          // userRef: phone,
+        ) : LoginpageNew()
         )
       );
 
