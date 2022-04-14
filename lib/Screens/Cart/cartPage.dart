@@ -7,21 +7,23 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/NewScreens/orderhistory.dart';
 import 'package:homelyy/Screens/Cart/cartshop.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/counterNumber.dart';
 import 'package:homelyy/component/models.dart';
 import 'package:intl/intl.dart';
+import '../../NewScreens/pastorder.dart';
 import 'checkout.dart';
 import 'customTextStyle.dart';
 import 'emptCart.dart';
 
 class CartPage extends StatefulWidget {
-  final String shopname,shopaddress,shopnumber,uid;
+  final String shopname,shopaddress,shopnumber,uid,symbol;
   final bool shopstatus;
   // final GeoFirePoint shoplocation;
-  const CartPage({ Key key, this.shopname, this.shopaddress, this.shopnumber, this.shopstatus, this.uid}) : super(key: key);
+  const CartPage({ Key key, this.shopname, this.shopaddress, this.shopnumber, this.shopstatus, this.uid, this.symbol}) : super(key: key);
   @override
   _CartPageState createState() => _CartPageState();
 }
@@ -129,19 +131,19 @@ class _CartPageState extends State<CartPage> {
       appBar: AppBar(title: Text("My Cart"),backgroundColor: kgreen   ,),
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
-        body: loading ? Center(child: Image.asset("assets/preloader.gif"),) : FutureBuilder(
+        body: loading ? kpreloader: FutureBuilder(
           future: Future.wait([AllApi().getCart(widget.uid, widget.shopname),AllApi().getUser(widget.uid)]),
           builder: (context, snapshot) {
 
 
             if(!snapshot.hasData){
-              return Center(child:CircularProgressIndicator(color: kgreen,));
+              return kpreloader;
             }
 
 
             List<CartModel> cartList = snapshot.requireData[0];
             UserModel usermodel = UserModel().fromJson(jsonDecode(snapshot.requireData[1]));
-            symbol = usermodel.symbol;
+            symbol = widget.symbol;
             // print("cartList in $cartList ${widget.uid} ${widget.shopname}");
 
 
@@ -151,7 +153,7 @@ class _CartPageState extends State<CartPage> {
 
 
                 // if(!snapshot3.hasData){
-                //   return Center(child:CircularProgressIndicator(color: kgreen,));
+                //   return kpreloader;
                 // }
 
 
@@ -162,7 +164,7 @@ class _CartPageState extends State<CartPage> {
 
 
                     if(!snapshot6.hasData){
-                      return Center(child:CircularProgressIndicator(color: kgreen,));
+                      return kpreloader;
                     }
 
                     CartTotalModel cartTotal = snapshot6.requireData;
@@ -241,11 +243,14 @@ class _CartPageState extends State<CartPage> {
               onPressed: () {
                widget.shopstatus == false ? Get.snackbar("SHOP CLOSED", "PLEASE CHECK SHOP ORDER TIMINGS") :
 
-                   Get.to(CheckOutPage(total:total.toString(),subTotal:subTotal.toString(), wallet: wallet.toString(), discount:discount.toString(),
-                     delivery:delivery.toString(), savings: savings.toString(),
-                     shopname:widget.shopname,
-                     listofcart: cartList,
-                   ));
+                   // Get.to(CheckOutPage(total:total.toString(),subTotal:subTotal.toString(), wallet: wallet.toString(), discount:discount.toString(),
+                   //   delivery:delivery.toString(), savings: savings.toString(),
+                   //   shopname:widget.shopname,
+                   //   listofcart: cartList,
+                   // ));
+
+                Get.to(Pastordernew(ref :widget.uid));
+
               },
               color: Colors.purple,
               padding:
@@ -729,8 +734,6 @@ class _CartPageState extends State<CartPage> {
                                       onChanged: (value) async {
                                         setState(() {
                                           loading = true;
-                                        });
-                                        setState(() {
                                           _defaultvalue = int.parse(value.toString());
                                         });
 
@@ -843,18 +846,18 @@ class _CartPageState extends State<CartPage> {
               ),
             ),
           ),
-          Visibility(
-            visible: cutprice != "0",
-            child: Positioned(
-                top: 10,
-                left: 20,
-                child: Container(
-                  width: 60,
-                  height: 25,
-                  child: Center(child: Text("$symbol ${double.parse(price) - double.parse(cutprice)} OFF",style: GoogleFonts.arvo(fontSize: 12,color: Colors.white),)),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6)), color: Colors.green,),
-                )),
-          )
+          // Visibility(
+          //   visible: cutprice != "0",
+          //   child: Positioned(
+          //       top: 10,
+          //       left: 20,
+          //       child: Container(
+          //         width: 60,
+          //         height: 25,
+          //         child: Center(child: Text("$symbol ${double.parse(price) - double.parse(cutprice)} OFF",style: GoogleFonts.arvo(fontSize: 12,color: Colors.white),)),
+          //         decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6)), color: Colors.green,),
+          //       )),
+          // )
         ],
       ),
     );

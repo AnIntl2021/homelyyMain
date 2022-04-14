@@ -58,14 +58,14 @@ class _CartShopPageState extends State<CartShopPage> {
                             onTap: () async {
                             var status =  await AllApi().getVendorbyid1(shopList[index]["vendorid"].toString().replaceAll("}", ""));
 
-                            if(status == false){
+                            if(status[0] == false){
                               Get.snackbar('SHOP CLOSED', 'YOU CAN ORDER AFTER SHOP OPENS',backgroundColor: Colors.red);
                             }else{
                               Get.to(
                                   CartPage(
                                     shopname: shopList[index]["vendorid"].toString().replaceAll("}", ""),
                                     uid: widget.ref,
-
+                                    symbol:status[1]
                                     // shopaddress: shopaddress,
                                     // shopnumber: shopnumber,
                                     // shoplocation:shopGeoFirePoint,

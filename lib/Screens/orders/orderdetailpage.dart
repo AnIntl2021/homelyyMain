@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/NewScreens/homellycolors.dart';
 import 'package:homelyy/Screens/Cart/customTextStyle.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
@@ -13,6 +14,8 @@ import 'package:homelyy/component/models.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+
+import '../../NewScreens/newscreenA/trackordertwo.dart';
 
 
 class OrderDetailScreen extends StatefulWidget {
@@ -22,7 +25,7 @@ class OrderDetailScreen extends StatefulWidget {
       wallet,
       discount,
       total,
-      delivery,
+      shopid,
       savings,
       reason,
       shopname,
@@ -36,7 +39,7 @@ class OrderDetailScreen extends StatefulWidget {
       this.wallet,
       this.discount,
       this.total,
-      this.delivery,
+      this.shopid,
       this.savings,
       this.reason,
       this.shopname, this.name, this.date, this.uid,this.symbol})
@@ -104,12 +107,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           Center(
             child: Padding(
                 padding: const EdgeInsets.only(right: 16.0),
-                child: _visible
-                    ? Text(
-                        'CANCEL',
-                        style: TextStyle(color: Colors.black, fontSize: 12),
-                      )
-                    : Text("")),
+                child: Text("")),
           ),
         ],
       ),
@@ -169,7 +167,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       children: [
                         Center(
                           child:
-                          Text('How Much you Like the Food from ${'Salwa'} ?'),
+                          Text('How Much you Like the Food from ${widget.shopname} ?'),
                         ),
                         SmoothStarRating(
                           onRated: (rating) {
@@ -177,6 +175,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               rated = rating;
                             });
                           },
+                          color:Colors.yellow.shade800,
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -263,6 +262,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 20,),
+                  ElevatedButton(
+                    onPressed: (){
+
+                          Get.to(Trackordernewtwo(status: widget.status,));
+
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(kgreen)
+                    ),
+                    child: Text('Track Order'),
+                  ),
                   Container(
                     margin: EdgeInsets.only(top: 50),
                     child: Text(
@@ -296,7 +307,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       widget.wallet,
                       widget.discount,
                       widget.total,
-                      widget.delivery,
+                      widget.shopid,
                       widget.savings)
                 ],
               ),
@@ -374,7 +385,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   cartListNew() {
     return  FutureBuilder(
-      future: AllApi().getOrders(widget.uid,widget.shopname,widget.id),
+      future: AllApi().getOrders(widget.uid,widget.shopid,widget.id),
       builder: (context, snapshot) {
 
 

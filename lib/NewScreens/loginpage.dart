@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:homelyy/NewScreens/homepage/homepagemain.dart';
 import 'package:homelyy/NewScreens/register.dart';
 import 'package:homelyy/component/constants.dart';
 
+import '../Screens/NewScreens/Homepage/homepage_new.dart';
 import '../Screens/NewScreens/homellycolors.dart';
 import '../Screens/homepage/homepage.dart';
 import '../component/api.dart';
@@ -169,6 +171,7 @@ class _LoginpageNewState extends State<LoginpageNew> {
 
                       if (phoneText.text.isNotEmpty &&
                           passwordController.text.isNotEmpty) {
+
                         AllApi()
                             .getUser(phoneText.text
                             .replaceAll("+", "")
@@ -204,24 +207,32 @@ class _LoginpageNewState extends State<LoginpageNew> {
                                 loading = false;
                               });
 
-                              Get.off(Homepage(
-                                userRef: users.phone,
+                              Get.off(MainHomePage(
+                                userRef: users.phone
+                                    .replaceAll("+", "")
+                                    .removeAllWhitespace,
                               ));
 
 
                             } else {
                               Fluttertoast.showToast(msg: "Incorrect Password");
+                              setState(() {
+                                loading = false;
+                              });
                             }
                           }
                         });
+
                       }
+
                       else
+
                       {
+
                         setState(() {
-                          phoneError = true;
-                          phoneerrorText =
-                          "Enter Correct Mobile Number with country code";
+                          loading = false;
                         });
+
                       }
 
                     },

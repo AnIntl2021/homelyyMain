@@ -11,6 +11,7 @@ class restaurantModel {
   String inPromotion;
   String description;
   String email,rating;
+  String symbol;
   bool status;
   var category;
   var cuisine;
@@ -28,7 +29,7 @@ class restaurantModel {
         this.vendorid,
         this.inPromotion,
         this.description,
-        this.email,this.location,this.category,this.cuisine,this.rating,this.status});
+        this.email,this.location,this.category,this.cuisine,this.rating,this.status,this.symbol});
 
   fromJson(Map<String, dynamic> json) {
 
@@ -59,7 +60,8 @@ class restaurantModel {
         category: json['category'],
         cuisine:json['cuisine'],
       rating:json['rating'],
-        status:json['status']
+        status:json['status'],
+        symbol:json['symbol']
     );
 
 

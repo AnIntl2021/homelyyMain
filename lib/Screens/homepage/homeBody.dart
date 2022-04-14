@@ -198,13 +198,16 @@ class _BodyState extends State<Body> {
 
    // print("location $myLocation $userAddress")//
 
-    return FutureBuilder(
+    return
+      FutureBuilder(
+
         future: Future.wait([
           getLocation(),
           AllApi().getBanner(selectedType == 0 ? "restro" : "lifestyle"),
           selectedType == 0 ? AllApi().getRestoCat() : AllApi().getLifeCat(),
           widget.userref == 'Guest' ? AllApi().getLifeCat() :  AllApi().getLocalUsers()
         ]),
+
         builder: (context, snapshot) {
           //
           if (!snapshot.hasData) {

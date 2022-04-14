@@ -107,6 +107,7 @@ class _ItemInfoState extends State<ItemInfo> {
                     setState(() {});
                   }
                 },
+
                 children: [
                   Container(height: 260,
                       child: RecommendedList(shopuid: widget.id,
@@ -119,6 +120,7 @@ class _ItemInfoState extends State<ItemInfo> {
                 ],
 
               ),
+
               widget.type == "lifestyle" ? Container(
                 margin: EdgeInsets.only(left: 8, right: 8, bottom: 15),
                 child: Text(
@@ -244,7 +246,8 @@ class _ItemInfoState extends State<ItemInfo> {
 
                                     children: [
 
-                                 widget.uid == 'Guest' ? FutureBuilder(
+                                 widget.uid == 'Guest' ?
+                                 FutureBuilder(
                                      future: Future.wait([AllApi().getcatfood(
                                          widget.id, catList[index].catid),SharedPreferences.getInstance()]),
                                      builder: (context, snapshot1) {
@@ -318,7 +321,8 @@ class _ItemInfoState extends State<ItemInfo> {
                                            ],
                                          ),
                                        );
-                                     }) :     FutureBuilder(
+                                     }) :
+                                 FutureBuilder(
                                           future: Future.wait([AllApi().getcatfood(
                                               widget.id, catList[index].catid),AllApi().getUser(widget.uid)]),
                                           builder: (context, snapshot1) {
@@ -347,13 +351,15 @@ class _ItemInfoState extends State<ItemInfo> {
                                                             .refreshed = true;
                                                         print("Refreshed");
                                                       },
-                                                      child: ListView.builder(
+                                                      child:
+                                                      ListView.builder(
                                                           itemCount:
                                                           foodList.length,
                                                           shrinkWrap: true,
                                                           physics: NeverScrollableScrollPhysics(),
                                                           itemBuilder:
                                                               (context, index) {
+
                                                             return ProductListCard(
                                                                 title: foodList[index]
                                                                     .name,

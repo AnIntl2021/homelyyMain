@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'homellycolors.dart';
 import 'homellycolors.dart';
@@ -28,15 +29,23 @@ class _ContactusnewState extends State<Contactusnew> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             InkWell(
+                              onTap:(){
+                                Get.back();
+            },
                               child: Icon(Icons.arrow_back,color: hmdarkolive),
                             ),
                           ],
                         ),
                       ),
+
                       Text('Contact Us',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),
                       ),
+
                       SizedBox(height: 40),
                       InkWell(
+                        onTap: (){
+                          launch('tel:+912240154583');
+                        },
                         child: Container(
                           child: Center(
                             child: Text('Call us now',style: TextStyle(color: Colors.white,fontSize: 15),
@@ -69,6 +78,9 @@ class _ContactusnewState extends State<Contactusnew> {
                 ),
                       SizedBox(height: 40),
                       InkWell(
+                        onTap: (){
+                          launch('mailto:homelyy2021@gmail.com');
+                        },
                         child: Container(
                             child: Center(
                               child: Text('Send US E-Mail',style: TextStyle(color: Colors.white,fontSize: 15),

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:homelyy/NewScreens/homellycolors.dart';
+import 'package:homelyy/component/constants.dart';
 
 import 'progressBarnewa.dart';
 
 class Trackordernewtwo extends StatefulWidget {
-  const Trackordernewtwo({Key  key}) : super(key: key);
+  final String status;
+  const Trackordernewtwo({Key  key, this.status}) : super(key: key);
 
   @override
   _TrackordernewtwoState createState() => _TrackordernewtwoState();
@@ -30,34 +32,39 @@ class _TrackordernewtwoState extends State<Trackordernewtwo> {
                           children: [
 
                             InkWell(
+                              onTap: (){
+                                Get.back();
+            },
                               child: Icon(Icons.arrow_back,color: hmdarkolive),
                             ),
                           ],
                         ),
                       ),
-                      Column(
-                        children: [
-                          Text('Your Order has been delivered',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
-                          ),
-                        ],
+
+                      Text('Your Order is ${widget.status}',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
+
                       ),
-                      SizedBox(height:6 ),
-                      Image.asset('assets/tick.png'),
 
 
-                      Deliveredordertracker(status: 'Packed',),
-                      SizedBox(height: 30),
-                      InkWell(
-                        child: Container(
-                          child: Center(child: Text('View Bill',style: TextStyle(color: Colors.white))
-                          ),
-                          decoration: BoxDecoration(color: hmdarkolive,borderRadius: BorderRadius.circular(30)
-                          ),
 
+                      Visibility(
+                        visible : widget.status == kDelivered,
+                        child: Column(
+                          children: [
 
-                          height: 30,width: 100,
+                            SizedBox(height:6 ),
+
+                            Image.asset('assets/tick.png'),
+                          ],
                         ),
-                      ),SizedBox(height: 20),
+                      ),
+
+                      SizedBox(height: 30),
+
+                      Deliveredordertracker(status: widget.status,),
+
+                      SizedBox(height: 30),
+
                       InkWell(
                         child: Container(
                           child: Center(child: Text('Help',style: TextStyle(color: Colors.white))

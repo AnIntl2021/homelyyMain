@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/NewScreens/homellycolors.dart';
+import 'package:homelyy/component/constants.dart';
 
 
 class Deliveredordertracker extends StatefulWidget {
@@ -44,7 +45,7 @@ class _DeliveredordertrackerState extends State<Deliveredordertracker> {
                           ||
                           widget.status == "Delivered" ? kred : FoodColors.Grey),
                 ),*/
-                Text('3.01 pm'),
+                SizedBox(width: 52),
                 SizedBox(width: 8),
                 Column(
                   children: [
@@ -58,7 +59,7 @@ class _DeliveredordertrackerState extends State<Deliveredordertracker> {
                 SizedBox(width: 10,),
 
                 Text(
-                  'Order Revived',
+                  'Order Received',
                   style:  GoogleFonts.arvo(color: Colors.grey,fontWeight: FontWeight.bold),
                 ),
               ],
@@ -75,11 +76,11 @@ class _DeliveredordertrackerState extends State<Deliveredordertracker> {
                     width: 2,
                     height: 50,
                     color:
-                    widget.status == "Packed" ||
-                        widget.status == "Shipped" ||
-                        widget.status == "On Delivery"
+                    widget.status == kpending ||
+                        widget.status == kAccepted ||
+                        widget.status == kReady
                         ||
-                        widget.status == "Delivered" || widget.status == "Delivered" ? hmdarkolive : Colors.black
+                        widget.status == kDelivered  ? hmdarkolive : Colors.black
                 ),
               ),
             ),
@@ -98,14 +99,13 @@ class _DeliveredordertrackerState extends State<Deliveredordertracker> {
                           ||
                           widget.status == "Delivered" ? kred : FoodColors.Grey),
                 ),*/
-                Text('3.01 pm'),
+               SizedBox(width: 52),
                 SizedBox(width: 8),
                 Opacity(
-                    opacity: widget.status == "Packed" ||
-                        widget.status == "Shipped" ||
-                        widget.status == "On Delivery"
+                    opacity:  widget.status == kAccepted ||
+                        widget.status == kReady
                         ||
-                        widget.status == "Delivered"
+                        widget.status == kDelivered
                         ? 1 : 0.1,
                     child: CircleAvatar(radius: 15,backgroundColor: hmdarkolive,)
 
@@ -113,12 +113,12 @@ class _DeliveredordertrackerState extends State<Deliveredordertracker> {
                 SizedBox(width: 10,),
 
                 Text(
-                  'Preparing Order',
-                  style:   widget.status == "Packed" ||
-                      widget.status == "Shipped" ||
-                      widget.status == "On Delivery"
+                  'Order Accepted',
+                  style:  widget.status == kAccepted ||
+                      widget.status == kReady
                       ||
-                      widget.status == "Delivered" ? GoogleFonts.arvo(color: Colors.grey,fontWeight: FontWeight.bold) : GoogleFonts.arvo(color: Colors.grey[100]),
+                      widget.status == kDelivered
+                      ? GoogleFonts.arvo(color: Colors.grey,fontWeight: FontWeight.bold) : GoogleFonts.arvo(color: Colors.grey),
                 ),
               ],
 
@@ -134,10 +134,11 @@ class _DeliveredordertrackerState extends State<Deliveredordertracker> {
                     width: 2,
                     height: 50,
                     color:
-                    widget.status == "Shipped" ||
-                        widget.status == "On Delivery"
+                    widget.status == kAccepted ||
+                        widget.status == kReady
                         ||
-                        widget.status == "Delivered" ? hmdarkolive : Colors.grey[100]
+                        widget.status == kDelivered
+                        ? hmdarkolive : Colors.grey[100]
                 ),
               ),
             ),
@@ -153,27 +154,28 @@ class _DeliveredordertrackerState extends State<Deliveredordertracker> {
                           ||
                           widget.status == "Delivered"  ? kred : FoodColors.Grey),
                 ),*/
-                Text('3.01 pm'),
+               SizedBox(width: 52),
                 SizedBox(width: 8),
 
                 Opacity(
-                    opacity: widget.status == "Shipped" ||
-                        widget.status == "On Delivery"
+                    opacity:widget.status == kReady
                         ||
-                        widget.status == "Delivered" ? 1 : 0.1,
+                        widget.status == kDelivered
+                        ? 1 : 0.1,
                     child: CircleAvatar(radius: 15,backgroundColor: hmdarkolive,)
                 ),
                 SizedBox(width: 10,),
 
                 Text(
-                  'Wrapping Order ',
-                  style:  widget.status == "Shipped" ||
-                      widget.status == "On Delivery"
+                  'Order Ready',
+                  style:   widget.status == kReady
                       ||
-                      widget.status == "Delivered"  ? GoogleFonts.arvo(color: Colors.grey,fontWeight: FontWeight.bold) : GoogleFonts.arvo(color: Colors.grey),
+                      widget.status == kDelivered
+                  ? GoogleFonts.arvo(color: Colors.grey,fontWeight: FontWeight.bold) : GoogleFonts.arvo(color: Colors.grey),
                 ),
               ],
             ),
+
             SizedBox(width: 10),
             Padding(
               padding: const EdgeInsets.only(left: 60),
@@ -198,44 +200,7 @@ class _DeliveredordertrackerState extends State<Deliveredordertracker> {
                 //       color:
                 //       widget.status == "Delivered"  ? kred : FoodColors.Grey),
                 // ),
-                Text('3.01 pm'),
-                SizedBox(width: 8),
-                Opacity(
-                    opacity:widget.status == 'Delivered' ?  1 : 0.1,
-                    child: CircleAvatar(radius: 15,backgroundColor: hmdarkolive,)
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  'Order Picked-up',
-                  style:  widget.status == "Delivered" ? GoogleFonts.arvo(color: Colors.grey,fontWeight: FontWeight.bold) : GoogleFonts.arvo(color: Colors.grey[100]),
-                ),
-              ],
-            ),
-            SizedBox(width: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 60),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                    margin: EdgeInsets.only(left: 14) ,
-                    width: 2,
-                    height: 50,
-                    color:
-                    widget.status == "Delivered"   ? hmdarkolive : Colors.grey[100]
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                // Container(
-                //   width: dotSize,
-                //   height: dotSize,
-                //   decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(dotSize / 2),
-                //       color:
-                //       widget.status == "Delivered"  ? kred : FoodColors.Grey),
-                // ),
-                Text('3.01 pm'),
+               SizedBox(width: 52),
                 SizedBox(width: 8),
                 Opacity(
                     opacity:widget.status == 'Delivered' ?  1 : 0.1,
@@ -244,7 +209,7 @@ class _DeliveredordertrackerState extends State<Deliveredordertracker> {
                 SizedBox(width: 10,),
                 Text(
                   'Order Delivered  ',
-                  style:  widget.status == "Delivered" ? GoogleFonts.arvo(color: Colors.grey,fontWeight: FontWeight.bold) : GoogleFonts.arvo(color: Colors.grey[100]),
+                  style:  widget.status == "Delivered" ? GoogleFonts.arvo(color: Colors.grey,fontWeight: FontWeight.bold) : GoogleFonts.arvo(color: Colors.grey),
                 ),
               ],
             ),

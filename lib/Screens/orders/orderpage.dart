@@ -94,7 +94,7 @@ class _OrderPageState extends State<OrderPage> {
        var usermodel = UserModel().fromJson(jsonDecode(data));
 
         Get.to(() => OrderDetailScreen(id: orderId,status: status,subTotal: subTotal,
-          wallet: wallet,discount: discount,savings: savings,total: total,delivery: "0",reason: reason
+          wallet: wallet,discount: discount,savings: savings,total: total,shopid: "0",reason: reason
           ,shopname:shopname,name:name,date:date,uid:uid,symbol:usermodel.symbol
           ,));
       },

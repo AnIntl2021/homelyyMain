@@ -85,6 +85,7 @@ class _ProductListCardState extends State<ProductListCard> {
           padding: const EdgeInsets.all(1.0),
           child: Stack(
             children: [
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,

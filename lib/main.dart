@@ -1,11 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/NewScreens/homellycolors.dart';
+import 'package:homelyy/NewScreens/homepage/homepagemain.dart';
 import 'package:homelyy/NewScreens/loginpage.dart';
 import 'package:homelyy/Screens/NewScreens/Homepage/homepage_new.dart';
 import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
@@ -15,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Screens/homepage/homepage.dart';
 import 'Screens/login/loginScreen.dart';
 import 'component/constants.dart';
+import 'component/helper.dart';
 import 'component/splashscreenMY.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -44,6 +48,8 @@ void main() async{
   await Firebase.initializeApp();
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessgaingBackgroundHandler);
+
+
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -113,7 +119,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-
+    init();
     getBoolValuesSF().then((value) {
 
       setState(() {
@@ -171,6 +177,12 @@ class _MyAppState extends State<MyApp> {
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
           primarySwatch: Colors.blue,
+          appBarTheme: AppBarTheme(
+            systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: hmolive),
+            // bottomRightness: Brightness.dark,
+            // color: kblackck
+
+          ),
         ),
         home: SplashScreenMy(
             duration: 6000,
@@ -186,8 +198,8 @@ class _MyAppState extends State<MyApp> {
             backgroundColor: Colors.white,
             speed: 1, navigateRoute: isloggedin ?
 
-        HomePageNew1(
-          // userRef: phone,
+        MainHomePage(
+           userRef: phone,
         ) : LoginpageNew()
         )
       );

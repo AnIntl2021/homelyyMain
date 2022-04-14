@@ -56,29 +56,32 @@ class _DiscountCardNewState extends State<DiscountCardNew> {
                             Padding(
                               padding: const EdgeInsets.only(top: 15),
                               child: Container(
-                                  child: Image.asset("assets/homescreenfood.png",
+                                  child: Image.network(imageURL +  'banner/' +sliderimage.image,
                                     )
                               ),
-                            ),Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(child: Column( crossAxisAlignment:CrossAxisAlignment.end
-                                ,children: [SizedBox(height: 25,width: 115,),
-                                  Text("50%",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white),),
-                                  Text("on all orders",style: TextStyle(fontSize: 15,color: Colors.white)),SizedBox(height: 5,)
-                                  ,Container(decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(20))
-                                    ,child:
-                                    Padding(
-                                      padding: const EdgeInsets.only(left:10,right: 10,top:5,bottom: 5),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
+                            ),
 
-                                          Text("Claim now",style: TextStyle(color : hmolive),),SizedBox(width: 10,),Image.asset("assets/arrow_homepage.png")
-                                        ],),
-                                    ),)
+                            // Padding(
+                            //   padding: const EdgeInsets.all(8.0),
+                            //   child: Container(child: Column( crossAxisAlignment:CrossAxisAlignment.end
+                            //     ,children: [SizedBox(height: 25,width: 115,),
+                            //       Text("50%",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white),),
+                            //       Text("on all orders",style: TextStyle(fontSize: 15,color: Colors.white)),SizedBox(height: 5,)
+                            //       ,Container(decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(20))
+                            //         ,child:
+                            //         Padding(
+                            //           padding: const EdgeInsets.only(left:10,right: 10,top:5,bottom: 5),
+                            //           child: Row(
+                            //             mainAxisSize: MainAxisSize.min,
+                            //             children: [
+                            //
+                            //               Text("Claim now",style: TextStyle(color : hmolive),),SizedBox(width: 10,),Image.asset("assets/arrow_homepage.png")
+                            //             ],),
+                            //         ),)
+                            //
+                            //     ],),),
+                            // )
 
-                                ],),),
-                            )
                           ]
                       ),
                     );

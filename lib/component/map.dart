@@ -13,6 +13,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:homelyy/Screens/homepage/homepage.dart';
 
+import '../Screens/NewScreens/Homepage/homepage_new.dart';
+
 
 
 class MapScreen extends StatefulWidget {
@@ -158,7 +160,7 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     ElevatedButton(onPressed: (){
 
-                             Get.offAll(Homepage(latlng: latlng,userRef: widget.userRef,)) ;
+                             Get.offAll(HomePageNew1(latlng: latlng,userref: widget.userRef,)) ;
 
 
                     }, child: Text("Set Delivery Location"))

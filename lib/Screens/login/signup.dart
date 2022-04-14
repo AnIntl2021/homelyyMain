@@ -42,14 +42,6 @@ class _SignUpState extends State<SignUp> {
   var symbol ;
   bool obsecureText = true;
 
-  List countryList = [
-    {'no': 1, 'keyword': 'India'},
-    {'no': 2, 'keyword': 'Kuwait'},
-    {'no': 3, 'keyword': 'Canada'},
-    {'no': 4, 'keyword': 'UK'},
-    {'no': 5, 'keyword': 'United States'},
-    {'no': 6, 'keyword': 'Dubai'},
-  ];
 
   Future addBoolToSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -72,25 +64,6 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  Future<List<DropdownMenuItem<Object>>> buildDropdownTestItems(
-      List _testList) async {
-    List<DropdownMenuItem<Object>> items = [];
-    // await for (var i in _testList) {
-    //
-    //  }
-
-    await Future.forEach(_testList, (element) {
-      items.add(
-        DropdownMenuItem(
-          value: element["no"],
-          child: Text(element['keyword']),
-        ),
-      );
-    });
-
-    return items;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,6 +81,7 @@ class _SignUpState extends State<SignUp> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
+
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
@@ -116,6 +90,7 @@ class _SignUpState extends State<SignUp> {
                                   color: kdarkgreen, fontSize: 10),
                             ),
                           ),
+
                           Text(
                             "Signup",
                             style: GoogleFonts.arvo(

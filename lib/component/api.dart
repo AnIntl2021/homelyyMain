@@ -60,13 +60,15 @@ class AllApi {
 
     var response = await http.get(userGetURL);
 
-    print("got restaurant ${response.body}");
 
 
 
 
-    var list = json.decode(response.body);
-    print("got restaurant1 ${list.length}");
+
+    var list = json.decode(utf8.decode(response.bodyBytes));
+
+
+    print("got restaurant1 ${list}");
     //
     // print("list ${
     // response.body
@@ -97,7 +99,7 @@ class AllApi {
 
 
 
-    var list = json.decode(response.body);
+    var list = json.decode(utf8.decode(response.bodyBytes));
 
 
     var newList = list.length == 0 ? null : list.map((e) {
@@ -119,7 +121,7 @@ class AllApi {
 
 
 
-    var list = json.decode(response.body);
+    var list = json.decode(utf8.decode(response.bodyBytes));
 
 
     var newList = list.length == 0 ? null : list.map((e) {
@@ -142,7 +144,7 @@ class AllApi {
 
 
 
-    var list = json.decode(response.body);
+    var list = json.decode(utf8.decode(response.bodyBytes));
 
 
     var newList = list.length == 0 ? null : list.map((e) {
@@ -839,13 +841,13 @@ class AllApi {
     var userGetURL = Uri.parse("${conurl}vendorgetid?vendorid=$vid");
     var response = await http.get(userGetURL);
 
-    var list = json.decode(response.body);
+    var list = json.decode(utf8.decode(response.bodyBytes));
 
     print("vebndordetaukl1 ${userGetURL}");
     print("venodr nmaem ${list}");
    // var checkMap = LifeProductModel().fromJson(list);
     print("checkmap ${list["name"]}");
-    return list["name"];
+    return [list["name"],list["image"],list['symbol']];
 
 
   }
@@ -855,13 +857,13 @@ class AllApi {
     var userGetURL = Uri.parse("${conurl}vendorgetid?vendorid=$vid");
     var response = await http.get(userGetURL);
 
-    var list = json.decode(response.body);
+    var list = json.decode(utf8.decode(response.bodyBytes));
 
     print("vebndordetaukl1 ${userGetURL}");
     print("venodr nmaem ${list}");
     // var checkMap = LifeProductModel().fromJson(list);
     print("checkmap ${list["name"]}");
-    return list["status"];
+    return [list["status"],list["symbol"]];
 
 
   }

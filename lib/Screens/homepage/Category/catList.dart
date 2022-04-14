@@ -65,7 +65,9 @@ class CatCard extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 onTap: (){
+
                   Get.to(RestaurantByCat(type: type,catid: title,uid: uid,restomodel: restomodel,));
+
                 },
                 child: Column(
                   children: [

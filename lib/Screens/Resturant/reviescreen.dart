@@ -10,7 +10,8 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class ReviewScreen extends StatefulWidget {
   final String vendorid;
-  const ReviewScreen({Key key, this.vendorid}) : super(key: key);
+  final List documents;
+  const ReviewScreen({Key key, this.vendorid, this.documents}) : super(key: key);
 
   @override
   _ReviewScreenState createState() => _ReviewScreenState();
@@ -24,27 +25,40 @@ class _ReviewScreenState extends State<ReviewScreen> {
 
     return Scaffold(
       appBar: AppBar(title:Text("Ratings & Reviews"),backgroundColor: kgreen,),
-      body: FutureBuilder(
-          future : AllApi().getReviews(widget.vendorid),
-          builder: (context,snapshot){
-            if(!snapshot.hasData){
-             return CircularProgressIndicator(color: kgreen,);
-            }
+      body:
 
+          ListView.builder(
+        itemCount: widget.documents.length,
+        itemBuilder: (context,index){
+          var ratings = widget.documents[index]["rating"];
+          var review = widget.documents[index]["comment"];
+          var userName = widget.documents[index]["user"];
+          var date = widget.documents[index]["date"];
+          return  buildRatingCard(name: userName,rating: double.parse(ratings),review: review,date: date);
+        }
+    )
 
-            var documents = snapshot.requireData;
-
-          return  ListView.builder(
-            itemCount: documents.length,
-              itemBuilder: (context,index){
-                var ratings = documents[index]["rating"];
-                var review = documents[index]["comment"];
-                var userName = documents[index]["user"];
-                var date = documents[index]["date"];
-              return  buildRatingCard(name: userName,rating: double.parse(ratings),review: review,date: date);
-              }
-          );
-      }),
+      // FutureBuilder(
+      //     future : AllApi().getReviews(widget.vendorid),
+      //     builder: (context,snapshot){
+      //       if(!snapshot.hasData){
+      //        return CircularProgressIndicator(color: kgreen,);
+      //       }
+      //
+      //
+      //       var documents = snapshot.requireData;
+      //
+      //     return  ListView.builder(
+      //       itemCount: documents.length,
+      //         itemBuilder: (context,index){
+      //           var ratings = documents[index]["rating"];
+      //           var review = documents[index]["comment"];
+      //           var userName = documents[index]["user"];
+      //           var date = documents[index]["date"];
+      //         return  buildRatingCard(name: userName,rating: double.parse(ratings),review: review,date: date);
+      //         }
+      //     );
+      // }),
     );
   }
 }

@@ -6,7 +6,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'homellycolors.dart';
 
 class Proflienew extends StatefulWidget {
-  const Proflienew({Key key}) : super(key: key);
+  final String id;
+  const Proflienew({Key key, this.id}) : super(key: key);
 
   @override
   _ProflienewState createState() => _ProflienewState();

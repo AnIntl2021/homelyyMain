@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:homelyy/NewScreens/homellycolors.dart';
 import 'package:homelyy/Screens/Cart/thankspage.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
@@ -295,7 +296,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
           title: Text("SELECT PAYMENT OPTION"),
           backgroundColor: kgreen,
         ),
-        body: loading ? Center(child: Image.asset("assets/preloader.gif"),) : Column(
+        body: loading ? kpreloader : Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
@@ -343,6 +344,9 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
                   }),
             ),
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(hmgreen)
+              ),
                 onPressed: () async {
                   if (!shop) {
                     Fluttertoast.showToast(

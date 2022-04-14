@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'homellycolors.dart';
 
 class Profilenewone extends StatefulWidget {
-  const Profilenewone({Key  key}) : super(key: key);
+  final String id;
+  const Profilenewone({Key  key, this.id}) : super(key: key);
 
   @override
   _ProfilenewoneState createState() => _ProfilenewoneState();

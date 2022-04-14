@@ -22,9 +22,23 @@ class RestaurantByCat extends StatefulWidget {
 class _RestaurantByCatState extends State<RestaurantByCat> {
   var listener = PaginateRefreshedChangeListener();
 
+  List restomodel1 = [];
+
+  @override
+  void initState() {
+    setState(() {
+      restomodel1 = restomodel1;
+    });
+
+    super.initState();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
+
+
 
     return  Scaffold(
       appBar: homeAppBar(context,"Shops near you", widget.uid

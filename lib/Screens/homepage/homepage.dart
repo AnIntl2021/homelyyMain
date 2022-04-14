@@ -75,6 +75,7 @@ class Homepage extends StatefulWidget {
 
 
 class _HomepageState extends State<Homepage> {
+
   var currentIndex = 0;
 
   AppUpdateInfo _updateInfo;
