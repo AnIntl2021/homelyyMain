@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:homelyy/NewScreens/homellycolors.dart';
 import 'package:homelyy/component/constants.dart';
 
+import '../contactus.dart';
 import 'progressBarnewa.dart';
 
 class Trackordernewtwo extends StatefulWidget {
@@ -66,6 +67,9 @@ class _TrackordernewtwoState extends State<Trackordernewtwo> {
                       SizedBox(height: 30),
 
                       InkWell(
+                        onTap: (){
+                          Get.to(Contactusnew());
+                        },
                         child: Container(
                           child: Center(child: Text('Help',style: TextStyle(color: Colors.white))
                           ),

@@ -62,7 +62,13 @@ class _LoginpageNewState extends State<LoginpageNew> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         InkWell(
+                            onTap: (){
 
+                              Get.off(MainHomePage(
+                                userRef: 'Guest'
+                              ));
+
+                  },
                           child: Container(
 
 

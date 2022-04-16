@@ -203,21 +203,25 @@ class _HomePageNew1State extends State<HomePageNew1> {
       backgroundColor: Colors.white,
       body: FutureBuilder(
           future: Future.wait([
-            getLocation(),
+            widget.userref == 'Guest'
+                ? AllApi().getLifeCat() :getLocation(),
             AllApi().getBanner(selectedType == 0 ? "restro" : "lifestyle"),
             selectedType == 0 ? AllApi().getRestoCat() : AllApi().getLifeCat(),
             widget.userref == 'Guest'
                 ? AllApi().getLifeCat()
                 : AllApi().getLocalUsers()
           ]),
+
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(child: kpreloader);
             }
 
             // LocationData latlng = snapshot.requireData[0];
-            latitude = snapshot.requireData[0][0];
-            longitude = snapshot.requireData[0][1];
+            latitude =  widget.userref == 'Guest'
+                ? 19.218778888954247 : snapshot.requireData[0][0];
+            longitude = widget.userref == 'Guest'
+                ? 72.98633375331721 : snapshot.requireData[0][1];
             banners = snapshot.requireData[1];
 
             catList = snapshot.requireData[2];
@@ -264,9 +268,12 @@ class _HomePageNew1State extends State<HomePageNew1> {
                           builder: (controller) {
 
                             print('cartcount = ${controller.cartCount}');
-                            return InkWell(
+                            return
+                              InkWell(
                               onTap: (){
-                                Get.to(CartShopPage(ref:controller.userModel.ref));
+                                widget.userref == 'Guest' ?
+                                print('asd')
+                                    :  Get.to(CartShopPage(ref:controller.userModel.ref));
                               },
                               child: Stack(
 
@@ -278,7 +285,9 @@ class _HomePageNew1State extends State<HomePageNew1> {
                                             height: 100,
                                           ))),
 
-                                  Align(
+                                  widget.userref == 'Guest' ?
+                                  SizedBox()
+                                      : Align(
                                     alignment: Alignment.topRight,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -287,7 +296,9 @@ class _HomePageNew1State extends State<HomePageNew1> {
                                       ),
                                     ),
                                   ),
-                                  Align(
+                                  widget.userref == 'Guest' ?
+                                  SizedBox()
+                                      :  Align(
                                     alignment: Alignment.topRight,
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 25),
@@ -410,12 +421,40 @@ class _HomePageNew1State extends State<HomePageNew1> {
             },
           ),
         ),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          buildCard(
-              "Food Store", "15 stores available", "assets/food-store.png", 0),
-          buildCard("Lifestyle Store", "20 Stores availabe",
-              "assets/clothing-store.png", 1),
-        ]),
+        FutureBuilder(
+            future: Future.wait([
+              AllApi().getRestaurant(
+                  widget.latlng == null
+                      ? latitude.toString()
+                      : widget.latlng.latitude.toString(),
+                  widget.latlng == null
+                      ? longitude.toString()
+                      : widget.latlng.longitude.toString()),
+                   AllApi().getLifestyle(
+                  widget.latlng == null
+                      ? latitude.toString()
+                      : widget.latlng.latitude.toString(),
+                  widget.latlng == null
+                      ? longitude.toString()
+                      : widget.latlng.longitude.toString()),
+            ]),
+          builder: (context, snapshot) {
+
+              if(!snapshot.hasData){
+                return SizedBox();
+              }
+
+              List restoList = snapshot.requireData[0];
+              List lifeList = snapshot.requireData[1];
+
+            return Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+              buildCard(
+                  "Food Store", "${restoList.length} stores available", "assets/food-store.png", 0),
+              buildCard("Lifestyle Store", "${lifeList.length} Stores availabe",
+                  "assets/clothing-store.png", 1),
+            ]);
+          }
+        ),
         Container(
           height: 170,
           child: DiscountCardNew(

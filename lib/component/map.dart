@@ -11,6 +11,7 @@ import 'package:geocoder/model.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:homelyy/NewScreens/homepage/homepagemain.dart';
 import 'package:homelyy/Screens/homepage/homepage.dart';
 
 import '../Screens/NewScreens/Homepage/homepage_new.dart';
@@ -160,7 +161,7 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     ElevatedButton(onPressed: (){
 
-                             Get.offAll(HomePageNew1(latlng: latlng,userref: widget.userRef,)) ;
+                             Get.offAll(MainHomePage(latlng: latlng,userRef: widget.userRef,)) ;
 
 
                     }, child: Text("Set Delivery Location"))

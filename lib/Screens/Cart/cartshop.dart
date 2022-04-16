@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homelyy/Screens/NewScreens/homellycolors.dart';
 import 'package:homelyy/component/api.dart';
 import 'package:homelyy/component/constants.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +35,11 @@ class _CartShopPageState extends State<CartShopPage> {
         Get.back();
       },
       child: Scaffold(
-        appBar: AppBar(title: Text("Shop Cart"),backgroundColor: kgreen,),
+        appBar: AppBar(
+          title: Text("Shop Cart",style: TextStyle(color: hmgray),),
+          backgroundColor: Colors.transparent,elevation: 0,
+          iconTheme: IconThemeData(color: hmgray),
+        ),
         body: FutureBuilder(
           future: AllApi().getShopCart(widget.ref),
           builder: (context, snapshot) {
@@ -65,7 +70,7 @@ class _CartShopPageState extends State<CartShopPage> {
                                   CartPage(
                                     shopname: shopList[index]["vendorid"].toString().replaceAll("}", ""),
                                     uid: widget.ref,
-                                    symbol:status[1]
+                                    symbol:status[1],
                                     // shopaddress: shopaddress,
                                     // shopnumber: shopnumber,
                                     // shoplocation:shopGeoFirePoint,

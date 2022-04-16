@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/NewScreens/homellycolors.dart';
 import 'package:homelyy/NewScreens/homepage/homepagemain.dart';
 import 'package:homelyy/NewScreens/loginpage.dart';
+import 'package:homelyy/NewScreens/slider.dart';
 import 'package:homelyy/Screens/NewScreens/Homepage/homepage_new.dart';
 import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
 import 'package:homelyy/component/api.dart';
@@ -200,7 +201,7 @@ class _MyAppState extends State<MyApp> {
 
         MainHomePage(
            userRef: phone,
-        ) : LoginpageNew()
+        ) : Intro()
         )
       );
 

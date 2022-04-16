@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:homelyy/NewScreens/loginpage.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 
@@ -20,7 +22,12 @@ class IntroState extends State<Intro> {
 
     return IntroSlider(
       slides: listSlides,
-
+      onDonePress: (){
+        Get.to(LoginpageNew());
+      },
+      onSkipPress: (){
+        Get.to(LoginpageNew());
+      },
     );
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:homelyy/NewScreens/loginpage.dart';
 import 'package:homelyy/Screens/NewScreens/Homepage/homepage_new.dart';
 import 'package:in_app_update/in_app_update.dart';
 
@@ -75,7 +76,7 @@ class _MainHomePageState extends State<MainHomePage> {
 
       Container(),
 
-      widget.userRef == 'Guest' ? LoginScreen() : Accountsnew(
+      widget.userRef == 'Guest' ? LoginpageNew() : Accountsnew(
 
         id: widget.userRef.replaceAll("+", "").removeAllWhitespace,
 

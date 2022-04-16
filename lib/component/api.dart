@@ -863,7 +863,7 @@ class AllApi {
     print("venodr nmaem ${list}");
     // var checkMap = LifeProductModel().fromJson(list);
     print("checkmap ${list["name"]}");
-    return [list["status"],list["symbol"]];
+    return [list["status"],list["symbol"],list["image"]];
 
 
   }

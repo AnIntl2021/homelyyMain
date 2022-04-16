@@ -601,25 +601,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ],
             ),
           ),
-          Visibility(
-            visible: discountVisibility,
-            child: Positioned(
-                top: 10,
-                left: 20,
-                child: Container(
-                  width: 60,
-                  height: 25,
-                  child: Center(
-                      child: Text(
-                    "${widget.symbol} ${discount} OFF",
-                    style: GoogleFonts.arvo(fontSize: 12, color: Colors.white),
-                  )),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(6)),
-                    color: Colors.green,
-                  ),
-                )),
-          )
+
         ],
       ),
     );
