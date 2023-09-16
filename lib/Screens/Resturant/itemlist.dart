@@ -15,13 +15,13 @@ import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:uuid/uuid.dart';
 
 class ItemList extends StatefulWidget {
-  final String streamTitle, id, shopname, uid, foodid;
-  final Function callback;
-  final List category;
-  final Function settingState;
+  final String? streamTitle, id, shopname, uid, foodid;
+  final Function? callback;
+  final List? category;
+  final Function? settingState;
 
   const ItemList({
-    Key key,
+    Key? key,
     this.streamTitle,
     this.callback,
     this.id,
@@ -45,25 +45,25 @@ class _ItemListState extends State<ItemList> {
 
   @override
   Widget build(BuildContext context) {
-
+    return SizedBox();
   }
 
   prodListCard(
-      {String title,
+      {required String title,
       shopName,
       price,
       uid,
       img,
       cutprice,
-      recipe,
+      required recipe,
       discount,
       vid,
       foodid,
-      Function press,
-      bool tagVisibility,
-      bool stock,
-      bool discountVisibility,
-      int totalorders}) {
+      Function? press,
+      bool? tagVisibility,
+      required bool stock,
+      required bool discountVisibility,
+      int? totalorders}) {
     var uuid = Uuid();
     var newUid = uuid.v1().toString().split("-");
 // var stream = FirebaseFirestore.instance

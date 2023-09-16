@@ -19,26 +19,22 @@ import 'component/splashscreenMY.dart';
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
-    description: 'This channel is used for important notifications.', // description
+    description:
+        'This channel is used for important notifications.', // description
     importance: Importance.max,
     playSound: true,
     // sound: RawResourceAndroidNotificationSound('notification'),
-    enableLights: true
-);
-
+    enableLights: true);
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 Future<void> firebaseMessgaingBackgroundHandler(RemoteMessage message) async {
-
   await Firebase.initializeApp();
   print("a message bg : ${message.messageId}");
-
 }
 
-void main() async{
-
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -46,7 +42,7 @@ void main() async{
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
@@ -56,41 +52,34 @@ void main() async{
   );
 
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatefulWidget {
-
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
-
 }
 
 class _MyAppState extends State<MyApp> {
-
-  var isloggedin = false;
-  var phone ;
+  bool? isloggedin = false;
+  var phone;
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   Future<List> getBoolValuesSF() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return bool
     bool boolValue = prefs.getBool('loggedin') ?? false;
     var userphone = prefs.getString("phone");
     print("Get Lcocal User ${userphone}");
     print("boolvalue $boolValue");
-    return [boolValue,userphone];
-
+    return [boolValue, userphone];
   }
-
 
   Future<void> setupInteractedMessage() async {
     // Get any messages which caused the application to open from
     // a terminated state.
-    RemoteMessage initialMessage =
-    await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
 
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
@@ -107,22 +96,14 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-
-
-
   @override
   void initState() {
-
     getBoolValuesSF().then((value) {
-
       setState(() {
         isloggedin = value[0];
         phone = value[1];
       });
     });
-
-
-
 
     firebaseMessaging.requestPermission(
         alert: true, badge: true, provisional: true, sound: true);
@@ -130,74 +111,64 @@ class _MyAppState extends State<MyApp> {
     setupInteractedMessage();
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
       print("NOTIFICATION WORLKING $android");
 
       if (notification != null && android != null) {
-
         flutterLocalNotificationsPlugin.show(
             notification.hashCode,
             notification.title,
             notification.body,
             NotificationDetails(
-              android: AndroidNotificationDetails(
-                  channel.id,
-                  channel.name,
-                  channelDescription:channel.description,
-                   icon: 'launcher_icon',
+              android: AndroidNotificationDetails(channel.id, channel.name,
+                  channelDescription: channel.description,
+                  icon: 'launcher_icon',
                   // sound: RawResourceAndroidNotificationSound('notification'),
                   // other properties...
                   importance: channel.importance,
-                  priority: Priority.max
-              ),
+                  priority: Priority.max),
             ));
-
       }
     });
 
-
-
-
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
     return FirebasePhoneAuthProvider(
       child: GetMaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
-          primarySwatch: Colors.blue,
-        ),
-        home: SplashScreenMy(
-            duration: 6000,
-            imageSize: 180,
-            imageSrc: "assets/homelyy.png",
-            text: "HOMELYY -EVERYTHING FROM HOME",
-            colors: [Colors.amber],
-            textType: TextType1.ScaleAnimatedText,
-            textStyle: GoogleFonts.cabin(
-                fontSize: 30,
-                color: kgreen,
-                fontWeight: FontWeight.bold),
-            backgroundColor: Colors.white,
-            speed: 1, navigateRoute: isloggedin ? Homepage(userRef: phone,) : LoginScreen()
-        )
-      ),
+          title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            // This is the theme of your application.
+            //
+            // Try running your application with "flutter run". You'll see the
+            // application has a blue toolbar. Then, without quitting the app, try
+            // changing the primarySwatch below to Colors.green and then invoke
+            // "hot reload" (press "r" in the console where you ran "flutter run",
+            // or simply save your changes to "hot reload" in a Flutter IDE).
+            // Notice that the counter didn't reset back to zero; the application
+            // is not restarted.
+            primarySwatch: Colors.blue,
+          ),
+          home: SplashScreenMy(
+              duration: 6000,
+              imageSize: 180,
+              imageSrc: "assets/homelyy.png",
+              text: "HOMELYY -EVERYTHING FROM HOME",
+              colors: [Colors.amber],
+              textType: TextType1.ScaleAnimatedText,
+              textStyle: GoogleFonts.cabin(
+                  fontSize: 30, color: kgreen, fontWeight: FontWeight.bold),
+              backgroundColor: Colors.white,
+              speed: 1,
+              navigateRoute: isloggedin!
+                  ? Homepage(
+                      userRef: phone,
+                    )
+                  : LoginScreen())),
     );
   }
 }
-

@@ -3,8 +3,8 @@ import 'package:homelyy/Screens/lifestyle/lifeitemlist.dart';
 import 'package:homelyy/component/homeAppbar.dart';
 
 class LifeProductPage extends StatefulWidget {
-  final String id,vid,uid,shopName,catid;
-  const LifeProductPage({Key key, this.id, this.vid, this.uid, this.shopName, this.catid}) : super(key: key);
+  final String? id,vid,uid,shopName,catid;
+  const LifeProductPage({Key? key, this.id, this.vid, this.uid, this.shopName, this.catid}) : super(key: key);
 
   @override
   _LifeProductPageState createState() => _LifeProductPageState();

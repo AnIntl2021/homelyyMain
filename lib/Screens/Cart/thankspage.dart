@@ -7,9 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:homelyy/Screens/orders/orderpage.dart';
 
 class ThankScreen extends StatefulWidget {
-  final String ref;
+  final String? ref;
 
-  const ThankScreen({Key key, this.ref}) : super(key: key);
+  const ThankScreen({Key? key, this.ref}) : super(key: key);
   @override
   Splash createState() => Splash();
 }

@@ -8,8 +8,8 @@ import 'package:homelyy/component/searchBoxx.dart';
 import '../../component/constants.dart';
 
 class LifeItemList extends StatefulWidget {
-  final String vid,uid,shopName,catid;
-  const LifeItemList({Key key, this.vid, this.uid, this.shopName, this.catid}) : super(key: key);
+  final String? vid,uid,shopName,catid;
+  const LifeItemList({Key? key, this.vid, this.uid, this.shopName, this.catid}) : super(key: key);
 
   @override
   _LifeItemListState createState() => _LifeItemListState();

@@ -1,11 +1,11 @@
-// @dart=2.9
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ShoppingCartScreen extends StatefulWidget {
-  final String text;
-  final String fromScreen;
-  const ShoppingCartScreen({Key key, this.text, this.fromScreen}) : super(key: key);
+  final String? text;
+  final String? fromScreen;
+  const ShoppingCartScreen({Key? key, this.text, this.fromScreen}) : super(key: key);
   @override
   _ShoppingCartScreenState createState() => _ShoppingCartScreenState();
 }
@@ -21,9 +21,9 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
 }
 
 class EmptyShoppingCartScreen extends StatefulWidget {
-  final String text;
+  final String? text;
 
-  const EmptyShoppingCartScreen({Key key, this.text}) : super(key: key);
+  const EmptyShoppingCartScreen({Key? key, this.text}) : super(key: key);
   @override
   _EmptyShoppingCartScreenState createState() =>
       _EmptyShoppingCartScreenState();
@@ -61,7 +61,7 @@ class _EmptyShoppingCartScreenState extends State<EmptyShoppingCartScreen> {
             Container(
               width: double.infinity,
               child: Text(
-                widget.text,
+                widget.text!,
                 style: TextStyle(
                   color: Color(0xFF67778E),
                   fontFamily: 'Roboto-Light.ttf',

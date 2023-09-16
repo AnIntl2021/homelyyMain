@@ -1,4 +1,4 @@
-// @dart=2.9
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,12 +11,12 @@ import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
 class PopularRestaurantList extends StatefulWidget {
-  final String type,uid;
-  final List category;
-  final GeoPoint userGeoPoint;
-  final bool status;
-  final List listofRestaurant;
-  const PopularRestaurantList({Key key, this.category, this.userGeoPoint, this.status, this.type, this.listofRestaurant, this.uid}) : super(key: key);
+  final String? type,uid;
+  final List? category;
+  final GeoPoint? userGeoPoint;
+  final bool? status;
+  final List? listofRestaurant;
+  const PopularRestaurantList({Key? key, this.category, this.userGeoPoint, this.status, this.type, this.listofRestaurant, this.uid}) : super(key: key);
 
   @override
   _PopularRestaurantListState createState() => _PopularRestaurantListState();
@@ -39,7 +39,7 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
     return  ListView.builder(
           physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-      itemCount: widget.listofRestaurant.length,
+      itemCount: widget.listofRestaurant!.length,
       itemBuilder: (context,index) {
 
       return  Padding(
@@ -48,30 +48,30 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
 
             child: RestaurentListCard(
 
-              category:widget.listofRestaurant[index].category,
-              title: widget.listofRestaurant[index].name,
+              category:widget.listofRestaurant![index].category,
+              title: widget.listofRestaurant![index].name,
 
-              type: widget.listofRestaurant[index].type,
+              type: widget.listofRestaurant![index].type,
 
-              img:widget.listofRestaurant[index].image,
+              img:widget.listofRestaurant![index].image,
 
               discount: "15",
 
-              cuisine: widget.listofRestaurant[index].cuisine,
+              cuisine: widget.listofRestaurant![index].cuisine,
 
-              area: widget.listofRestaurant[index].address,
+              area: widget.listofRestaurant![index].address,
 
               deliveryTime: "15-20",
 
               tag: "",
 
-              rating: widget.listofRestaurant[index].rating,
+              rating: widget.listofRestaurant![index].rating,
 
               discountVisibility: true,
 
               tagVisibility: false,
 
-              shopid: widget.listofRestaurant[index].vendorid,
+              shopid: widget.listofRestaurant![index].vendorid,
 
               press: () {},
 
@@ -81,13 +81,13 @@ class _PopularRestaurantListState extends State<PopularRestaurantList> {
 
               opentiming: "10",
 
-              badgeVisibility: widget.listofRestaurant[index].inPromotion == "1" ? true : false,
+              badgeVisibility: widget.listofRestaurant![index].inPromotion == "1" ? true : false,
 
-              status: !widget.status,
+              status: !widget.status!,
 
               numReview: 12,
 
-              uid: widget.uid.replaceAll("+", "").removeAllWhitespace,
+              uid: widget.uid!.replaceAll("+", "").removeAllWhitespace,
 
               // category:widget.listofRestaurant[index]["category"],
               // title: widget.listofRestaurant[index]["name"],

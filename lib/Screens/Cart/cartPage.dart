@@ -1,4 +1,3 @@
-// @dart=2.9
 import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
@@ -18,10 +17,17 @@ import 'customTextStyle.dart';
 import 'emptCart.dart';
 
 class CartPage extends StatefulWidget {
-  final String shopname,shopaddress,shopnumber,uid;
-  final bool shopstatus;
+  final String? shopname, shopaddress, shopnumber, uid;
+  final bool? shopstatus;
   // final GeoFirePoint shoplocation;
-  const CartPage({ Key key, this.shopname, this.shopaddress, this.shopnumber, this.shopstatus, this.uid}) : super(key: key);
+  const CartPage(
+      {Key? key,
+      this.shopname,
+      this.shopaddress,
+      this.shopnumber,
+      this.shopstatus,
+      this.uid})
+      : super(key: key);
   @override
   _CartPageState createState() => _CartPageState();
 }
@@ -52,7 +58,7 @@ class _CartPageState extends State<CartPage> {
   //     .collection("cart")
   //     .snapshots();
   bool loading = false;
-  String symbol;
+  String? symbol;
 
   @override
   void initState() {
@@ -83,42 +89,33 @@ class _CartPageState extends State<CartPage> {
   }
 
   Future uploadCartTotal(List<CartModel> cartList) async {
-
     var subtotal = 0;
     var savings = 0;
     var total = 0;
 
-    await Future.forEach(cartList,(CartModel element) {
-      var a = element.price;
+    await Future.forEach(cartList, (CartModel element) {
+      var a = element.price!;
       var getcut = element.cutprice;
       var c = int.parse(a);
-      var getcutInt =
-      getcut == "" ? int.parse("0") : int.parse(getcut);
+      var getcutInt = getcut == "" ? int.parse("0") : int.parse(getcut!);
 
       savings += getcut == "0" ? 0 : c - getcutInt;
       subtotal += c;
       print("cartPriceLoop $c");
-
     });
 
     print("end $subtotal");
     print("cutpricetotal $savings");
 
+    total = subtotal + discountfinal - savings;
 
-
-    total = subtotal +
-        discountfinal -
-        savings;
-
-  await  AllApi().postCartTotal(CartTotalModel(
-        discount:discountfinal.toString(),
-        subTotal:subtotal.toString(),
-        total:total.toString(),
-        savings:savings.toString(),
-        ref:widget.uid
-    ));
+    await AllApi().postCartTotal(CartTotalModel(
+        discount: discountfinal.toString(),
+        subTotal: subtotal.toString(),
+        total: total.toString(),
+        savings: savings.toString(),
+        ref: widget.uid));
     print("finalTotal $total");
-
   }
 
   @override
@@ -126,96 +123,110 @@ class _CartPageState extends State<CartPage> {
     var availablewalletfinal = "0";
 
     return Scaffold(
-      appBar: AppBar(title: Text("My Cart"),backgroundColor: kgreen   ,),
+        appBar: AppBar(
+          title: Text("My Cart"),
+          backgroundColor: kgreen,
+        ),
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
-        body: loading ? Center(child: Image.asset("assets/preloader.gif"),) : FutureBuilder(
-          future: Future.wait([AllApi().getCart(widget.uid, widget.shopname),AllApi().getUser(widget.uid)]),
-          builder: (context, snapshot) {
-
-
-            if(!snapshot.hasData){
-              return Center(child:CircularProgressIndicator(color: kgreen,));
-            }
-
-
-            List<CartModel> cartList = snapshot.requireData[0];
-            UserModel usermodel = UserModel().fromJson(jsonDecode(snapshot.requireData[1]));
-            symbol = usermodel.symbol;
-            // print("cartList in $cartList ${widget.uid} ${widget.shopname}");
-
-
-            return FutureBuilder(
-              future: uploadCartTotal(cartList),
-              builder: (context, snapshot3) {
-
-
-                // if(!snapshot3.hasData){
-                //   return Center(child:CircularProgressIndicator(color: kgreen,));
-                // }
-
-
-
-                return FutureBuilder(
-                  future: AllApi().getCartTotal(widget.uid),
-                  builder: (context, snapshot6) {
-
-
-                    if(!snapshot6.hasData){
-                      return Center(child:CircularProgressIndicator(color: kgreen,));
-                    }
-
-                    CartTotalModel cartTotal = snapshot6.requireData;
-                    print("cartTotal in $cartTotal ${widget.uid} ${widget.shopname}");
-
-                  var  subtotal = cartTotal.subTotal;
-                   var discountfinal =cartTotal.discount;
-                   var  total =cartTotal.total;
-                   var savings =cartTotal.savings;
-
-                    return ListView(
-                      children: [
-                        Container(
-                            margin: EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    offset: Offset(0, -7),
-                                    blurRadius: 33,
-                                    color: Colors.deepOrange.withOpacity(0.11),
-                                  ),
-                                ],
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20))),
-                            child: cartListNew(
-                              cartList,
-                              cntrler,
-                            )),
-                        footer(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
-                            int.parse(total), 20, int.parse(savings),cartList),
-                        // discountApplied
-                        //     ? discountCard(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
-                        //     int.parse(total), int.parse(savings))
-                        //     : appliedDiscount(),
-                        // walletApplied
-                        //     ? walletCard(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
-                        //     int.parse(total), availablewalletfinal, 10)
-                        //     : appliedWallet(),
-                      ],
-                    );
+        body: loading
+            ? Center(
+                child: Image.asset("assets/preloader.gif"),
+              )
+            : FutureBuilder(
+                future: Future.wait([
+                  AllApi().getCart(widget.uid, widget.shopname),
+                  AllApi().getUser(widget.uid)
+                ]),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                        child: CircularProgressIndicator(
+                      color: kgreen,
+                    ));
                   }
-                );
-              }
-            );
-          }
-        ));
 
+                  List<CartModel> cartList = (snapshot.requireData as List)[0];
+                  UserModel usermodel =
+                      UserModel().fromJson(jsonDecode((snapshot.requireData as List)[1]));
+                  symbol = usermodel.symbol;
+                  // print("cartList in $cartList ${widget.uid} ${widget.shopname}");
+
+                  return FutureBuilder(
+                      future: uploadCartTotal(cartList),
+                      builder: (context, snapshot3) {
+                        // if(!snapshot3.hasData){
+                        //   return Center(child:CircularProgressIndicator(color: kgreen,));
+                        // }
+
+                        return FutureBuilder(
+                            future: AllApi().getCartTotal(widget.uid),
+                            builder: (context, snapshot6) {
+                              if (!snapshot6.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator(
+                                  color: kgreen,
+                                ));
+                              }
+
+                              CartTotalModel cartTotal =
+                                  snapshot6.requireData as CartTotalModel;
+                              print(
+                                  "cartTotal in $cartTotal ${widget.uid} ${widget.shopname}");
+
+                              var subtotal = cartTotal.subTotal!;
+                              var discountfinal = cartTotal.discount!;
+                              var total = cartTotal.total!;
+                              var savings = cartTotal.savings!;
+
+                              return ListView(
+                                children: [
+                                  Container(
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              offset: Offset(0, -7),
+                                              blurRadius: 33,
+                                              color: Colors.deepOrange
+                                                  .withOpacity(0.11),
+                                            ),
+                                          ],
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(20),
+                                              topRight: Radius.circular(20))),
+                                      child: cartListNew(
+                                        cartList,
+                                        cntrler,
+                                      )),
+                                  footer(
+                                      context,
+                                      int.parse(subtotal),
+                                      walletfinal,
+                                      int.parse(discountfinal),
+                                      int.parse(total),
+                                      20,
+                                      int.parse(savings),
+                                      cartList),
+                                  // discountApplied
+                                  //     ? discountCard(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
+                                  //     int.parse(total), int.parse(savings))
+                                  //     : appliedDiscount(),
+                                  // walletApplied
+                                  //     ? walletCard(context, int.parse(subtotal), walletfinal, int.parse(discountfinal),
+                                  //     int.parse(total), availablewalletfinal, 10)
+                                  //     : appliedWallet(),
+                                ],
+                              );
+                            });
+                      });
+                }));
   }
 
   footer(BuildContext context, int subTotal, int wallet, int discount,
-      int total, int delivery,int savings,List<CartModel> cartList) {
+      int total, int delivery, int savings, List<CartModel> cartList) {
     return Card(
       margin: EdgeInsets.only(top: 15, left: 10, right: 10),
       elevation: 1,
@@ -232,28 +243,40 @@ class _CartPageState extends State<CartPage> {
             // billRow("Delivery Charges", delivery.toString()),
             SizedBox(height: 8, width: 0),
             billRow("Discount", discount.toString()),
-           // SizedBox(height: 8, width: 0),
-           //  billRow("Wallet", wallet.toString()),
+            // SizedBox(height: 8, width: 0),
+            //  billRow("Wallet", wallet.toString()),
             SizedBox(height: 8, width: 0),
             billRow("Total", total.toString()),
             SizedBox(height: 8, width: 0),
-            RaisedButton(
+            ElevatedButton(
+              style: ButtonStyle(
+                  shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(24)))),
+                  padding: const MaterialStatePropertyAll(EdgeInsets.only(
+                      top: 12, left: 60, right: 60, bottom: 12)),
+                  backgroundColor: MaterialStatePropertyAll(Colors.purple)),
               onPressed: () {
-               widget.shopstatus == false ? Get.snackbar("SHOP CLOSED", "PLEASE CHECK SHOP ORDER TIMINGS") :
-
-                   Get.to(CheckOutPage(total:total.toString(),subTotal:subTotal.toString(), wallet: wallet.toString(), discount:discount.toString(),
-                     delivery:delivery.toString(), savings: savings.toString(),
-                     shopname:widget.shopname,
-                     listofcart: cartList,
-                   ));
+                widget.shopstatus == false
+                    ? Get.snackbar(
+                        "SHOP CLOSED", "PLEASE CHECK SHOP ORDER TIMINGS")
+                    : Get.to(CheckOutPage(
+                        total: total.toString(),
+                        subTotal: subTotal.toString(),
+                        wallet: wallet.toString(),
+                        discount: discount.toString(),
+                        delivery: delivery.toString(),
+                        savings: savings.toString(),
+                        shopname: widget.shopname,
+                        listofcart: cartList,
+                      ));
               },
-              color: Colors.purple,
-              padding:
-              EdgeInsets.only(top: 12, left: 60, right: 60, bottom: 12),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(24))),
+              // color: Colors.purple,
+              // padding:
+              //     EdgeInsets.only(top: 12, left: 60, right: 60, bottom: 12),
+              // shape: RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.all(Radius.circular(24))),
               child: Text(
-               widget.shopname == "Medicines" ? "Send Enquiry" : "Checkout",
+                widget.shopname == "Medicines" ? "Send Enquiry" : "Checkout",
                 style: CustomTextStyle.textFormFieldSemiBold
                     .copyWith(color: Colors.white),
               ),
@@ -265,8 +288,8 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  discountCard(
-      BuildContext context, int subTotal, int wallet, int discount, int total,int savings) {
+  discountCard(BuildContext context, int subTotal, int wallet, int discount,
+      int total, int savings) {
     String discountId;
     int discountvalue;
     int discounttotal;
@@ -314,15 +337,14 @@ class _CartPageState extends State<CartPage> {
                   )),
               ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor:
-                      MaterialStateProperty.all<Color>(kgreen),
+                      backgroundColor: MaterialStateProperty.all<Color>(kgreen),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                           EdgeInsets.only(
                               top: 8, left: 30, right: 30, bottom: 8)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ))),
+                        borderRadius: BorderRadius.circular(18.0),
+                      ))),
                   onPressed: () {
                     // if (discountTextController.text.isEmpty) {
                     //   setState(() {
@@ -406,7 +428,7 @@ class _CartPageState extends State<CartPage> {
   }
 
   walletCard(BuildContext context, int subTotal, int wallet, int discount,
-      int total, availableWalletAmount,int savings) {
+      int total, availableWalletAmount, int savings) {
     String discountId;
     int walletAvailablevalue;
     int discounttotal;
@@ -425,7 +447,7 @@ class _CartPageState extends State<CartPage> {
       }
     });*/
     return Card(
-      margin: EdgeInsets.only(top: 10, left: 10, right: 10,bottom: 10),
+      margin: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),
       elevation: 1,
@@ -451,23 +473,23 @@ class _CartPageState extends State<CartPage> {
                       decoration: InputDecoration(
                           hintText: "ENTER WALLET AMOUNT",
                           hintStyle:
-                          TextStyle(color: Colors.deepOrange.shade100),
+                              TextStyle(color: Colors.deepOrange.shade100),
                           errorText: iswalletAvailable ? walleterroText : null),
                     )),
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor:
-                        MaterialStateProperty.all<Color>(kgreen),
+                            MaterialStateProperty.all<Color>(kgreen),
                         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                             EdgeInsets.only(
                                 top: 8, left: 30, right: 30, bottom: 8)),
                         shape:
-                        MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ))),
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ))),
                     onPressed: () {
-                    /*  if (walletTextController.text.isEmpty) {
+                      /*  if (walletTextController.text.isEmpty) {
                         setState(() {
                           iswalletAvailable = true;
                           walleterroText = "Please Enter Amount";
@@ -574,61 +596,55 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  cartListNew( List<CartModel> cartList, controller) {
-
-
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: cartList.length,
-          itemBuilder: (context, index) {
-
-
-
-            return Container(
-                margin: EdgeInsets.only(top: 10, bottom: 10),
-
-                child: createCartListItem(
-                  cartList[index].img,
-                  cartList[index].title,
-                  "requirement",
-                  cartList[index].price,
-                  cartList[index].quantity,
-                  cartList[index].itemnumber,
-                  true,
-                  cartList[index].cutprice,
-                  cartList[index].discount,
-                  cartList[index].ogprice,
-                  cartList[index].ogcutprice,
-                    index,
-                  cartList[index].recipe,
-                  widget.uid,
-                  cartList[index].vendorid,
-                  cartList[index].foodid,
-                  context,
-                )
-            );
-          }
-        );
+  cartListNew(List<CartModel> cartList, controller) {
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: cartList.length,
+        itemBuilder: (context, index) {
+          return Container(
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              child: createCartListItem(
+                cartList[index].img,
+                cartList[index].title!,
+                "requirement",
+                cartList[index].price!,
+                cartList[index].quantity!,
+                cartList[index].itemnumber,
+                true,
+                cartList[index].cutprice!,
+                cartList[index].discount,
+                cartList[index].ogprice,
+                cartList[index].ogcutprice,
+                index,
+                cartList[index].recipe!,
+                widget.uid,
+                cartList[index].vendorid,
+                cartList[index].foodid,
+                context,
+              ));
+        });
   }
 
   createCartListItem(
-      String img,
+      String? img,
       String title,
       String requirement,
       String price,
       String quantity,
-      String itemnumber,
+      String? itemnumber,
       bool discountVisibility,
       String cutprice,
-      String discount,
-      String ogprice,
-      String ogcutprice,
+      String? discount,
+      String? ogprice,
+      String? ogcutprice,
       int index,
       // AsyncSnapshot<QuerySnapshot> prodDocument,
-      String recipe,String uid,String vid, String fid,
+      String recipe,
+      String? uid,
+      String? vid,
+      String? fid,
       BuildContext context) {
-
-      _defaultvalue = int.parse(quantity);
+    _defaultvalue = int.parse(quantity);
 
     return Card(
       child: Stack(
@@ -647,7 +663,8 @@ class _CartPageState extends State<CartPage> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(14)),
                       color: Colors.white,
-                      image: DecorationImage(image: NetworkImage("${imageURL}products/$img"))),
+                      image: DecorationImage(
+                          image: NetworkImage("${imageURL}products/$img"))),
                 ),
                 Expanded(
                   child: Container(
@@ -656,7 +673,6 @@ class _CartPageState extends State<CartPage> {
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-
                         Container(
                           padding: EdgeInsets.only(right: 8, top: 4),
                           child: Text(
@@ -664,12 +680,10 @@ class _CartPageState extends State<CartPage> {
                             maxLines: 2,
                             softWrap: true,
                             style: CustomTextStyle.textFormFieldSemiBold
-                                .copyWith(fontSize: 14,color: Colors.blueGrey),
+                                .copyWith(fontSize: 14, color: Colors.blueGrey),
                           ),
                         ),
-
                         SizedBox(height: 6, width: 0),
-
                         Container(
                           padding: EdgeInsets.only(right: 8, top: 4),
                           child: Text(
@@ -677,51 +691,56 @@ class _CartPageState extends State<CartPage> {
                             maxLines: 2,
                             softWrap: true,
                             style: CustomTextStyle.textFormFieldSemiBold
-                                .copyWith(fontSize: 14,color: Colors.blueGrey),
+                                .copyWith(fontSize: 14, color: Colors.blueGrey),
                           ),
                         ),
-
                         SizedBox(height: 6, width: 0),
-
                         Text(
                           "Special Requirement: $requirement",
                           style: CustomTextStyle.textFormFieldRegular
                               .copyWith(color: Colors.grey, fontSize: 14),
                         ),
-
-                        SizedBox(height: 10,),
-
+                        SizedBox(
+                          height: 10,
+                        ),
                         Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-
                               Column(
                                 children: [
                                   Row(
                                     children: [
                                       Visibility(
-                                        visible:cutprice != "0"  ,
+                                        visible: cutprice != "0",
                                         child: Text(
                                           "${symbol} ${(int.parse(cutprice)).toString()}",
-                                          style:
-                                          TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.purple.shade400),
                                         ),
                                       ),
-
-                                      SizedBox(width: 10,),
-
+                                      SizedBox(
+                                        width: 10,
+                                      ),
                                       Text(
                                         "$symbol ${price}",
-                                        style:
-                                        cutprice != "0" ? TextStyle(fontSize: 14, color: Colors.blueGrey,decoration: TextDecoration.lineThrough,) : TextStyle(fontSize: 16, color: Colors.purple.shade400),
+                                        style: cutprice != "0"
+                                            ? TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.blueGrey,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                              )
+                                            : TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.purple.shade400),
                                       ),
-
                                     ],
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child:  CounterNumberButton(
+                                    child: CounterNumberButton(
                                       initialValue: _defaultvalue,
                                       minValue: 0,
                                       maxValue: 10,
@@ -731,65 +750,71 @@ class _CartPageState extends State<CartPage> {
                                           loading = true;
                                         });
                                         setState(() {
-                                          _defaultvalue = int.parse(value.toString());
+                                          _defaultvalue =
+                                              int.parse(value.toString());
                                         });
 
                                         print(value);
 
                                         if (_defaultvalue < 1) {
-
                                           await AllApi()
-                                              .removeCart(uid,  vid, fid);
+                                              .removeCart(uid, vid, fid);
                                           await AllApi()
                                               .removeShopCart(uid, vid);
                                           setState(() {
                                             loading = false;
                                           });
-                                          Fluttertoast.showToast(msg: "Removed From Cart");
+                                          Fluttertoast.showToast(
+                                              msg: "Removed From Cart");
                                         } else {
-                                            print("ogprice = $_defaultvalue $ogprice $ogcutprice");
-                                          var changedprice = _defaultvalue * int.parse(ogprice);
-                                          var changedcutprice =cutprice == ""
+                                          print(
+                                              "ogprice = $_defaultvalue $ogprice $ogcutprice");
+                                          var changedprice = _defaultvalue *
+                                              int.parse(ogprice!);
+                                          var changedcutprice = cutprice == ""
                                               ? ""
-                                              : _defaultvalue * int.parse(ogcutprice);
+                                              : _defaultvalue *
+                                                  int.parse(ogcutprice!);
 
-                                          var quantity = _defaultvalue.toString();
+                                          var quantity =
+                                              _defaultvalue.toString();
 
-                                          await AllApi().postCart(CartModel(
-                                            img: img,
-                                            price: changedprice.toString(),
-                                            title: title,
-                                            recipe: recipe,
-                                            quantity: quantity.toString(),
-                                            requirement: "",
-                                            itemnumber: "u",
-                                            cutprice: changedcutprice.toString(),
-                                            // ogprice:  price,
-                                            // ogcutprice: cutprice,
-                                            discount: discount,
-                                            shop: widget.shopname,
-                                            date: DateFormat('dd-MM-yyyy').format(DateTime.now()),
-                                            time: DateFormat('hh-MM-yyyy').format(DateTime.now()),
-                                            ref: uid,
-                                            vendorid: vid,
-                                            foodid: fid,
-                                          ),"Update"
-                                          );
+                                          await AllApi().postCart(
+                                              CartModel(
+                                                img: img,
+                                                price: changedprice.toString(),
+                                                title: title,
+                                                recipe: recipe,
+                                                quantity: quantity.toString(),
+                                                requirement: "",
+                                                itemnumber: "u",
+                                                cutprice:
+                                                    changedcutprice.toString(),
+                                                // ogprice:  price,
+                                                // ogcutprice: cutprice,
+                                                discount: discount,
+                                                shop: widget.shopname,
+                                                date: DateFormat('dd-MM-yyyy')
+                                                    .format(DateTime.now()),
+                                                time: DateFormat('hh-MM-yyyy')
+                                                    .format(DateTime.now()),
+                                                ref: uid,
+                                                vendorid: vid,
+                                                foodid: fid,
+                                              ),
+                                              "Update");
                                           setState(() {
                                             loading = false;
                                           });
                                         }
-
-
-
-
-
                                       },
                                       decimalPlaces: 0,
                                       color: kgreen,
                                       buttonSizeHeight: 30,
                                       buttonSizeWidth: 30,
-                                      textStyle: TextStyle(fontSize: 18, color: Colors.white), key: Key(""),
+                                      textStyle: TextStyle(
+                                          fontSize: 18, color: Colors.white),
+                                      key: Key(""),
                                     ),
                                   ),
                                 ],
@@ -810,16 +835,18 @@ class _CartPageState extends State<CartPage> {
             child: GestureDetector(
               onTap: () {
                 setState(() {
-                      loading = true;
+                  loading = true;
                 });
-                AllApi().removeCart(uid, vid,fid).then((value) {
+                AllApi().removeCart(uid, vid, fid).then((value) {
                   AllApi().getCountShopCart(uid, vid).then((value) {
                     print("ShopCount ${value}");
-                    if(double.parse(value.toString()) == 0){
+                    if (double.parse(value.toString()) == 0) {
                       AllApi().removeShopCart(uid, vid).then((value) {
-                       Get.off(CartShopPage(ref: uid,));
+                        Get.off(CartShopPage(
+                          ref: uid,
+                        ));
                       });
-                    }else{
+                    } else {
                       setState(() {
                         loading = false;
                       });
@@ -851,8 +878,15 @@ class _CartPageState extends State<CartPage> {
                 child: Container(
                   width: 60,
                   height: 25,
-                  child: Center(child: Text("$symbol ${double.parse(price) - double.parse(cutprice)} OFF",style: GoogleFonts.arvo(fontSize: 12,color: Colors.white),)),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6)), color: Colors.green,),
+                  child: Center(
+                      child: Text(
+                    "$symbol ${double.parse(price) - double.parse(cutprice)} OFF",
+                    style: GoogleFonts.arvo(fontSize: 12, color: Colors.white),
+                  )),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(6)),
+                    color: Colors.green,
+                  ),
                 )),
           )
         ],
@@ -936,15 +970,14 @@ class _CartPageState extends State<CartPage> {
                   )),
               ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor:
-                      MaterialStateProperty.all<Color>(kgreen),
+                      backgroundColor: MaterialStateProperty.all<Color>(kgreen),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                           EdgeInsets.only(
                               top: 8, left: 30, right: 30, bottom: 8)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ))),
+                        borderRadius: BorderRadius.circular(18.0),
+                      ))),
                   onPressed: () {
                     setState(() {
                       discountfinal = 0;
@@ -965,7 +998,7 @@ class _CartPageState extends State<CartPage> {
     return Visibility(
       visible: true,
       child: Card(
-        margin: EdgeInsets.only(top: 10, left: 10, right: 10,bottom: 10),
+        margin: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
         elevation: 1,
@@ -987,15 +1020,14 @@ class _CartPageState extends State<CartPage> {
                   )),
               ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor:
-                      MaterialStateProperty.all<Color>(kgreen),
+                      backgroundColor: MaterialStateProperty.all<Color>(kgreen),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                           EdgeInsets.only(
                               top: 8, left: 30, right: 30, bottom: 8)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ))),
+                        borderRadius: BorderRadius.circular(18.0),
+                      ))),
                   onPressed: () {
                     setState(() {
                       walletfinal = 0;

@@ -8,9 +8,9 @@ import 'package:homelyy/component/models.dart';
 import 'lifeproductpage.dart';
 
 class LifestylePage extends StatefulWidget {
-  final String id,vid,shopName,uid;
-  final List category;
-  const LifestylePage({Key key, this.id, this.vid, this.shopName, this.uid, this.category}) : super(key: key);
+  final String? id,vid,shopName,uid;
+  final List? category;
+  const LifestylePage({Key? key, this.id, this.vid, this.shopName, this.uid, this.category}) : super(key: key);
 
   @override
   _LifestylePageState createState() => _LifestylePageState();
@@ -24,7 +24,7 @@ class _LifestylePageState extends State<LifestylePage> {
       onTap: () {
 
       },
-      child: FutureBuilder<List<CatModel>>(
+      child: FutureBuilder<List<CatModel>?>(
         future: AllApi().getCategory(vendorId:widget.id),
         builder: (context, snapshot) {
 
@@ -36,7 +36,7 @@ class _LifestylePageState extends State<LifestylePage> {
             );
           }
 
-          var catList = snapshot.requireData;
+          var catList = snapshot.requireData!;
           print("catlist lenght = ${catList}");
 
           return GridView.builder(
@@ -60,7 +60,7 @@ class _LifestylePageState extends State<LifestylePage> {
                   )
                   );
 
-                },child: buildContainer(catList[index].name,catList[index].image));
+                },child: buildContainer(catList[index].name!,catList[index].image));
               },
 
           );
@@ -70,7 +70,7 @@ class _LifestylePageState extends State<LifestylePage> {
 
   }
 
-  Widget buildContainer(String catname,String catimage) {
+  Widget buildContainer(String catname,String? catimage) {
         return Container(
           decoration:
           BoxDecoration(border: Border.all(color: Colors.black)),

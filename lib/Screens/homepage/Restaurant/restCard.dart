@@ -11,15 +11,15 @@ import 'package:homelyy/Screens/Resturant/detailScreen.dart';
 import 'package:homelyy/component/constants.dart';
 
 class RestaurentListCard extends StatelessWidget {
-  final String type,title, area, discount, deliveryTime, tag, rating, img,shopid,opentiming,closetiming,uid;
-  final bool tagVisibility,badgeVisibility;
-  final bool discountVisibility,status;
-  final List<dynamic> cuisine;
-  final Function press;
-  final int numReview;
-  final List category;
+  final String? type,title, area, discount, deliveryTime, tag, rating, img,shopid,opentiming,closetiming,uid;
+  final bool? tagVisibility,badgeVisibility;
+  final bool? discountVisibility,status;
+  final List<dynamic>? cuisine;
+  final Function? press;
+  final int? numReview;
+  final List? category;
   const   RestaurentListCard({
-     Key key,
+     Key? key,
      this.title,
      this.press,
      this.cuisine,
@@ -62,7 +62,7 @@ class RestaurentListCard extends StatelessWidget {
                   rating: rating,
                   numReview: numReview,
                   shopUid: shopid, key: Key("shopDetailPage"), opentiming:opentiming, closetiming: closetiming,
-                    uid:uid.replaceAll("+", "").removeAllWhitespace,status:status
+                    uid:uid!.replaceAll("+", "").removeAllWhitespace,status:status
             )
             );
       // status ? Get.to(DetailsScreen(
@@ -78,7 +78,7 @@ class RestaurentListCard extends StatelessWidget {
             child: Stack(
               children: [
                 Visibility(
-                  visible: badgeVisibility ? false : tagVisibility,
+                  visible: badgeVisibility! ? false : tagVisibility!,
                   child: Positioned(
                       right: 0,
                       child: Container(
@@ -90,7 +90,7 @@ class RestaurentListCard extends StatelessWidget {
                       )),
                 ),
                 Visibility(
-                  visible: badgeVisibility,
+                  visible: badgeVisibility!,
                   child: Positioned(
                       right: 0,
                       child: Container(
@@ -145,7 +145,7 @@ class RestaurentListCard extends StatelessWidget {
                           ),
                         ),
                         Visibility(
-                          visible: discountVisibility,
+                          visible: discountVisibility!,
                           child: Positioned(
                             bottom: 3,
                             left: 10,
@@ -188,7 +188,7 @@ class RestaurentListCard extends StatelessWidget {
                           ),
                         ),
                         Visibility(
-                          visible: status,
+                          visible: status!,
                           child: Positioned(
                             width: 120,
                             height: 120,
@@ -207,7 +207,7 @@ class RestaurentListCard extends StatelessWidget {
                           ),
                         ),
                         Visibility(
-                          visible: status,
+                          visible: status!,
                           child: Positioned(
                             top: 40,
                             right: 30,
@@ -237,7 +237,7 @@ class RestaurentListCard extends StatelessWidget {
                           Container(
                             margin: EdgeInsets.only(right: 50),
                             child: Text(
-                              title,
+                              title!,
                               style: GoogleFonts.slabo27px(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -253,13 +253,13 @@ class RestaurentListCard extends StatelessWidget {
                           Container(
                             margin: EdgeInsets.only(right: 50),
                             child: Text(
-                              cuisine.join(","),
+                              cuisine!.join(","),
                               style: TextStyle(
                                   color: Colors.black.withOpacity(0.5)),
                             ),
                           ),
                           Text(
-                            area,
+                            area!,
                             // style: TextStyle(fontSize: 16, color: Colors.purple.shade400),
                           ),
                           SizedBox(height: 15),
@@ -280,7 +280,7 @@ class RestaurentListCard extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
                                 child: Text(
-                                  rating,
+                                  rating!,
                                   style: GoogleFonts.arvo(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold),

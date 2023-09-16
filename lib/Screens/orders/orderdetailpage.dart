@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,11 +10,10 @@ import 'package:homelyy/component/constants.dart';
 import 'package:homelyy/component/models.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
-
+import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 class OrderDetailScreen extends StatefulWidget {
-  final String id,
+  final String? id,
       status,
       subTotal,
       wallet,
@@ -26,10 +23,13 @@ class OrderDetailScreen extends StatefulWidget {
       savings,
       reason,
       shopname,
-      name,date,uid,symbol;
+      name,
+      date,
+      uid,
+      symbol;
 
   const OrderDetailScreen(
-      {Key key,
+      {Key? key,
       this.id,
       this.status,
       this.subTotal,
@@ -39,7 +39,11 @@ class OrderDetailScreen extends StatefulWidget {
       this.delivery,
       this.savings,
       this.reason,
-      this.shopname, this.name, this.date, this.uid,this.symbol})
+      this.shopname,
+      this.name,
+      this.date,
+      this.uid,
+      this.symbol})
       : super(key: key);
 
   @override
@@ -50,8 +54,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   // var uid = FirebaseAuth.instance.currentUser.uid;
   var _visible = true;
   var listener = PaginateRefreshedChangeListener();
-  double rated;
-  String reviewText;
+  double? rated;
+  String? reviewText;
   bool rateVisible = true;
   @override
   void initState() {
@@ -83,196 +87,220 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     print("orderdetail ${widget.id}");
 
-
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.chevron_left,
-            color: Colors.black,
-            size: 40,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(
+              Icons.chevron_left,
+              color: Colors.black,
+              size: 40,
+            ),
+            onPressed: () {
+              Get.back();
+            },
           ),
-          onPressed: () {
-            Get.back();
-          },
+          actions: <Widget>[
+            Center(
+              child: Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: _visible
+                      ? Text(
+                          'CANCEL',
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        )
+                      : Text("")),
+            ),
+          ],
         ),
-        actions: <Widget>[
-          Center(
-            child: Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: _visible
-                    ? Text(
-                        'CANCEL',
-                        style: TextStyle(color: Colors.black, fontSize: 12),
-                      )
-                    : Text("")),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Center(
-              child: widget.status == "Cancelled"
-                  ? Container(
-                height: 250,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      child: Icon(FontAwesomeIcons.cut),
-                    ),
-                    SizedBox(height: 15),
-                    Column(
-                      children: [
-                        Text(
-                          "ORDER CANCELLED",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        Text(
-                          "Reason: ${widget.reason}",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-                  : Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Visibility(
-                      visible: !rateVisible,
-                      child: Card(
-                        child: Container(
-                          color: Colors.green,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("Review Submitted",
-                              style: GoogleFonts.basic(color: Colors.white),),
-                          ),
-                        ),
-                      )
-                  ),
-                  Visibility(
-                    visible: rateVisible,
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Center(
+            child: widget.status == "Cancelled"
+                ? Container(
+                    height: 250,
                     child: Column(
-                      children: [
-                        Center(
-                          child:
-                          Text('How Much you Like the Food from ${'Salwa'} ?'),
+                      children: <Widget>[
+                        Container(
+                          child: Icon(FontAwesomeIcons.cut),
                         ),
-                        SmoothStarRating(
-                          onRated: (rating) {
-                            setState(() {
-                              rated = rating;
-                            });
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: "Enter Your Review",
-                              hintText: "Tell everyone Why u like this Restaurants",
-                              labelStyle: TextStyle(color: kgreen),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: kgreen),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: kgreen),
-                              ),
-                            ),
-                            onChanged: (changedReview) {
-                              setState(() {
-                                reviewText = changedReview;
-                              });
-                            },
-                            maxLines: 4,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        SizedBox(height: 15),
+                        Column(
                           children: [
-                            loading ? CircularProgressIndicator(color:kgreen,) : ElevatedButton(
-                              child: Text('Submit Rating'),
-                              onPressed: () {
-                                setState(() {
-                                  loading = true;
-                                });
-                                // rated != null
-                                //     ? rated.isGreaterThan(1)
-                                //     ? print("rated $rated")
-                                //     : print("rated nothing")
-                                //     : print("rated null");
-                                //
-                                // reviewText != null
-                                //     ? reviewText.isNotEmpty
-                                //     ? print("review ${reviewText}")
-                                //     : print("review empty")
-                                //     : print("review null");
-
-                                rated != null && reviewText != null
-                                    ? rated.isGreaterThan(1) &&
-                                    reviewText.isNotEmpty
-                                    ? AllApi().getAllRatings(widget.shopname, rated.round()).then((value) async {
-
-                                      await AllApi().addRating(widget.uid, widget.shopname, rated.toString(), reviewText.toString());
-
-                                      await AllApi().updateRating(widget.shopname, value.toPrecision(1));
-
-                                      Fluttertoast.showToast(
-                                          msg:
-                                          "Thank you for giving your Review",
-                                          toastLength: Toast.LENGTH_LONG);
-
-                                      setState(() {
-                                        loading = false;
-                                      });
-
-                                })
-                                    : Fluttertoast.showToast(
-                                    msg:
-                                    "Please Rate A Star More Than 0 and Add Some Review",
-                                    toastLength: Toast.LENGTH_LONG).then((value) => setState(() {
-                                  loading = false;
-                                }))
-                                    : Fluttertoast.showToast(
-                                    msg:
-                                    "Please Rate A Star More Than 0 and Add Some Review",
-                                    toastLength: Toast.LENGTH_LONG).then((value) => setState(() {
-                                  loading = false;
-                                }));
-                              },
-                              style: ButtonStyle(
-                                backgroundColor:
-                                MaterialStateProperty.all(Colors.green),
-                              ),
+                            Text(
+                              "ORDER CANCELLED",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              "Reason: ${widget.reason}",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
                       ],
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 50),
-                    child: Text(
-                      widget.id,
-                      style: TextStyle(
-                          color: Color.fromRGBO(0, 0, 0, 0.2), fontSize: 12),
-                    ),
-                  ),
-                  // Timer(),
-                 /* ProgressBar(
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Visibility(
+                          visible: !rateVisible,
+                          child: Card(
+                            child: Container(
+                              color: Colors.green,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Review Submitted",
+                                  style: GoogleFonts.basic(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          )),
+                      Visibility(
+                        visible: rateVisible,
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                  'How Much you Like the Food from ${'Salwa'} ?'),
+                            ),
+                            SmoothStarRating(
+                              onRatingChanged: (rating) {
+                                setState(() {
+                                  rated = rating;
+                                });
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  labelText: "Enter Your Review",
+                                  hintText:
+                                      "Tell everyone Why u like this Restaurants",
+                                  labelStyle: TextStyle(color: kgreen),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: kgreen),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: kgreen),
+                                  ),
+                                ),
+                                onChanged: (changedReview) {
+                                  setState(() {
+                                    reviewText = changedReview;
+                                  });
+                                },
+                                maxLines: 4,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                loading
+                                    ? CircularProgressIndicator(
+                                        color: kgreen,
+                                      )
+                                    : ElevatedButton(
+                                        child: Text('Submit Rating'),
+                                        onPressed: () {
+                                          setState(() {
+                                            loading = true;
+                                          });
+                                          // rated != null
+                                          //     ? rated.isGreaterThan(1)
+                                          //     ? print("rated $rated")
+                                          //     : print("rated nothing")
+                                          //     : print("rated null");
+                                          //
+                                          // reviewText != null
+                                          //     ? reviewText.isNotEmpty
+                                          //     ? print("review ${reviewText}")
+                                          //     : print("review empty")
+                                          //     : print("review null");
+
+                                          rated != null && reviewText != null
+                                              ? rated!.isGreaterThan(1) &&
+                                                      reviewText!.isNotEmpty
+                                                  ? AllApi()
+                                                      .getAllRatings(
+                                                          widget.shopname,
+                                                          rated!.round())
+                                                      .then((value) async {
+                                                      await AllApi().addRating(
+                                                          widget.uid,
+                                                          widget.shopname,
+                                                          rated.toString(),
+                                                          reviewText
+                                                              .toString());
+
+                                                      await AllApi()
+                                                          .updateRating(
+                                                              widget.shopname,
+                                                              value.toPrecision(
+                                                                  1));
+
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Thank you for giving your Review",
+                                                          toastLength: Toast
+                                                              .LENGTH_LONG);
+
+                                                      setState(() {
+                                                        loading = false;
+                                                      });
+                                                    })
+                                                  : Fluttertoast.showToast(
+                                                          msg:
+                                                              "Please Rate A Star More Than 0 and Add Some Review",
+                                                          toastLength:
+                                                              Toast.LENGTH_LONG)
+                                                      .then((value) =>
+                                                          setState(() {
+                                                            loading = false;
+                                                          }))
+                                              : Fluttertoast.showToast(
+                                                      msg:
+                                                          "Please Rate A Star More Than 0 and Add Some Review",
+                                                      toastLength:
+                                                          Toast.LENGTH_LONG)
+                                                  .then((value) => setState(() {
+                                                        loading = false;
+                                                      }));
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Colors.green),
+                                        ),
+                                      ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 50),
+                        child: Text(
+                          widget.id!,
+                          style: TextStyle(
+                              color: Color.fromRGBO(0, 0, 0, 0.2),
+                              fontSize: 12),
+                        ),
+                      ),
+                      // Timer(),
+                      /* ProgressBar(
                     status: widget.status,
                   ),
                   SizedBox(height: 50),
@@ -283,30 +311,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   Divider(
                     thickness: 1,
                   ),*/
-                  Text(
-                    "Order Details",
-                    style: GoogleFonts.basic(fontSize: 18),
+                      Text(
+                        "Order Details",
+                        style: GoogleFonts.basic(fontSize: 18),
+                      ),
+
+                      cartListNew(),
+
+                      footer(
+                          context,
+                          widget.subTotal,
+                          widget.wallet,
+                          widget.discount,
+                          widget.total,
+                          widget.delivery,
+                          widget.savings)
+                    ],
                   ),
-
-                  cartListNew(),
-
-                  footer(
-                      context,
-                      widget.subTotal,
-                      widget.wallet,
-                      widget.discount,
-                      widget.total,
-                      widget.delivery,
-                      widget.savings)
-                ],
-              ),
-            ),
-          )
-    );
+          ),
+        ));
   }
 
-  footer(BuildContext context, String subTotal, String wallet, String discount,
-      String total, String delivery, String savings) {
+  footer(BuildContext context, String? subTotal, String? wallet,
+      String? discount, String? total, String? delivery, String? savings) {
     return Card(
       margin: EdgeInsets.only(top: 15, left: 10, right: 10),
       elevation: 1,
@@ -321,10 +348,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             billRow("Total Savings", savings.toString()),
             // SizedBox(height: 8, width: 10),
             // billRow("Delivery Charges", delivery.toString()),
-           // SizedBox(height: 8, width: 0),
-           //  billRow("Discount", discount.toString()),
-           // SizedBox(height: 8, width: 0),
-           //  billRow("Wallet", wallet.toString()),
+            // SizedBox(height: 8, width: 0),
+            //  billRow("Discount", discount.toString()),
+            // SizedBox(height: 8, width: 0),
+            //  billRow("Wallet", wallet.toString()),
             SizedBox(height: 8, width: 0),
             billRow("Total", total.toString()),
             SizedBox(height: 8, width: 0),
@@ -373,49 +400,45 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   cartListNew() {
-    return  FutureBuilder(
-      future: AllApi().getOrders(widget.uid,widget.shopname,widget.id),
-      builder: (context, snapshot) {
-
-
-
-        if(!snapshot.hasData){
-          return Center(child:CircularProgressIndicator(color: kgreen,));
-        }
-
-
-        List<CartModel> orderList = snapshot.requireData;
-
-
-        print("OrderList in $orderList ${widget.uid} ${widget.shopname}");
-
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: orderList.length,
-          itemBuilder: (context, index) {
-            return Container(
-                margin: EdgeInsets.only(top: 10, bottom: 10),
-                child: createCartListItem(
-                  orderList[index].img,
-                  orderList[index].title,
-                  orderList[index].requirement,
-                  orderList[index].price ,
-                  orderList[index].quantity ,
-                  orderList[index].itemnumber,
-                  true,
-                  orderList[index].cutprice ,
-                  orderList[index].discount ,
-                  "50",
-                  orderList[index].img,
-                  0,
-                  // snapshot,
-                  context,
-                ));
+    return FutureBuilder(
+        future: AllApi().getOrders(widget.uid, widget.shopname, widget.id),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+                child: CircularProgressIndicator(
+              color: kgreen,
+            ));
           }
-        );
-      }
-    );
+
+          List<CartModel> orderList = snapshot.requireData as List<CartModel>;
+
+          print("OrderList in $orderList ${widget.uid} ${widget.shopname}");
+
+          return ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: orderList.length,
+              itemBuilder: (context, index) {
+                return Container(
+                    margin: EdgeInsets.only(top: 10, bottom: 10),
+                    child: createCartListItem(
+                      orderList[index].img!,
+                      orderList[index].title!,
+                      orderList[index].requirement,
+                      orderList[index].price,
+                      orderList[index].quantity,
+                      orderList[index].itemnumber,
+                      true,
+                      orderList[index].cutprice,
+                      orderList[index].discount,
+                      "50",
+                      orderList[index].img,
+                      0,
+                      // snapshot,
+                      context,
+                    ));
+              });
+        });
 
     /*  StreamBuilder<QuerySnapshot>(
         stream: streamCart,
@@ -486,15 +509,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   createCartListItem(
       String img,
       String title,
-      String requirement,
-      String price,
-      String quantity,
-      String itemnumber,
+      String? requirement,
+      String? price,
+      String? quantity,
+      String? itemnumber,
       bool discountVisibility,
-      String cutprice,
-      String discount,
+      String? cutprice,
+      String? discount,
       String ogprice,
-      String ogcutprice,
+      String? ogcutprice,
       int index,
       // AsyncSnapshot<QuerySnapshot> prodDocument,
       BuildContext context) {
@@ -554,7 +577,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                       Text(
                                         cutprice == ""
                                             ? ""
-                                            : "${widget.symbol} ${(int.parse(cutprice)).toString()}",
+                                            : "${widget.symbol} ${(int.parse(cutprice!)).toString()}",
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.purple.shade400),

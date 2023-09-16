@@ -16,14 +16,14 @@ import 'package:intl/intl.dart';
 
 
 class ItemCard extends StatefulWidget {
-  final String title, shopName, price, uid,img,cutprice,recipe,discount,type,vid,foodid,symbol;
-  final Function press;
-  final bool tagVisibility;
-  final bool stock;
-  final bool discountVisibility;
-  final int totalorders ;
+  final String? title, shopName, price, uid,img,cutprice,recipe,discount,type,vid,foodid,symbol;
+  final Function? press;
+  final bool? tagVisibility;
+  final bool? stock;
+  final bool? discountVisibility;
+  final int? totalorders ;
   const ItemCard({
-     Key key,
+     Key? key,
      this.title,
      this.shopName,
      this.press,
@@ -73,14 +73,14 @@ class _ItemCardState extends State<ItemCard> {
                     shape: BoxShape.circle,
                   ),
                   child: Image.network(
-                    widget.img,
+                    widget.img!,
                     height: 97,
                     width: 97,
                     fit: BoxFit.fill,
                     // size.width * 0.18 means it use 18% of total width
                   ),
                 ),
-                Text(widget.title),
+                Text(widget.title!),
                 SizedBox(height: 3),
                 SizedBox(height: 10),
                 Row(
@@ -115,7 +115,7 @@ class _ItemCardState extends State<ItemCard> {
         ),
       ),
       Visibility(
-        visible: _defaultvalue < 1 && widget.stock ? true : false,
+        visible: _defaultvalue < 1 && widget.stock! ? true : false,
         child: Positioned(
             bottom: 0,
             right: 0,
@@ -128,7 +128,7 @@ class _ItemCardState extends State<ItemCard> {
 
                   });
                   await AllApi().postCart(CartModel(
-                    img: widget.img.replaceAll("https://thehomelyy.com/images/products/", ""),
+                    img: widget.img!.replaceAll("https://thehomelyy.com/images/products/", ""),
                     price: widget.price,
                     title: widget.title,
                     recipe: widget.recipe,
@@ -194,9 +194,9 @@ class _ItemCardState extends State<ItemCard> {
                                       }),
                                   Positioned(
                                     right: 0,
-                                    child: Badge(
-                                      badgeContent: Text(
-                                        cartCount,
+                                    child: BadgePositioned(
+                                      child: Text(
+                                        cartCount.toString(),
                                         style: GoogleFonts.arvo(color: Colors.white),
                                       ),
                                       // child: Icon(
@@ -257,15 +257,15 @@ class _ItemCardState extends State<ItemCard> {
               } else {
                 Map<String, String> updateQuantity = new Map();
                 updateQuantity['quantity'] = value.toString();
-                var changedprice = value * int.parse(widget.price);
+                var changedprice = value * int.parse(widget.price!);
                 var changedcutprice = widget.cutprice == ""
                     ? ""
-                    : value * int.parse(widget.cutprice);
+                    : value * int.parse(widget.cutprice!);
 
                 var quantity = value.toString();
 
                 await AllApi().postCart(CartModel(
-                  img: widget.img.replaceAll("https://thehomelyy.com/images/products/", ""),
+                  img: widget.img!.replaceAll("https://thehomelyy.com/images/products/", ""),
                   price: changedprice.toString(),
                   title: widget.title,
                   recipe: widget.recipe,
@@ -298,7 +298,7 @@ class _ItemCardState extends State<ItemCard> {
         ),
       ),
       Visibility(
-        visible: widget.discountVisibility,
+        visible: widget.discountVisibility!,
         child: Positioned(
             top: 10,
             left: 20,
@@ -314,7 +314,7 @@ class _ItemCardState extends State<ItemCard> {
             )),
       ),
       Visibility(
-        visible: widget.stock ? false : true,
+        visible: widget.stock! ? false : true,
         child: Positioned(
             bottom: 10,
             right: 0,

@@ -1,6 +1,6 @@
 class restaurant {
-  String title;
-  Properties properties;
+  String? title;
+  Properties? properties;
 
   restaurant({this.title, this.properties});
 
@@ -15,20 +15,20 @@ class restaurant {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = this.title;
     if (this.properties != null) {
-      data['properties'] = this.properties.toJson();
+      data['properties'] = this.properties!.toJson();
     }
     return data;
   }
 }
 
 class Properties {
-  Id iId;
-  Address address;
-  Id borough;
-  Id cuisine;
-  Coord grades;
-  Id name;
-  Id restaurantId;
+  Id? iId;
+  Address? address;
+  Id? borough;
+  Id? cuisine;
+  Coord? grades;
+  Id? name;
+  Id? restaurantId;
 
   Properties(
       {this.iId,
@@ -55,32 +55,32 @@ class Properties {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.iId != null) {
-      data['_id'] = this.iId.toJson();
+      data['_id'] = this.iId!.toJson();
     }
     if (this.address != null) {
-      data['address'] = this.address.toJson();
+      data['address'] = this.address!.toJson();
     }
     if (this.borough != null) {
-      data['borough'] = this.borough.toJson();
+      data['borough'] = this.borough!.toJson();
     }
     if (this.cuisine != null) {
-      data['cuisine'] = this.cuisine.toJson();
+      data['cuisine'] = this.cuisine!.toJson();
     }
     if (this.grades != null) {
-      data['grades'] = this.grades.toJson();
+      data['grades'] = this.grades!.toJson();
     }
     if (this.name != null) {
-      data['name'] = this.name.toJson();
+      data['name'] = this.name!.toJson();
     }
     if (this.restaurantId != null) {
-      data['restaurant_id'] = this.restaurantId.toJson();
+      data['restaurant_id'] = this.restaurantId!.toJson();
     }
     return data;
   }
 }
 
 class Id {
-  String bsonType;
+  String? bsonType;
 
   Id({this.bsonType});
 
@@ -96,8 +96,8 @@ class Id {
 }
 
 class Address {
-  String bsonType;
-  Properties properties;
+  String? bsonType;
+  Properties? properties;
 
   Address({this.bsonType, this.properties});
 
@@ -112,17 +112,17 @@ class Address {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['bsonType'] = this.bsonType;
     if (this.properties != null) {
-      data['properties'] = this.properties.toJson();
+      data['properties'] = this.properties!.toJson();
     }
     return data;
   }
 }
 
 class BuildingProperties {
-  Id building;
-  Coord coord;
-  Id street;
-  Id zipcode;
+  Id? building;
+  Coord? coord;
+  Id? street;
+  Id? zipcode;
 
   BuildingProperties({this.building, this.coord, this.street, this.zipcode});
 
@@ -137,24 +137,24 @@ class BuildingProperties {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.building != null) {
-      data['building'] = this.building.toJson();
+      data['building'] = this.building!.toJson();
     }
     if (this.coord != null) {
-      data['coord'] = this.coord.toJson();
+      data['coord'] = this.coord!.toJson();
     }
     if (this.street != null) {
-      data['street'] = this.street.toJson();
+      data['street'] = this.street!.toJson();
     }
     if (this.zipcode != null) {
-      data['zipcode'] = this.zipcode.toJson();
+      data['zipcode'] = this.zipcode!.toJson();
     }
     return data;
   }
 }
 
 class Coord {
-  String bsonType;
-  Address items;
+  String? bsonType;
+  Address? items;
 
   Coord({this.bsonType, this.items});
 
@@ -167,16 +167,16 @@ class Coord {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['bsonType'] = this.bsonType;
     if (this.items != null) {
-      data['items'] = this.items.toJson();
+      data['items'] = this.items!.toJson();
     }
     return data;
   }
 }
 
 class GradeModel {
-  Id date;
-  Id grade;
-  Id score;
+  Id? date;
+  Id? grade;
+  Id? score;
 
   GradeModel({this.date, this.grade, this.score});
 
@@ -189,13 +189,13 @@ class GradeModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.date != null) {
-      data['date'] = this.date.toJson();
+      data['date'] = this.date!.toJson();
     }
     if (this.grade != null) {
-      data['grade'] = this.grade.toJson();
+      data['grade'] = this.grade!.toJson();
     }
     if (this.score != null) {
-      data['score'] = this.score.toJson();
+      data['score'] = this.score!.toJson();
     }
     return data;
   }

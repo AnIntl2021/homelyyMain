@@ -1,4 +1,4 @@
-// @dart=2.9
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +7,8 @@ import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
 class SearchRestoList extends StatefulWidget {
-  final String category;
-  const SearchRestoList({Key key, this.category}) : super(key: key);
+  final String? category;
+  const SearchRestoList({Key? key, this.category}) : super(key: key);
 
   @override
   _SearchRestoListState createState() => _SearchRestoListState();
@@ -33,7 +33,7 @@ class _SearchRestoListState extends State<SearchRestoList> {
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
 
-          itemBuilderType: PaginateBuilderType.listView, itemBuilder: (int , context , document ) {
+          itemBuilderType:  PaginateBuilderType.listView, itemBuilder:  (int , context , document ) {
         var shoptitle = document.get("name");
         var cuisine = document.get("cuisine");
         var area = document.get("area");

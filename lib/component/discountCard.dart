@@ -1,4 +1,4 @@
-import 'package:carousel_pro/carousel_pro.dart';
+// import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +9,10 @@ import 'package:homelyy/component/models.dart';
 
 
 class DiscountCard extends StatefulWidget {
-  final String title;
-  final List<BannerModel> snapshot;
+  final String? title;
+  final List<BannerModel>? snapshot;
   const DiscountCard({
-     Key key,  this.title, this.snapshot,
+     Key? key,  this.title, this.snapshot,
   }) : super(key: key);
 
   @override
@@ -49,14 +49,14 @@ class _DiscountCardState extends State<DiscountCard> {
               height: 166,
               child: CarouselSlider.builder(
                 slideBuilder: (index){
-                  var sliderimage = widget.snapshot[index].image;
+                  var sliderimage = widget.snapshot![index].image;
 
 
 
                   return Container(
                     child: Image.network("${imageURL}banner/$sliderimage", loadingBuilder: (BuildContext context,
                         Widget child,
-                        ImageChunkEvent loadingProgress) {
+                        ImageChunkEvent? loadingProgress) {
                       if (loadingProgress == null) {
                         return child;
                       }
@@ -67,14 +67,14 @@ class _DiscountCardState extends State<DiscountCard> {
                               .expectedTotalBytes != null
                               ? loadingProgress
                               .cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes
+                              loadingProgress.expectedTotalBytes!
                               : null,
                         ),
                       );
                     },),
                   );
                 },
-                itemCount: widget.snapshot.length,
+                itemCount: widget.snapshot!.length,
                 enableAutoSlider: true,
                 unlimitedMode: true,
               )

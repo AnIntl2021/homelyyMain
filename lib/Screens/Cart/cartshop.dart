@@ -1,4 +1,4 @@
-// @dart=2.9
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -12,8 +12,8 @@ import 'cartPage.dart';
 import 'emptCart.dart';
 
 class CartShopPage extends StatefulWidget {
-  final String ref;
-  const CartShopPage({Key key, this.ref}) : super(key: key);
+  final String? ref;
+  const CartShopPage({Key? key, this.ref}) : super(key: key);
 
   @override
   _CartShopPageState createState() => _CartShopPageState();
@@ -33,7 +33,7 @@ class _CartShopPageState extends State<CartShopPage> {
     return WillPopScope(
       onWillPop: () {
         Get.back();
-      },
+      } as Future<bool> Function()?,
       child: Scaffold(
         appBar: AppBar(title: Text("Shop Cart"),backgroundColor: kgreen,),
         body: FutureBuilder(
@@ -43,7 +43,7 @@ class _CartShopPageState extends State<CartShopPage> {
               return Center(child:CircularProgressIndicator(color: kgreen,));
             }
 
-            List shopList = snapshot.requireData;
+            List shopList = snapshot.requireData as List;
             print("shopList in $shopList");
 
             return shopList.length == 0 ? EmptyShoppingCartScreen(text: "Empty Cart",)  :Padding(

@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 typedef void CounterChangeCallback(num value);
 
 class CounterNumberButton extends StatelessWidget {
-  final CounterChangeCallback onChanged;
+  final CounterChangeCallback? onChanged;
 
   CounterNumberButton({
-     Key key,
-     num initialValue,
-     this.minValue,
-     this.maxValue,
+     Key? key,
+     required num initialValue,
+     required this.minValue,
+     required this.maxValue,
      this.onChanged,
      this.decimalPlaces,
      this.color,
@@ -34,7 +34,7 @@ class CounterNumberButton extends StatelessWidget {
   final num maxValue;
 
   /// decimal places  by the counter
-  final int decimalPlaces;
+  final int? decimalPlaces;
 
   ///Currently selected integer value
   num selectedValue;
@@ -43,29 +43,29 @@ class CounterNumberButton extends StatelessWidget {
   final num step;
 
   /// indicates the color of fab used for increment and decrement
-  Color color;
+  Color? color;
 
   /// text syle
-  TextStyle textStyle;
+  TextStyle? textStyle;
 
   final double buttonSizeWidth, buttonSizeHeight;
 
   void _incrementCounter() {
     if (selectedValue + step <= maxValue) {
-      onChanged((selectedValue + step));
+      onChanged!((selectedValue + step));
     }
   }
 
   void _decrementCounter() {
     if (selectedValue - step >= minValue) {
-      onChanged((selectedValue - step));
+      onChanged!((selectedValue - step));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    color = color ?? themeData.accentColor;
+    color = color ?? themeData.canvasColor;
     textStyle = textStyle ?? new TextStyle(fontSize: 20.0, color: Colors.white);
 
     return new Container(
@@ -105,7 +105,7 @@ class CounterNumberButton extends StatelessWidget {
             color: Colors.pink,
             child: Center(
               child: new Text(
-                  '${num.parse((selectedValue).toStringAsFixed(decimalPlaces))}',
+                  '${num.parse((selectedValue).toStringAsFixed(decimalPlaces!))}',
                   style: textStyle),
             ),
           ),

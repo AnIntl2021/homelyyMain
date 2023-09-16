@@ -29,7 +29,7 @@ class AllApi {
   Future<UserModel> getLocalUsers() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
 
-    var a = pref.getString("userData");
+    var a = pref.getString("userData")!;
       print("Get Lcocal User ${a}");
 
     var jsonid = await jsonDecode(a);
@@ -42,7 +42,7 @@ class AllApi {
 
     List<UserModel> newList = [];
 
-    UserModel userid = await UserModel().fromJson(json);
+    UserModel userid = await UserModel().fromJson(json as Map<String, dynamic>);
 
 
     //
@@ -106,7 +106,7 @@ class AllApi {
 
   }
 
-  Future getRestaurantbyCat(String catid,String lat,String lon) async {
+  Future getRestaurantbyCat(String? catid,String lat,String lon) async {
 
     var userGetURL = Uri.parse("${conurl}restobycat?lat=$lat&lng=$lon&catid=$catid");
 
@@ -128,7 +128,7 @@ class AllApi {
 
   }
 
-  Future getLifestylebyCat(String catid,String lat,String lon) async {
+  Future getLifestylebyCat(String? catid,String lat,String lon) async {
 
     var userGetURL = Uri.parse("${conurl}lifestylebycat?lat=$lat&lng=$lon&catid=$catid");
 
@@ -188,7 +188,7 @@ class AllApi {
     return response.body;
   }
 
-  Future getUser(String ref) async {
+  Future getUser(String? ref) async {
     print("prionting ref = $ref");
 
     var userGetURL = Uri.parse("https://data.mongodb-api.com/app/application-0-aveoz/endpoint/Homelyy/userget?ref=$ref");
@@ -226,7 +226,7 @@ class AllApi {
     return jsonDecode(response.body);
   }
 
-  Future getReviews(String vid ) async {
+  Future getReviews(String? vid ) async {
     var userGetURL = Uri.parse("${conurl}ratingall?vendorid=$vid");
 
     print('reviewurl $userGetURL');
@@ -245,7 +245,7 @@ class AllApi {
     return jsonDecode(response.body);
   }
 
-  Future getUserName(String uid ) async {
+  Future getUserName(String? uid ) async {
     var userGetURL = Uri.parse("${conurl}usersRateName?ref=$uid");
     var response = await http.get(userGetURL);
 
@@ -260,7 +260,7 @@ class AllApi {
     return jsonDecode(response.body);
   }
 
-  Future<List<CatModel>> getCategory({ String vendorId,}) async {
+  Future<List<CatModel>?> getCategory({ String? vendorId,}) async {
 
     var getCategoryUrl = Uri.parse(
         "https://webhooks.mongodb-realm.com/api/client/v2.0/app/application-0-aveoz/service/Homelyy/incoming_webhook/getCategoryVendor?vendorId=$vendorId");
@@ -281,7 +281,7 @@ class AllApi {
 
 
 
-  Future getcatfood(String vendorid , String catid) async {
+  Future getcatfood(String? vendorid , String? catid) async {
     var userGetURL = Uri.parse("${conurl}getcatfood?vendorid=$vendorid&catid=$catid");
     print(userGetURL);
     var response = await http.get(userGetURL);
@@ -298,7 +298,7 @@ class AllApi {
 
   }
 
-  Future getrecproduct(String vendorid ) async {
+  Future getrecproduct(String? vendorid ) async {
     var userGetURL = Uri.parse("${conurl}getRecProdcut?vendorid=$vendorid");
     var response = await http.get(userGetURL);
 
@@ -316,7 +316,7 @@ class AllApi {
 
 
 
-  Future<List<ProductModel>> getrestrecfood(String vendorid ) async {
+  Future<List<ProductModel>> getrestrecfood(String? vendorid ) async {
 
     var userGetURL = Uri.parse("https://data.mongodb-api.com/app/application-0-aveoz/endpoint/Homelyy/getrecFoods?vendorid=$vendorid");
     var response = await http.get(userGetURL);
@@ -492,7 +492,7 @@ class AllApi {
     return response.body;
   }
 
-  Future removeCart(String ref,String vendorid,String foodid) async {
+  Future removeCart(String? ref,String? vendorid,String? foodid) async {
 
     var userGetURL = Uri.parse("${conurl}removecart?ref=$ref&vendorid=$vendorid&foodid=$foodid");
 
@@ -515,7 +515,7 @@ class AllApi {
     return response.body;
   }
 
-  Future getCart(String ref,String vendorid) async {
+  Future getCart(String? ref,String? vendorid) async {
 
     var userGetURL = Uri.parse("${conurl}getCart?ref=$ref&vendorid=$vendorid");
       print("uri $userGetURL");
@@ -539,7 +539,7 @@ class AllApi {
     return response.body;
   }
 
-  Future removeShopCart(String ref,String vendorid) async {
+  Future removeShopCart(String? ref,String? vendorid) async {
 
     var userGetURL = Uri.parse("${conurl}removeShopCart?ref=$ref&vendorid=$vendorid");
 
@@ -562,7 +562,7 @@ class AllApi {
     return response.body;
   }
 
-  Future getShopCart(String ref) async {
+  Future getShopCart(String? ref) async {
 
     var userGetURL = Uri.parse("${conurl}getShopCart?ref=$ref");
 
@@ -582,7 +582,7 @@ class AllApi {
   }
 
 
-  Future  getCartCount(String ref) async {
+  Future  getCartCount(String? ref) async {
 
     var userGetURL = Uri.parse("${conurl}getCartCount?ref=$ref");
 
@@ -606,7 +606,7 @@ class AllApi {
   }
 
 
-  Future  getCountShopCart(String ref,String vid) async {
+  Future  getCountShopCart(String? ref,String? vid) async {
 
     var userGetURL = Uri.parse("${conurl}getCountShopCart?ref=$ref&vendorid=$vid");
 
@@ -665,7 +665,7 @@ class AllApi {
   }
 
 
-  Future getCartTotal(String ref) async {
+  Future getCartTotal(String? ref) async {
 
     var userGetURL = Uri.parse("${conurl}getCartTotal?ref=$ref");
     print("uri $userGetURL");
@@ -717,7 +717,7 @@ class AllApi {
   }
 
 
-  Future addOrderTotal(UserModel users,CartTotalModel cartTotal,String shopName,String uaddress,String rNum) async {
+  Future addOrderTotal(UserModel users,CartTotalModel cartTotal,String? shopName,String? uaddress,String rNum) async {
     var date =DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
 
     var userGetURL = Uri.parse("${conurl}addOrderTotal");
@@ -748,7 +748,7 @@ class AllApi {
     return response.body;
   }
 
-  Future removeAllCart(String ref,String vendorid) async {
+  Future removeAllCart(String? ref,String? vendorid) async {
 
     var userGetURL = Uri.parse("${conurl}removeAllCart?ref=$ref&vid=$vendorid");
 
@@ -758,7 +758,7 @@ class AllApi {
     return response.body;
   }
 
-  Future getOrderTotal(String ref) async {
+  Future getOrderTotal(String? ref) async {
 
     var userGetURL = Uri.parse("${conurl}getOrderTotal?ref=$ref");
     print("uri $userGetURL");
@@ -773,7 +773,7 @@ class AllApi {
   }
 
 
-  Future getOrders(String ref,String vendorid,String order_id) async {
+  Future getOrders(String? ref,String? vendorid,String? order_id) async {
 
     var userGetURL = Uri.parse("${conurl}getOrderDetail?ref=$ref&vendorid=$vendorid&order_id=$order_id");
     print("uri $userGetURL");
@@ -797,7 +797,7 @@ class AllApi {
     return response.body;
   }
 
-  Future getlifeProdAll(String vendorid , String catid) async {
+  Future getlifeProdAll(String? vendorid , String? catid) async {
     var userGetURL = Uri.parse("${conurl}getLifeProducts?vendorid=$vendorid&category=$catid");
     // print("vendorUrl = $userGetURL");
     var response = await http.get(userGetURL);
@@ -814,7 +814,7 @@ class AllApi {
 
   }
 
-  Future getlifeprod(String varient,String vid) async {
+  Future getlifeprod(String? varient,String? vid) async {
     var userGetURL = Uri.parse("${conurl}getlifeprod?varient=$varient&vid=$vid");
     var response = await http.get(userGetURL);
 
@@ -830,7 +830,7 @@ class AllApi {
 
   }
 
-  Future getVendorbyid(String vid) async {
+  Future getVendorbyid(String? vid) async {
 
     var userGetURL = Uri.parse("${conurl}vendorgetid?vendorid=$vid");
     var response = await http.get(userGetURL);
@@ -876,7 +876,7 @@ class AllApi {
 
   }
 
-  Future updateWallet(String ref,String wallet) async {
+  Future updateWallet(String? ref,String wallet) async {
 
     var userGetURL = Uri.parse("${conurl}updateUserWallet?ref=$ref");
 
@@ -894,7 +894,7 @@ class AllApi {
     return response.body;
   }
 
-  Future updateToken(String ref,String token) async {
+  Future updateToken(String? ref,String? token) async {
 
     var userGetURL = Uri.parse("${conurl}updateUserWallet?ref=$ref");
 
@@ -912,7 +912,7 @@ class AllApi {
     return response.body;
   }
 
-  Future<double> getAllRatings(String vid,int userRating) async {
+  Future<double> getAllRatings(String? vid,int userRating) async {
 
 
     var userGetURL = Uri.parse("${conurl}ratingall?vendorid=$vid");
@@ -925,7 +925,7 @@ class AllApi {
 
     var ct = 0.0;
 
-    Future.forEach(allRating,(element){
+    Future.forEach(allRating,(dynamic element){
 
         ct += double.parse(element["rating"]);
 
@@ -945,7 +945,7 @@ class AllApi {
 
   }
 
-  Future addRating(String ref,String vendorid,String rating , String comment) async {
+  Future addRating(String? ref,String? vendorid,String rating , String comment) async {
 
     var date =DateFormat('yyyy/MM/dd').format(DateTime.now());
     var time =DateFormat('hh:mm aa ').format(DateTime.now());
@@ -973,7 +973,7 @@ class AllApi {
     return response.body;
   }
 
-  Future updateRating(String vid,double userRating) async {
+  Future updateRating(String? vid,double userRating) async {
 
 
     var userGetURL = Uri.parse("${conurl}rateVendor?vendorid=$vid&rating=$userRating");

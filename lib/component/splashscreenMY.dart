@@ -8,10 +8,10 @@ import 'package:splash_screen_view/TyperAnimatedText.dart';
 // ignore: must_be_immutable
 class SplashScreenMy extends StatefulWidget {
   /// The [Widget] Name of target screen which you want to display after completion of splash screen milliseconds.
-  Widget _widget;
+  Widget? _widget;
 
   ///  [String] Asset path of your logo image.
-  String _imageSrc = "";
+  String? _imageSrc = "";
 
   /// Check if network image
   bool isNetworkImage = false;
@@ -19,58 +19,58 @@ class SplashScreenMy extends StatefulWidget {
   /// defines standard behaviors when transitioning between routes (or screens)
   ///
   /// By default is  is Normal
-  PageRouteTransition _pageRouteTransition;
+  PageRouteTransition? _pageRouteTransition;
 
   ///  [String] that would be displayed on below logo.
-  String _text;
+  String? _text;
 
   /// Select [TextType1] of your text.
   ///
   /// By default it is NormalText.
-  TextType1 _textType;
+  TextType1? _textType;
 
   /// Gives [TextStyle] to the text strings.
-  TextStyle _textStyle;
+  TextStyle? _textStyle;
 
   /// The [Duration] of the delay between the apparition of each characters
   ///
   /// By default it is set to 3000 milliseconds.
-  int _duration = 3000;
+  int? _duration = 3000;
 
   /// The [Speed] of the delay between the apparition of each characters
   ///
   /// By default it is set to 100 milliseconds.
-  int _speed = 100;
+  int? _speed = 100;
 
   ///  [int] Size of your image logo.
   ///
   /// By default it is set to 150.
-  int _logoSize = 150;
+  int? _logoSize = 150;
 
   ///  [Color] Background Color of your splash screen.
   /// By default it is set to white.
-  Color _backgroundColor = Colors.white;
+  Color? _backgroundColor = Colors.white;
 
   /// Set the colors for the gradient animation of the text.
   ///
   /// The [List] should contain at least two values of [Color] in it.
   /// By default it is set to red and black.
-  List<Color> _colors;
+  List<Color>? _colors;
 
   double _defaultTextFontSize = 20;
 
   SplashScreenMy(
-      { Widget navigateRoute,
-        String imageSrc,
-        int duration,
-        int imageSize,
-        TextStyle textStyle,
-        int speed,
-        PageRouteTransition pageRouteTransition,
-        List<Color> colors,
-        TextType1 textType,
-        Color backgroundColor,
-        String text}) {
+      { Widget? navigateRoute,
+        String? imageSrc,
+        int? duration,
+        int? imageSize,
+        TextStyle? textStyle,
+        int? speed,
+        PageRouteTransition? pageRouteTransition,
+        List<Color>? colors,
+        TextType1? textType,
+        Color? backgroundColor,
+        String? text}) {
     _imageSrc = imageSrc;
     _widget = navigateRoute;
     _speed = speed;
@@ -91,21 +91,21 @@ class SplashScreenMy extends StatefulWidget {
 
 class _SplashScreenMyState extends State<SplashScreenMy>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _animation;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     if (widget._duration == null) {
       widget._duration = 3000;
-    } else if (widget._duration < 1000) {
+    } else if (widget._duration! < 1000) {
       widget._duration = 3000;
     }
 
-    if (widget._imageSrc != null && widget._imageSrc.isNotEmpty) {
-      if (widget._imageSrc.startsWith("http://") ||
-          widget._imageSrc.startsWith("https://")) {
+    if (widget._imageSrc != null && widget._imageSrc!.isNotEmpty) {
+      if (widget._imageSrc!.startsWith("http://") ||
+          widget._imageSrc!.startsWith("https://")) {
         widget.isNetworkImage = true;
       } else {
         widget.isNetworkImage = false;
@@ -130,11 +130,11 @@ class _SplashScreenMyState extends State<SplashScreenMy>
       _animationController.forward();
     }
 
-    Future.delayed(Duration(milliseconds: widget._duration)).then((value) {
+    Future.delayed(Duration(milliseconds: widget._duration!)).then((value) {
       if (widget._pageRouteTransition ==
           PageRouteTransition.CupertinoPageRoute) {
         Navigator.of(context).pushReplacement(CupertinoPageRoute(
-            builder: (BuildContext context) => widget._widget));
+            builder: (BuildContext context) => widget._widget!));
       } else if (widget._pageRouteTransition ==
           PageRouteTransition.SlideTransition) {
         Navigator.of(context).pushReplacement(_tweenAnimationPageRoute());
@@ -163,18 +163,18 @@ class _SplashScreenMyState extends State<SplashScreenMy>
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              (widget._imageSrc != null && widget._imageSrc.isNotEmpty)
+              (widget._imageSrc != null && widget._imageSrc!.isNotEmpty)
                   ? (widget.isNetworkImage)
                   ? Image.network(
-                widget._imageSrc,
+                widget._imageSrc!,
                 height: (widget._logoSize != null)
-                    ? widget._logoSize.toDouble()
+                    ? widget._logoSize!.toDouble()
                     : 150,
               )
                   : Image.asset(
-                widget._imageSrc,
+                widget._imageSrc!,
                 height: (widget._logoSize != null)
-                    ? widget._logoSize.toDouble()
+                    ? widget._logoSize!.toDouble()
                     : 150,
               )
                   : SizedBox(),
@@ -201,7 +201,7 @@ class _SplashScreenMyState extends State<SplashScreenMy>
                 ? widget._textStyle
                 : TextStyle(fontSize: widget._defaultTextFontSize),
             colors: (widget._colors != null)
-                ? widget._colors
+                ? widget._colors!
                 : [
               Colors.blue,
               Colors.black,
@@ -211,7 +211,7 @@ class _SplashScreenMyState extends State<SplashScreenMy>
           );
         case TextType1.NormalText:
           return Text(
-            widget._text,
+            widget._text!,
             style: (widget._textStyle != null)
                 ? widget._textStyle
                 : TextStyle(fontSize: widget._defaultTextFontSize),
@@ -221,7 +221,7 @@ class _SplashScreenMyState extends State<SplashScreenMy>
             text: widget._text,
             speed: (widget._speed == null)
                 ? Duration(milliseconds: 100)
-                : Duration(milliseconds: widget._speed),
+                : Duration(milliseconds: widget._speed!),
             textStyle: (widget._textStyle != null)
                 ? widget._textStyle
                 : TextStyle(fontSize: widget._defaultTextFontSize),
@@ -236,7 +236,7 @@ class _SplashScreenMyState extends State<SplashScreenMy>
           );
         default:
           return Text(
-            widget._text,
+            widget._text!,
             style: (widget._textStyle != null)
                 ? widget._textStyle
                 : TextStyle(fontSize: widget._defaultTextFontSize),
@@ -253,7 +253,7 @@ class _SplashScreenMyState extends State<SplashScreenMy>
   Route _tweenAnimationPageRoute() {
     /// Tween Animation
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => widget._widget,
+      pageBuilder: (context, animation, secondaryAnimation) => widget._widget!,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);
         var end = Offset.zero;
@@ -271,7 +271,7 @@ class _SplashScreenMyState extends State<SplashScreenMy>
   Route _normalPageRoute() {
     /// Normal Animation
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => widget._widget,
+      pageBuilder: (context, animation, secondaryAnimation) => widget._widget!,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return child;
       },

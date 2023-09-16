@@ -7,7 +7,7 @@ import 'package:homelyy/component/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Registeration extends StatefulWidget {
-  const Registeration({Key key}) : super(key: key);
+  const Registeration({Key? key}) : super(key: key);
 
   @override
   _RegisterationState createState() => _RegisterationState();
@@ -17,8 +17,8 @@ class _RegisterationState extends State<Registeration> {
   var _formKey = GlobalKey<FormState>();
   final _emailRegExp = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  var userEmail = "FormModel()";
-  var userName = "";
+  String? userEmail = "FormModel()";
+  String? userName = "";
   var userDOB = DateTime.now();
   var isloggedin = false ;
 
@@ -32,7 +32,7 @@ class _RegisterationState extends State<Registeration> {
   }
 
   _selectstartDate(BuildContext context) async {
-    DateTime picked = await showDatePicker(
+    DateTime? picked = await showDatePicker(
       context: context,
       initialDate: userDOB, // Refer step 1
       firstDate: DateTime(1960),
@@ -95,7 +95,7 @@ class _RegisterationState extends State<Registeration> {
                           // errorText: isdiscountAvailable ? erroText : null
                         ),
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return 'Please enter an email address';
                           }
                           return null;
@@ -124,7 +124,7 @@ class _RegisterationState extends State<Registeration> {
                           // errorText: isdiscountAvailable ? erroText : null
                         ),
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return 'Please enter your name';
                           }
                           return null;

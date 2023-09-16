@@ -17,7 +17,7 @@ import 'package:homelyy/component/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({Key key}) : super(key: key);
+  const SignUp({Key? key}) : super(key: key);
 
   @override
   _SignUpState createState() => _SignUpState();
@@ -27,14 +27,14 @@ class _SignUpState extends State<SignUp> {
   var _formKey = GlobalKey<FormState>();
   final _emailRegExp = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  var userEmail = "";
-  var userPhone = "";
-  var userPassword = "";
-  var userName = "";
+  String? userEmail = "";
+  String? userPhone = "";
+  String? userPassword = "";
+  String? userName = "";
   var userDOB = DateTime.now();
   var isloggedin = false;
 
-  var refercode = "";
+  String? refercode = "";
 
   var phone = "";
 
@@ -59,7 +59,7 @@ class _SignUpState extends State<SignUp> {
   }
 
   _selectstartDate(BuildContext context) async {
-    DateTime picked = await showDatePicker(
+    DateTime? picked = await showDatePicker(
       context: context,
       initialDate: userDOB, // Refer step 1
       firstDate: DateTime(1960),
@@ -79,7 +79,7 @@ class _SignUpState extends State<SignUp> {
     //
     //  }
 
-    await Future.forEach(_testList, (element) {
+    await Future.forEach(_testList, (dynamic element) {
       items.add(
         DropdownMenuItem(
           value: element["no"],
@@ -188,7 +188,7 @@ class _SignUpState extends State<SignUp> {
                                 // errorText: isdiscountAvailable ? erroText : null
                               ),
                               validator: (value) {
-                                if (value.isEmpty || !value.isEmail) {
+                                if (value!.isEmpty || !value.isEmail) {
                                   return 'Please enter Correct email address';
                                 }
                                 return null;
@@ -226,7 +226,7 @@ class _SignUpState extends State<SignUp> {
                                 // errorText: isdiscountAvailable ? erroText : null
                               ),
                               validator: (value) {
-                                if (value.isEmpty || !value.isPhoneNumber) {
+                                if (value!.isEmpty || !value.isPhoneNumber) {
                                   return 'Please enter Correct Phone Number';
                                 }
                                 return null;
@@ -271,7 +271,7 @@ class _SignUpState extends State<SignUp> {
                                 // errorText: isdiscountAvailable ? erroText : null
                               ),
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value!.isEmpty) {
                                   return 'Please enter your password';
                                 }
                                 return null;
@@ -307,7 +307,7 @@ class _SignUpState extends State<SignUp> {
                                 // errorText: isdiscountAvailable ? erroText : null
                               ),
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value!.isEmpty) {
                                   return 'Please enter your name';
                                 }
                                 return null;
@@ -385,7 +385,7 @@ class _SignUpState extends State<SignUp> {
                             child: ElevatedButton(
                               onPressed: () {
                                 // Validate returns true if the form is valid, or false otherwise.
-                                if (_formKey.currentState.validate()) {
+                                if (_formKey.currentState!.validate()) {
                                   print(
                                       "Got all text = user = $userName ref = $refercode email = $userEmail nme =$userName phone = $userPhone ");
 
@@ -394,7 +394,7 @@ class _SignUpState extends State<SignUp> {
                                   //
                                   // });
                                   //
-                                  var referId = userName.substring(1,3) + userPhone.substring(6,10);
+                                  var referId = userName!.substring(1,3) + userPhone!.substring(6,10);
 
                                   if(country != null){
                                     AllApi()
@@ -402,7 +402,7 @@ class _SignUpState extends State<SignUp> {
                                         country: country,
                                         name: userName ?? "",
                                         address: "",
-                                        ref: userPhone
+                                        ref: userPhone!
                                             .replaceAll("+", "")
                                             .removeAllWhitespace ??
                                             "",
@@ -413,7 +413,7 @@ class _SignUpState extends State<SignUp> {
                                             .split(' ')[0] ??
                                             "",
                                         member: "",
-                                        phone: userPhone
+                                        phone: userPhone!
                                             .replaceAll("+", "")
                                             .removeAllWhitespace,
                                         token: "",
@@ -451,13 +451,13 @@ class _SignUpState extends State<SignUp> {
                                         UserModel().fromJson(result);
 
                                         AllApi()
-                                            .updateLocalUsers(jsonEncode(users),users.phone);
+                                            .updateLocalUsers(jsonEncode(users),users.phone!);
 
                                         print(
-                                            "getting user ${users.phone.replaceAll("+", "")}");
+                                            "getting user ${users.phone!.replaceAll("+", "")}");
 
                                         Get.off(Homepage(
-                                          userRef: users.phone
+                                          userRef: users.phone!
                                               .replaceAll("+", "")
                                               .removeAllWhitespace,
                                         ));

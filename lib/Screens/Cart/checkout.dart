@@ -1,4 +1,4 @@
-// @dart=2.9
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +10,12 @@ import 'package:homelyy/component/models.dart';
 
 class CheckOutPage extends StatefulWidget {
 
-  final String total,subTotal,  wallet,  discount,
+  final String? total,subTotal,  wallet,  discount,
     delivery, savings,shopname,shopnumber,shopaddress;
-  final List<CartModel> listofcart;
+  final List<CartModel>? listofcart;
  // final GeoFirePoint shoplocation;
 
-  const CheckOutPage({Key key, this.total, this.subTotal, this.wallet, this.discount, this.delivery, this.savings, this.shopname, this.shopnumber, this.shopaddress, this.listofcart}) : super(key: key);
+  const CheckOutPage({Key? key, this.total, this.subTotal, this.wallet, this.discount, this.delivery, this.savings, this.shopname, this.shopnumber, this.shopaddress, this.listofcart}) : super(key: key);
   @override
   _CheckOutPageState createState() => _CheckOutPageState();
 

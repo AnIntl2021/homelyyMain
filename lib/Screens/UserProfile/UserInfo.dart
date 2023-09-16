@@ -1,4 +1,4 @@
-// @dart=2.9
+
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,9 +16,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 class UserInfoScreen extends StatefulWidget {
-  final String phone;
+  final String? phone;
 
-  const UserInfoScreen({Key key, this.phone}) : super(key: key);
+  const UserInfoScreen({Key? key, this.phone}) : super(key: key);
   @override
   _UserInfoScreenState createState() => _UserInfoScreenState();
 }
@@ -27,11 +27,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   var _formKey = GlobalKey<FormState>();
   final _emailRegExp = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  var userEmail = "";
-  var userName = "";
+  String? userEmail = "";
+  String? userName = "";
   var userDOB = DateTime.now();
   var isloggedin = false ;
-  var refercode = "" ;
+  String? refercode = "" ;
 
   Future addBoolToSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -41,7 +41,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   }
 
   _selectstartDate(BuildContext context) async {
-    DateTime picked = await showDatePicker(
+    DateTime? picked = await showDatePicker(
       context: context,
       initialDate: userDOB, // Refer step 1
       firstDate: DateTime(1960),
@@ -100,7 +100,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           // errorText: isdiscountAvailable ? erroText : null
                         ),
                         validator: (value) {
-                          if (value.isEmpty || !value.isEmail) {
+                          if (value!.isEmpty || !value.isEmail) {
                             return 'Please enter Correct email address';
                           }
                           return null;
@@ -139,7 +139,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           // errorText: isdiscountAvailable ? erroText : null
                         ),
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return 'Please enter your name';
                           }
                           return null;
@@ -221,7 +221,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           // Validate returns true if the form is valid, or false otherwise.
-                          if (_formKey.currentState.validate()) {
+                          if (_formKey.currentState!.validate()) {
                             print("Got all text = user = $userName ref = $refercode email = $userEmail ");
 
                            // AllApi().getUser(widget.phone.replaceAll("+", "").removeAllWhitespace?? "").then((value){
@@ -234,11 +234,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             AllApi().postUser(UserModel(
                                 name:userName ?? "",
                                 address:"",
-                                ref:widget.phone.replaceAll("+", "").removeAllWhitespace?? "",
+                                ref:widget.phone!.replaceAll("+", "").removeAllWhitespace?? "",
                                 email:userEmail?? "",
                                 dob:userDOB.toLocal().toString().split(' ')[0]?? "",
                                 member:"",
-                                phone:widget.phone.replaceAll("+", "").removeAllWhitespace,
+                                phone:widget.phone!.replaceAll("+", "").removeAllWhitespace,
                                 token:"",
                                 wallet:"0",
                               refFrom: refercode
@@ -267,11 +267,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
                                 UserModel users = UserModel().fromJson(result);
 
-                                AllApi().updateLocalUsers(jsonEncode(users),users.phone.replaceAll("+", "").removeAllWhitespace);
+                                AllApi().updateLocalUsers(jsonEncode(users),users.phone!.replaceAll("+", "").removeAllWhitespace);
 
-                                print("getting user ${users.phone.replaceAll("+", "")}");
+                                print("getting user ${users.phone!.replaceAll("+", "")}");
 
-                                Get.off(Homepage(userRef: users.phone.replaceAll("+", "").removeAllWhitespace,));
+                                Get.off(Homepage(userRef: users.phone!.replaceAll("+", "").removeAllWhitespace,));
 
                               }
 

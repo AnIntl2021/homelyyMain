@@ -1,4 +1,4 @@
-// @dart=2.9
+
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,18 +14,18 @@ import 'package:homelyy/component/homeAppbar.dart';
 import 'package:intl/intl.dart';
 
 class ProductDetailPage extends StatefulWidget {
- final String title,itemnumber;
- final String price;
- final String note;
- final String image,cutprice,discount;
- final bool tagVisibility;
- final bool stock;
- final bool discountVisibility;
- final int totalorders;
- final String type;
+ final String? title,itemnumber;
+ final String? price;
+ final String? note;
+ final String? image,cutprice,discount;
+ final bool? tagVisibility;
+ final bool? stock;
+ final bool? discountVisibility;
+ final int? totalorders;
+ final String? type;
 
 
-  ProductDetailPage({ Key key,  this.title,  this.price,  this.note,  this.image, this.cutprice, this.discount, this.tagVisibility, this.stock, this.discountVisibility, this.totalorders, this.type, this.itemnumber})
+  ProductDetailPage({ Key? key,  this.title,  this.price,  this.note,  this.image, this.cutprice, this.discount, this.tagVisibility, this.stock, this.discountVisibility, this.totalorders, this.type, this.itemnumber})
       : super(key: key);
 
   @override
@@ -34,10 +34,10 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage>
     with TickerProviderStateMixin {
-   String selectedValue;
-   String selectedValueSize;
-   String selectedAvailable;
-   String selectedTotalOrders;
+   String? selectedValue;
+   String? selectedValueSize;
+   String? selectedAvailable;
+   String? selectedTotalOrders;
   var defaultValue = 1;
   // var listitem = ListItem;
   var list = [];
@@ -52,8 +52,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   var currentTime = "";
   String defaultFontFamily = 'Roboto-Light.ttf';
   List imageof = [];
-   AnimationController controller;
-   Animation<double> animation;
+   late AnimationController controller;
+   Animation<double>? animation;
   @override
   void initState() {
     super.initState();
@@ -105,11 +105,11 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                       ),
                     );
                   }
-                  var count = snapshot.data.size;
+                  var count = snapshot.data!.size;
                   return Positioned(
                     right: 0,
-                    child: Badge(
-                      badgeContent: Text(
+                    child: BadgePositioned(
+                      child: Text(
                         count.toString(),
                         style: GoogleFonts.arvo(color: Colors.white),
                       ),
@@ -199,7 +199,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                     ),
                     SizedBox(height: 10),
                     Visibility(
-                      visible: widget.discountVisibility,
+                      visible: widget.discountVisibility!,
                       child: Container(
                         width: 60,
                         height: 25,
@@ -213,7 +213,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text( widget.title,style:  TextStyle(fontSize: 25),),
+                          Text( widget.title!,style:  TextStyle(fontSize: 25),),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
@@ -233,7 +233,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                   ),
                                   Text(
                                     "Rs.${ widget.price}",
-                                    style: widget.discountVisibility
+                                    style: widget.discountVisibility!
                                         ? TextStyle(
                                       fontSize: 14,
                                       color: Colors.blueGrey,
@@ -278,7 +278,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     );
   }
 
-  Widget _availableSize(String firstSize) {
+  Widget _availableSize(String? firstSize) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -295,7 +295,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     );
   }
 
-  Widget _availableColor(String firstSize) {
+  Widget _availableColor(String? firstSize) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -314,7 +314,7 @@ Text(
   }
 
 
-  Widget _colorWidget(String text, String streamType,String firstSize) {
+  Widget _colorWidget(String text, String? streamType,String? firstSize) {
     print(text);
     var stream = FirebaseFirestore.instance.collection("products");
     return StreamBuilder<QuerySnapshot>(
@@ -327,7 +327,7 @@ Text(
               ),
             );
           }
-          var colorQuery = snapshot.data.docs;
+          var colorQuery = snapshot.data!.docs;
           // var colors = snapshot.data.doc;
           // List<Widget> widget = [];
           // colors.forEach((element) {
@@ -402,7 +402,7 @@ Text(
         });
   }
 
-  Widget _sizeWidget(String text, String streamType,String firstSize) {
+  Widget _sizeWidget(String text, String? streamType,String? firstSize) {
     print(text);
     var stream = FirebaseFirestore.instance.collection("products");
     return StreamBuilder<QuerySnapshot>(
@@ -415,7 +415,7 @@ Text(
               ),
             );
           }
-          var size = snapshot.data.docs;
+          var size = snapshot.data!.docs;
           // var colors = snapshot.data.doc;
           // List<Widget> widget = [];
           // colors.forEach((element) {
@@ -487,7 +487,7 @@ Text(
 
         ),
         SizedBox(height: 20),
-        Text(widget.note),
+        Text(widget.note!),
       ],
     );
   }
@@ -496,7 +496,7 @@ Text(
     return
       FloatingActionButton(
       onPressed: () {
-      if(widget.stock)  {
+      if(widget.stock!)  {
           var currentAddingDate =
               DateTime.now().toLocal().toString().split(' ')[0];
           var currentAddingTime =
@@ -523,7 +523,7 @@ Text(
             items['img'] = widget.image;
             items['title'] = widget.title;
             items['price'] =
-                (defaultValue * int.parse(widget.price)).toString();
+                (defaultValue * int.parse(widget.price!)).toString();
             items['quantity'] = defaultValue.toString();
             items['size'] = selectedValueSize;
             items['uid'] = uid;
@@ -532,7 +532,7 @@ Text(
 
             items['cutprice'] = widget.cutprice == ""
                 ? ""
-                : (defaultValue * int.parse(widget.cutprice)).toString();
+                : (defaultValue * int.parse(widget.cutprice!)).toString();
             items['ogprice'] = widget.price;
             items['ogcutprice'] = widget.cutprice;
             items['discount'] = widget.discount;
@@ -631,7 +631,7 @@ Text(
   @override
   Widget build(BuildContext context) {
     print("stock ${widget.stock}");
-    var currentUser = FirebaseAuth.instance.currentUser.uid;
+    var currentUser = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
       appBar: AppBar(backgroundColor: kgreen,),
       floatingActionButton: _flotingButton(currentUser),

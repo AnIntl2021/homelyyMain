@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 
 import 'dart:convert';
@@ -18,12 +18,12 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'customTextStyle.dart';
 
 class PaymentDiaolog extends StatefulWidget {
-  final String total,subTotal,  wallet,  discount,
+  final String? total,subTotal,  wallet,  discount,
       delivery, savings,address,shopname,shopnumber , shopaddress;
-  final List<CartModel> listofcart;
+  final List<CartModel>? listofcart;
   // final GeoFirePoint shoplocation;
   const PaymentDiaolog({
-     Key key, this.total, this.subTotal, this.wallet, this.discount, this.delivery, this.savings, this.address, this.shopname, this.shopnumber, this.shopaddress, this.listofcart,
+     Key? key, this.total, this.subTotal, this.wallet, this.discount, this.delivery, this.savings, this.address, this.shopname, this.shopnumber, this.shopaddress, this.listofcart,
   }) : super(key: key);
   @override
   _PaymentDiaologState createState() => _PaymentDiaologState();
@@ -33,7 +33,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
 
   var paymentvalue;
   static const platform = const MethodChannel("razorpay_flutter");
-  Razorpay _razorpay;
+  late Razorpay _razorpay;
   var shop = true;
 
   var paymentSuccess = false;
@@ -65,10 +65,10 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
     _razorpay.clear();
   }
 
-  void openCheckout({String phone, String id, String email}) async {
+  void openCheckout({String? phone, String? id, String? email}) async {
     var options = {
       'key': 'rzp_live_LGItxuVfw7pS3P',
-      'amount': int.parse(widget.total) * 100,
+      'amount': int.parse(widget.total!) * 100,
       'name': 'Homelyy',
       'description': 'Order no: $id',
 
@@ -95,7 +95,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
 
   Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     Fluttertoast.showToast(
-        msg: "SUCCESS: " + response.paymentId,
+        msg: "SUCCESS: " + response.paymentId!,
         toastLength: Toast.LENGTH_SHORT);
 
       setState(() {
@@ -108,57 +108,57 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
       var randomizer = new Random();
       var rNum = min + randomizer.nextInt(max - min);
 
-      await Future.forEach(widget.listofcart,(CartModel element) {
+      await Future.forEach(widget.listofcart!,(CartModel element) {
         AllApi().postOrders(element, rNum.toString());
 
 
       });
 
       // await AllApi().postOrders(jsonEncode(widget.listofcart).toString());
-      print('${widget.discount} ${widget.total} ${ widget.savings} ${widget.subTotal} ${data.ref} ${widget.shopname} ${widget.address}${rNum.toString()}');
-      await AllApi().addOrderTotal(data, CartTotalModel(
+      print('${widget.discount} ${widget.total} ${ widget.savings} ${widget.subTotal} ${data!.ref} ${widget.shopname} ${widget.address}${rNum.toString()}');
+      await AllApi().addOrderTotal(data!, CartTotalModel(
         discount:widget.discount,
         total: widget.total,
         savings: widget.savings,
         subTotal: widget.subTotal,
-        ref: data.ref,
+        ref: data!.ref,
       ), widget.shopname, widget.address,rNum.toString());
 
-      await AllApi().removeAllCart(data.phone, widget.shopname);
-      await AllApi().removeShopCart(data.phone, widget.shopname);
+      await AllApi().removeAllCart(data!.phone, widget.shopname);
+      await AllApi().removeShopCart(data!.phone, widget.shopname);
 
     setState(() {
       loading = false;
     });
 
-    Get.offAll(ThankScreen(ref:data.phone));
+    Get.offAll(ThankScreen(ref:data!.phone));
 
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     Fluttertoast.showToast(
-        msg: "ERROR: " + response.code.toString() + " - " + response.message,
+        msg: "ERROR: " + response.code.toString() + " - " + response.message!,
         toastLength: Toast.LENGTH_SHORT);
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     Fluttertoast.showToast(
-        msg: "EXTERNAL_WALLET: " + response.walletName,
+        msg: "EXTERNAL_WALLET: " + response.walletName!,
         toastLength: Toast.LENGTH_SHORT);
   }
 
 
  bool loading = false;
 
-  UserModel data ;
+  UserModel? data ;
 
   @override
   Widget build(BuildContext context) {
 
     print(widget.address);
-    var name = "";
-    var phoneNumber = "";
-    var email = "";
+    String? name = "";
+    String? phoneNumber = "";
+    String? email = "";
 
 
     List a = ["CASH ON DELIVERY"];
@@ -284,9 +284,9 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
         }
 
 
-        var name1 = future.data.name;
-        var phoneNumber1 = future.data.phone;
-        var email1 = future.data.email;
+        var name1 = future.data!.name;
+        var phoneNumber1 = future.data!.phone;
+        var email1 = future.data!.email;
 
         name = name1;
         phoneNumber = phoneNumber1;
@@ -327,7 +327,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
                         width: 5,
                       ),
                       Text(
-                        widget.total,
+                        widget.total!,
                         style: CustomTextStyle.textFormFieldBlack
                             .copyWith(color: Colors.black, fontSize: 14),
                       ),
@@ -366,13 +366,13 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
                     var randomizer = new Random();
                     var rNum = min + randomizer.nextInt(max - min);
 
-                    await Future.forEach(widget.listofcart,(CartModel element) {
+                    await Future.forEach(widget.listofcart!,(CartModel element) {
                       AllApi().postOrders(element, rNum.toString());
 
 
                     });
 
-                      await AllApi().addOrderTotal(future.data, CartTotalModel(
+                      await AllApi().addOrderTotal(future.data!, CartTotalModel(
                         discount:widget.discount,
                         total: widget.total,
                         savings: widget.savings,
@@ -380,14 +380,14 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
                         ref: "",
                       ), widget.shopname, widget.address,rNum.toString());
 
-                    await AllApi().removeAllCart(future.data.phone, widget.shopname);
-                    await AllApi().removeShopCart(future.data.phone, widget.shopname);
+                    await AllApi().removeAllCart(future.data!.phone, widget.shopname);
+                    await AllApi().removeShopCart(future.data!.phone, widget.shopname);
 
                     setState(() {
                       loading = false;
                     });
 
-                    Get.offAll(ThankScreen(ref:future.data.phone));
+                    Get.offAll(ThankScreen(ref:future.data!.phone));
 
                   } else if (shop && paymentvalue == 1) {
 
@@ -413,7 +413,7 @@ class _PaymentDiaologState extends State<PaymentDiaolog> {
   paymentOption(index, title) {
     return Card(
       child: RadioListTile(
-        onChanged: (ind) {
+        onChanged: (dynamic ind) {
           print(ind);
           print(index);
           setState(() => paymentvalue = ind);

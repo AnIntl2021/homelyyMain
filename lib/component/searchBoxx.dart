@@ -1,4 +1,4 @@
-// @dart=2.9
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +7,10 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:homelyy/component/constants.dart';
 
 class SearchBox extends StatelessWidget {
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String>? onChanged;
 
   const SearchBox({
-    Key key,
+    Key? key,
     this.onChanged,
   }) : super(key: key);
 
@@ -50,7 +50,7 @@ class SearchBox extends StatelessWidget {
             //   return value.docs;
             // });
           },
-          itemBuilder: (context, suggestion) {
+          itemBuilder: (context, dynamic suggestion) {
             // var shoptitle = suggestion.get("name");
             // List<dynamic> cuisine = suggestion.get("cuisine");
             // var area = suggestion.get("area");
@@ -94,7 +94,7 @@ class SearchBox extends StatelessWidget {
               ),
             );
           },
-          onSuggestionSelected: (suggestion) {},
+          onSuggestionSelected: (dynamic suggestion) {},
         )
 
         // TextField(

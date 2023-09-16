@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:homelyy/component/constants.dart';
 
 class MyContactUs extends StatefulWidget {
-  const MyContactUs({Key key}) : super(key: key);
+  const MyContactUs({Key? key}) : super(key: key);
 
   @override
   _MyContactUsState createState() => _MyContactUsState();

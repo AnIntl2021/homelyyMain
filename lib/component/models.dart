@@ -1,17 +1,17 @@
 import 'dart:convert';
 
 class restaurantModel {
-  String name;
-  String address;
-  String image;
-  String user;
-  String password;
-  String type;
-  String vendorid;
-  String inPromotion;
-  String description;
-  String email,rating;
-  bool status;
+  String? name;
+  String? address;
+  String? image;
+  String? user;
+  String? password;
+  String? type;
+  String? vendorid;
+  String? inPromotion;
+  String? description;
+  String? email,rating;
+  bool? status;
   var category;
   var cuisine;
   var location;
@@ -82,21 +82,21 @@ class restaurantModel {
 }
 
 class  UserModel {
-  String name;
-  String address;
-  String ref;
-  String email;
-  String dob;
+  String? name;
+  String? address;
+  String? ref;
+  String? email;
+  String? dob;
   dynamic location;
-  String member;
-  String phone;
-  String token;
-  String wallet;
-  String refFrom;
-  String referid;
-  String country;
-  String password;
-  String symbol;
+  String? member;
+  String? phone;
+  String? token;
+  String? wallet;
+  String? refFrom;
+  String? referid;
+  String? country;
+  String? password;
+  String? symbol;
 
   UserModel(
       {
@@ -175,10 +175,10 @@ class  UserModel {
 }
 
 class BannerModel {
-  String bannerid;
-  String name;
-  String image;
-  String type;
+  String? bannerid;
+  String? name;
+  String? image;
+  String? type;
 
   BannerModel({ this.bannerid, this.name, this.image, this.type});
 
@@ -203,11 +203,11 @@ class BannerModel {
 }
 
 class CatModel {
-  String name;
-  String image;
-  String type;
-  String catid;
-  String number;
+  String? name;
+  String? image;
+  String? type;
+  String? catid;
+  String? number;
 
   CatModel({ this.name, this.image, this.type, this.catid,this.number});
 
@@ -235,17 +235,17 @@ class CatModel {
 
 class ProductModel {
 
-  String description;
-  String vendorid;
-  String foodid;
-  String name;
-  String image;
-  String price;
-  String category;
-  String subcategory;
-  String cutprice;
-  String recommended;
-  bool status;
+  String? description;
+  String? vendorid;
+  String? foodid;
+  String? name;
+  String? image;
+  String? price;
+  String? category;
+  String? subcategory;
+  String? cutprice;
+  String? recommended;
+  bool? status;
 
   ProductModel(
       {
@@ -297,24 +297,24 @@ class ProductModel {
 }
 
 class CartModel {
-  String img;
-  String price;
-  String title;
-  String recipe;
-  String quantity;
-  String requirement;
-  String itemnumber;
-  String cutprice;
-  String ogprice;
-  String ogcutprice;
-  String discount;
-  String shop;
-  String ref;
-  String date;
-  String time;
-  String vendorid;
-  String foodid;
-  String productid;
+  String? img;
+  String? price;
+  String? title;
+  String? recipe;
+  String? quantity;
+  String? requirement;
+  String? itemnumber;
+  String? cutprice;
+  String? ogprice;
+  String? ogcutprice;
+  String? discount;
+  String? shop;
+  String? ref;
+  String? date;
+  String? time;
+  String? vendorid;
+  String? foodid;
+  String? productid;
 
 
 
@@ -394,11 +394,11 @@ class CartModel {
 
 class CartTotalModel {
 
-  String discount;
-  String subTotal;
-  String total;
-  String savings;
-  String ref;
+  String? discount;
+  String? subTotal;
+  String? total;
+  String? savings;
+  String? ref;
 
   CartTotalModel(
       {
@@ -436,18 +436,18 @@ class CartTotalModel {
 
 class LifeProductModel {
 
-  String description;
-  String vendorid;
-  String foodid;
-  String name;
-  String image;
-  String price;
-  String category;
-  String subcategory;
-  String cutprice;
-  bool status;
-  String varient;
-  String productid;
+  String? description;
+  String? vendorid;
+  String? foodid;
+  String? name;
+  String? image;
+  String? price;
+  String? category;
+  String? subcategory;
+  String? cutprice;
+  bool? status;
+  String? varient;
+  String? productid;
 
   LifeProductModel(
       {

@@ -12,16 +12,16 @@ import 'package:homelyy/component/homeAppbar.dart';
 
 class DetailsScreen extends StatefulWidget {
   final type;
-  final String rating;
-  final String shoptitle;
-  final List<dynamic> cuisine;
-  final String shopUid,opentiming,closetiming,uid;
-  final int numReview;
-  final List category;
-  final bool status;
+  final String? rating;
+  final String? shoptitle;
+  final List<dynamic>? cuisine;
+  final String? shopUid,opentiming,closetiming,uid;
+  final int? numReview;
+  final List? category;
+  final bool? status;
 
   const DetailsScreen({
-     Key key,
+     Key? key,
      this.rating,
      this.shoptitle,
      this.cuisine,
@@ -42,7 +42,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     //     .snapshots();
     return WillPopScope(
 
-      onWillPop: () { Get.offAll(Homepage(userRef: widget.uid,)); },
+      onWillPop: () { Get.offAll(Homepage(userRef: widget.uid,)); } as Future<bool> Function()?,
       child: Body(
           category:widget.category,
           type: widget.type,
@@ -50,7 +50,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           rating: widget.rating,
           numReviews: widget.numReview,
           cuisine: widget.cuisine, key: Key("shopBody"),id: widget.shopUid, opentiming: widget.opentiming, closetiming: widget.closetiming, shopname: widget.shoptitle ,
-        uid:widget.uid.replaceAll("+", "").removeAllWhitespace,status : widget.status
+        uid:widget.uid!.replaceAll("+", "").removeAllWhitespace,status : widget.status
         ),
     );
   }

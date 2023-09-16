@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 
 class TypeCard extends StatelessWidget {
-  final String img;
+  final String? img;
   const TypeCard({
-     Key key,
+     Key? key,
      this.img,
   }) : super(key: key);
 
@@ -20,7 +20,7 @@ class TypeCard extends StatelessWidget {
         ),
         child: Image(
           // fit: BoxFit.fill,
-          image: AssetImage(img),
+          image: AssetImage(img!),
         ),
       ),
     );

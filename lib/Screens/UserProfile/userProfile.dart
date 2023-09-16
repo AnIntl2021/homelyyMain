@@ -21,9 +21,9 @@ import '../../component/api.dart';
 import '../../component/models.dart';
 
 class UserProfile extends StatefulWidget {
-  final String id;
+  final String? id;
 
-  const UserProfile({Key key, this.id}) : super(key: key);
+  const UserProfile({Key? key, this.id}) : super(key: key);
   @override
   _UserProfileState createState() => _UserProfileState();
 }
@@ -59,7 +59,7 @@ class _UserProfileState extends State<UserProfile> {
             ),
             buildListTile("REFER & EARN", FontAwesomeIcons.share, () async {
              var value = await AllApi()
-                  .getUser(widget.id
+                  .getUser(widget.id!
                   .replaceAll("+", "")
                   .removeAllWhitespace);
 

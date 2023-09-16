@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'dart:io';
 
@@ -8,8 +8,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geocoder/geocoder.dart' as coder;
-import 'package:geocoder/geocoder.dart';
+import 'package:geocode/geocode.dart';
+//import 'package:geocoder/geocoder.dart' as coder;
+//import 'package:geocoder/geocoder.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -32,17 +33,19 @@ import 'Category/catList.dart';
 import 'Restaurant/popularRestaurant.dart';
 
 class Body extends StatefulWidget {
-  final bool fromMap;
-  final String userref;
-  final LatLng latlng;
-  const Body({Key key, this.fromMap, this.userref, this.latlng}) : super(key: key);
+  final bool? fromMap;
+  final String? userref;
+  final LatLng? latlng;
+  const Body({Key? key, this.fromMap, this.userref, this.latlng})
+      : super(key: key);
   @override
   _BodyState createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
-  List searchModel ;
-  String search ;
+  GeoCode geoCode = GeoCode();
+  List? searchModel;
+  String? search;
   var catTitle = "South Indian";
   var pizzanon = false;
   var pizzaveg = false;
@@ -53,27 +56,25 @@ class _BodyState extends State<Body> {
   var scrollController = ScrollController();
   var closeContainer = false;
   // var uid = FirebaseAuth.instance.currentUser.uid;
-  GeoFirePoint myLocation;
+  GeoFirePoint? myLocation;
   var userAddressFeature = "";
   var userAddress = "";
   var locationAvailable = "";
-  String addressfromFirestore;
+  String? addressfromFirestore;
   bool gorLocation = false;
 
   var selectedType = 0;
 
-
-
   Location location = Location();
 
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
-  LocationData _locationData;
+  late bool _serviceEnabled;
+  PermissionStatus? _permissionGranted;
+  LocationData? _locationData;
   var userLatitude = "";
   var userLongitude = "";
-  GeoPoint userGeoPoint;
+  GeoPoint? userGeoPoint;
 
-  Future<LocationData> getLocation() async {
+  Future<LocationData?> getLocation() async {
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -98,8 +99,6 @@ class _BodyState extends State<Body> {
     print('getting location = $_locationData');
     return _locationData;
   }
-
-
 
   // Future<DocumentSnapshot>getFirestoreAddress() async {
   //  return FirebaseFirestore.instance.collection("users").doc(uid).get();
@@ -138,19 +137,15 @@ class _BodyState extends State<Body> {
   }
 
   String getCurrency(String code) {
-
-    var format = NumberFormat.simpleCurrency(locale: Platform.localeName, name: code,decimalDigits: 3);
+    var format = NumberFormat.simpleCurrency(
+        locale: Platform.localeName, name: code, decimalDigits: 3);
 
     return format.currencySymbol;
-
   }
-
 
   @override
   Widget build(BuildContext context) {
-
-
-    Future<List<coder.Address>> getAddress(LocationData locationdata) async {
+    Future<List<Address>> getAddress(LocationData? locationdata) async {
       // // From a query
       // final query = "1600 Amphiteatre Parkway, Mountain View";
       // var addresses = await Geocoder.local.findAddressesFromQuery(query);
@@ -158,38 +153,45 @@ class _BodyState extends State<Body> {
       // print("${first.featureName} : ${first.coordinates}");
 
 // From coordinates
-      final coordinates = widget.latlng == null ? coder.Coordinates(locationdata.latitude, locationdata.longitude) :
-      coder.Coordinates(widget.latlng.latitude, widget.latlng.longitude)
-      ;
+      // final coordinates = widget.latlng == null
+      //     ? coder.Coordinates(locationdata.latitude, locationdata.longitude)
+      //     : coder.Coordinates(widget.latlng.latitude, widget.latlng.longitude);
 
+      final addresses = widget.latlng == null
+          ? await geoCode.reverseGeocoding(
+              latitude: locationdata!.latitude!,
+              longitude: locationdata.longitude!)
+          : await geoCode.reverseGeocoding(
+              latitude: widget.latlng!.latitude,
+              longitude: widget.latlng!.longitude);
 
-      var addresses =
-      await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      var first = addresses.first;
-      var code = first.postalCode ?? first.countryCode;
+      // var addresses =
+      //     await Geocoder.local.findAddressesFromCoordinates(coordinates);
+
+      var first = addresses;
+      var code = first.postal ?? first.countryCode!;
       print(" : ${first.countryCode}");
 
       var pref = await SharedPreferences.getInstance();
-      pref.setString("address", first.addressLine);
+      pref.setString("address", first.streetAddress!);
       pref.setString("code", code);
 
-     var curSymbol = getCurrency(first.countryCode == 'IN' ? 'INR'  : first.countryCode == 'KW' ?'KWT' : first.countryCode == 'QA' ? "QAT" : "USD" );
+      var curSymbol = getCurrency(first.countryCode == 'IN'
+          ? 'INR'
+          : first.countryCode == 'KW'
+              ? 'KWT'
+              : first.countryCode == 'QA'
+                  ? "QAT"
+                  : "USD");
 
-     pref.setString('gsymbol', curSymbol);
-     print('currency symbol $curSymbol');
+      pref.setString('gsymbol', curSymbol);
+      print('currency symbol $curSymbol');
 
-
-      return addresses;
-
-
+      return [addresses];
     }
 
-
-
-
-
     print(
-        "userGetttinghomwebody ${widget.userref.replaceAll("+", "").removeAllWhitespace}");
+        "userGetttinghomwebody ${widget.userref!.replaceAll("+", "").removeAllWhitespace}");
 
     print("location $myLocation $userAddress");
 
@@ -198,10 +200,11 @@ class _BodyState extends State<Body> {
           getLocation(),
           AllApi().getBanner(selectedType == 0 ? "restro" : "lifestyle"),
           selectedType == 0 ? AllApi().getRestoCat() : AllApi().getLifeCat(),
-        widget.userref == 'Guest' ? AllApi().getLifeCat() :  AllApi().getLocalUsers()
+          widget.userref == 'Guest'
+              ? AllApi().getLifeCat()
+              : AllApi().getLocalUsers()
         ]),
         builder: (context, snapshot) {
-
           if (!snapshot.hasData) {
             return Center(
                 child: CircularProgressIndicator(
@@ -209,74 +212,94 @@ class _BodyState extends State<Body> {
             ));
           }
 
-          LocationData latlng = snapshot.requireData[0];
+          LocationData? latlng = (snapshot.requireData as List)[0];
 
-          List<BannerModel> banners = snapshot.requireData[1];
+          List<BannerModel>? banners = (snapshot.requireData as List)[1];
 
-          List<CatModel> catList = snapshot.requireData[2];
+          List<CatModel> catList = (snapshot.requireData as List)[2];
 
-          UserModel usersList =  widget.userref == 'Guest' ? UserModel(ref: 'Guest') :snapshot.requireData[3];
+          UserModel? usersList = widget.userref == 'Guest'
+              ? UserModel(ref: 'Guest')
+              : (snapshot.requireData as List)[3];
 
           print("lat = $latlng.latitude long = $latlng.longitude");
           // print("banners = ${banners[0].name}");
           print("cat = ${catList[0].name}");
 
           return FutureBuilder(
-
               future: Future.wait([
-
                 selectedType == 0
-                    ? AllApi().getRestaurant(widget.latlng == null ? latlng.latitude.toString() : widget.latlng.latitude.toString(),widget.latlng == null ? latlng.longitude.toString():widget.latlng.longitude.toString())
-                    : AllApi().getLifestyle(widget.latlng == null ? latlng.latitude.toString() : widget.latlng.latitude.toString(),widget.latlng == null ? latlng.longitude.toString():widget.latlng.longitude.toString()),
+                    ? AllApi().getRestaurant(
+                        widget.latlng == null
+                            ? latlng!.latitude.toString()
+                            : widget.latlng!.latitude.toString(),
+                        widget.latlng == null
+                            ? latlng!.longitude.toString()
+                            : widget.latlng!.longitude.toString())
+                    : AllApi().getLifestyle(
+                        widget.latlng == null
+                            ? latlng!.latitude.toString()
+                            : widget.latlng!.latitude.toString(),
+                        widget.latlng == null
+                            ? latlng!.longitude.toString()
+                            : widget.latlng!.longitude.toString()),
                 getAddress(latlng),
-
               ]),
               builder: (context, snapshot1) {
-
                 if (!snapshot1.hasData) {
-                  return Center(child: CircularProgressIndicator(color: kgreen,));
+                  return Center(
+                      child: CircularProgressIndicator(
+                    color: kgreen,
+                  ));
                 }
 
-                // print("restomodel1 ${snapshot1.requireData[0][0].status}");
-                List restomodel = snapshot1.requireData[0];
+                // print("restomodel1 ${(snapshot1.requireData)[0][0].status}");
+                List restomodel = (snapshot1.requireData as List)[0];
 
-                List<Address> addresses = snapshot1.requireData[1];
+                List<Address> addresses = (snapshot1.requireData as List)[1];
 
-                var closedrestomodel =  restomodel.where((element) => element.status == false).toList();
+                var closedrestomodel = restomodel
+                    .where((element) => element.status == false)
+                    .toList();
 
-                var promorestomodel =  restomodel.where((element) => element.status == true && element.inPromotion == '1').toList();
+                var promorestomodel = restomodel
+                    .where((element) =>
+                        element.status == true && element.inPromotion == '1')
+                    .toList();
 
-                restomodel = restomodel.where((element) => element.status == true&& element.inPromotion == '0').toList();
+                restomodel = restomodel
+                    .where((element) =>
+                        element.status == true && element.inPromotion == '0')
+                    .toList();
                 print("opendrestomodel $restomodel");
-
-
 
                 print("closedrestomodel $closedrestomodel");
 
-                return  ListView(
+                return ListView(
                   children: [
                     Row(
                       children: [
                         IconButton(
                           icon: Icon(FontAwesomeIcons.mapSigns),
-                          onPressed: () {
-
-                          },
+                          onPressed: () {},
                         ),
                         Expanded(
                           child: Container(
                               child: InkWell(
                             onTap: () {
-
-                              Get.to(MapScreen(loc: widget.latlng == null ? LatLng(latlng.latitude, latlng.longitude) : widget.latlng,userRef:widget.userref));
-
-                              },
+                              Get.to(MapScreen(
+                                  loc: widget.latlng == null
+                                      ? LatLng(
+                                          latlng!.latitude!, latlng.longitude!)
+                                      : widget.latlng,
+                                  userRef: widget.userref));
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  addresses.first.addressLine,
+                                  addresses.first.streetAddress!,
                                   style: GoogleFonts.arvo(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12),
@@ -285,65 +308,69 @@ class _BodyState extends State<Body> {
                                 ),
                                 Container(
                                   child: Text(
-                                    addresses.first.postalCode ?? addresses.first.countryCode,
+                                    addresses.first.postal ??
+                                        addresses.first.countryCode!,
                                     style: GoogleFonts.arvo(fontSize: 10),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],
                             ),
-                          )
-                          ),
+                          )),
                         )
                       ],
                     ),
 
-                          Padding(
-                padding: const EdgeInsets.only(left: 15.0),
-                child: TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                cursorColor: kgreen,
-                decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                color: kgreen.withOpacity(0.6), width: 3)),
-                disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                color: kgreen.withOpacity(0.6), width: 3)),
-                border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                color: kgreen.withOpacity(0.6), width: 3)),
-                focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: kgreen, width: 3)),
-                suffixIcon: Icon(
-                Icons.search,
-                color: kgreen,
-                ),
-                contentPadding: EdgeInsets.all(11.25),
-                hintText: "Search",
-                hintStyle: TextStyle(
-                color: Colors.black.withOpacity(0.4),
-                ),
-                ),
-                style: TextStyle(color: kblackcolor),
-                onChanged: (value) {
-                setState(() {
-                search = value.removeAllWhitespace;
-                        searchModel = restomodel;
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        cursorColor: kgreen,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: kgreen.withOpacity(0.6), width: 3)),
+                          disabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: kgreen.withOpacity(0.6), width: 3)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: kgreen.withOpacity(0.6), width: 3)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: kgreen, width: 3)),
+                          suffixIcon: Icon(
+                            Icons.search,
+                            color: kgreen,
+                          ),
+                          contentPadding: EdgeInsets.all(11.25),
+                          hintText: "Search",
+                          hintStyle: TextStyle(
+                            color: Colors.black.withOpacity(0.4),
+                          ),
+                        ),
+                        style: TextStyle(color: kblackcolor),
+                        onChanged: (value) {
+                          setState(() {
+                            search = value.removeAllWhitespace;
+                            searchModel = restomodel;
 
+                            searchModel = restomodel
+                                .where((element) => element.name
+                                    .toLowerCase()
+                                    .contains(value.removeAllWhitespace
+                                            .toLowerCase() ??
+                                        ""))
+                                .toList();
 
-
-                searchModel = restomodel.where((element) => element.name.toLowerCase().contains(value.removeAllWhitespace.toLowerCase() ?? "")).toList();
-
-                print(searchModel );
-                });
-                },
-                ),
-                ),
+                            print(searchModel);
+                          });
+                        },
+                      ),
+                    ),
 
                     AnimatedContainer(
                       duration: Duration(milliseconds: 200),
@@ -454,18 +481,15 @@ class _BodyState extends State<Body> {
                             Divider(),
                             Expanded(
                               child: CatList(
-
                                 catList: catList,
-
                                 streamTitle:
                                     selectedType == 0 ? catTitle : "Jeans",
-
                                 key: Key("catList"),
-
                                 type: selectedType,
-
-                                uid: usersList.ref,latlng: widget.latlng == null ? LatLng(latlng.latitude, latlng.longitude) : widget.latlng,
-
+                                uid: usersList!.ref,
+                                latlng: widget.latlng == null
+                                    ? LatLng(latlng!.latitude!, latlng.longitude!)
+                                    : widget.latlng,
                               ),
                             ),
                           ],
@@ -506,57 +530,83 @@ class _BodyState extends State<Body> {
                       ],
                     )),
 
-                    promorestomodel.length == 0 ?SizedBox() :  PopularRestaurantList(
+                    promorestomodel.length == 0
+                        ? SizedBox()
+                        : PopularRestaurantList(
+                            type: selectedType.toString(),
+                            userGeoPoint: userGeoPoint,
+                            status: true,
+                            listofRestaurant: promorestomodel,
+                            uid: usersList.ref!
+                                .replaceAll("+", "")
+                                .removeAllWhitespace,
+                          ),
 
-                      type: selectedType.toString(),
-                      userGeoPoint: userGeoPoint,
-                      status: true,
-                      listofRestaurant:promorestomodel,
-                      uid:
-                      usersList.ref.replaceAll("+", "").removeAllWhitespace,
-
-                    ),
-
-                    restomodel.length == 0 ? closedrestomodel.length != 0 ? Container(child: Padding(
-                      padding: const EdgeInsets.only(bottom: 30.0,left: 30),
-                      child: Row(
-                        children: [
-                          Icon(FontAwesomeIcons.sadCry),
-                          SizedBox(width: 10,),
-                          Text("NO RESTAURANT ARE LIVE NOW",style:  GoogleFonts.basic(
-                              fontWeight: FontWeight.bold, fontSize: 18,color: Colors.red.shade800),)
-                        ],
-                      ),
-                    )): Container(child: Padding(
-                      padding: const EdgeInsets.only(bottom: 30.0,left: 30),
-                      child: Row(
-                        children: [
-                          Icon(FontAwesomeIcons.sadCry),
-                          SizedBox(width: 10,),
-                          Text("We are not Serving in Your Location",style:  GoogleFonts.basic(
-                              fontWeight: FontWeight.bold, fontSize: 18,color: Colors.red.shade800),)
-                        ],
-                      ),
-                    )) :  PopularRestaurantList(
-
-                      type: selectedType.toString(),
-                      userGeoPoint: userGeoPoint,
-                      status: true,
-                      listofRestaurant:search == null || search.toString().isBlank ? restomodel : searchModel,
-                      uid:
-                          usersList.ref.replaceAll("+", "").removeAllWhitespace,
-
-                    ),
-                    closedrestomodel.length == 0 ?SizedBox() :  PopularRestaurantList(
-
-                      type: selectedType.toString(),
-                      userGeoPoint: userGeoPoint,
-                      status: false,
-                      listofRestaurant:closedrestomodel,
-                      uid:
-                      usersList.ref.replaceAll("+", "").removeAllWhitespace,
-
-                    )
+                    restomodel.length == 0
+                        ? closedrestomodel.length != 0
+                            ? Container(
+                                child: Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 30.0, left: 30),
+                                child: Row(
+                                  children: [
+                                    Icon(FontAwesomeIcons.sadCry),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "NO RESTAURANT ARE LIVE NOW",
+                                      style: GoogleFonts.basic(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                          color: Colors.red.shade800),
+                                    )
+                                  ],
+                                ),
+                              ))
+                            : Container(
+                                child: Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 30.0, left: 30),
+                                child: Row(
+                                  children: [
+                                    Icon(FontAwesomeIcons.sadCry),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "We are not Serving in Your Location",
+                                      style: GoogleFonts.basic(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                          color: Colors.red.shade800),
+                                    )
+                                  ],
+                                ),
+                              ))
+                        : PopularRestaurantList(
+                            type: selectedType.toString(),
+                            userGeoPoint: userGeoPoint,
+                            status: true,
+                            listofRestaurant:
+                                search == null || search.toString().isBlank!
+                                    ? restomodel
+                                    : searchModel,
+                            uid: usersList.ref!
+                                .replaceAll("+", "")
+                                .removeAllWhitespace,
+                          ),
+                    closedrestomodel.length == 0
+                        ? SizedBox()
+                        : PopularRestaurantList(
+                            type: selectedType.toString(),
+                            userGeoPoint: userGeoPoint,
+                            status: false,
+                            listofRestaurant: closedrestomodel,
+                            uid: usersList.ref!
+                                .replaceAll("+", "")
+                                .removeAllWhitespace,
+                          )
                     // Divider(thickness: 2,),
                     // Expanded(child: RestroList(userGeoPoint : userGeoPoint,status: true,)),
                     // Expanded(child: RestroList(userGeoPoint : userGeoPoint,status: false,)),

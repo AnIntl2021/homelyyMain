@@ -18,8 +18,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class LifeProdCard extends StatefulWidget {
-  final String vid,uid,shopName,catId;
-  const LifeProdCard({Key key, this.vid, this.uid, this.shopName, this.catId}) : super(key: key);
+  final String? vid,uid,shopName,catId;
+  const LifeProdCard({Key? key, this.vid, this.uid, this.shopName, this.catId}) : super(key: key);
 
   @override
   _LifeProdCardState createState() => _LifeProdCardState();
@@ -73,10 +73,10 @@ class _LifeProdCardState extends State<LifeProdCard> {
         }
 
         List prod =
-            snapshot1.requireData[0];
+            (snapshot1.requireData as List)[0];
         print("foodList lenght = ${prod} ${widget.catId}");
 
-        SharedPreferences usermodel = snapshot1.requireData[1];
+        SharedPreferences usermodel = (snapshot1.requireData as List)[1];
 
         var  symbol = usermodel.get('gsymbol');
 
@@ -187,7 +187,7 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                       }
 
                                                       List<LifeProductModel> prod1 =
-                                                          snapshot.requireData;
+                                                          snapshot.requireData as List<LifeProductModel>;
                                                       print("foodList lenght2 = ${prod1}");
 
 
@@ -218,9 +218,9 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                             var prodDiscount = prodcutprice ==
                                                                 ""
                                                                 ? ""
-                                                                : (int.parse(prodprice) -
+                                                                : (int.parse(prodprice!) -
                                                                 int.parse(
-                                                                    prodcutprice))
+                                                                    prodcutprice!))
                                                                 .toString();
                                                             var defaultquantity = 0;
                                                             // var totalorders = prod[index]["totalorders"];
@@ -271,7 +271,7 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                                                               Expanded(
                                                                                                 child: Container(
                                                                                                   child: Text(
-                                                                                                    title,
+                                                                                                    title!,
                                                                                                     style: GoogleFonts.slabo27px(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.blueGrey),
                                                                                                     maxLines: 2,
                                                                                                     overflow: TextOverflow.ellipsis,
@@ -330,7 +330,7 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                                               Visibility(
                                                                                 visible: defaultquantity <
                                                                                     1 &&
-                                                                                    prodstock
+                                                                                    prodstock!
                                                                                     ? true
                                                                                     : false,
                                                                                 child: Positioned(
@@ -417,9 +417,9 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                                                                                 }),
                                                                                                             Positioned(
                                                                                                               right: 0,
-                                                                                                              child: Badge(
-                                                                                                                badgeContent: Text(
-                                                                                                                  cartCount,
+                                                                                                              child: BadgePositioned(
+                                                                                                                child: Text(
+                                                                                                                  cartCount.toString(),
                                                                                                                   style: GoogleFonts.arvo(color: Colors.white),
                                                                                                                 ),
                                                                                                                 // child: Icon(
@@ -493,10 +493,10 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                                                           } else {
                                                                                             Map<String, String> updateQuantity = new Map();
                                                                                             updateQuantity['quantity'] = value.toString();
-                                                                                            var changedprice = value * int.parse(prodprice);
+                                                                                            var changedprice = value * int.parse(prodprice!);
                                                                                             var changedcutprice = prodprice == ""
                                                                                                 ? ""
-                                                                                                : value * int.parse(prodcutprice);
+                                                                                                : value * int.parse(prodcutprice!);
 
                                                                                             var quantity = value.toString();
 
@@ -577,7 +577,7 @@ class _LifeProdCardState extends State<LifeProdCard> {
                                                                               ),
                                                                               Visibility(
                                                                                 visible:
-                                                                                prodstock
+                                                                                prodstock!
                                                                                     ? false
                                                                                     : true,
                                                                                 child:
