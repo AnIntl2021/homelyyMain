@@ -166,7 +166,7 @@ AppBar homeAppBar(BuildContext context, String? title, String? ref, from) {
                   child: Stack(children: [
                     IconButton(
                         icon: const Icon(
-                          FontAwesomeIcons.opencart,
+                          FontAwesomeIcons.addressBook,
                           color: kdarkgreen,
                         ),
                         onPressed: () {

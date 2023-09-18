@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -15,7 +14,6 @@ class CartShopPage extends StatefulWidget {
   final String? ref;
 
   const CartShopPage({Key? key, this.ref}) : super(key: key);
-
 
   @override
   _CartShopPageState createState() => _CartShopPageState();
@@ -35,132 +33,147 @@ class _CartShopPageState extends State<CartShopPage> {
     return WillPopScope(
       onWillPop: () {
         Get.back();
-      } as Future<bool> Function()?,
+        return Future.value(true);
+      },
       child: Scaffold(
-        appBar: AppBar(title: Text("Shop Cart"),backgroundColor: kgreen,),
+        appBar: AppBar(
+          title: const Text("Shop Cart"),
+          backgroundColor: kgreen,
+        ),
         body: FutureBuilder(
-          future: AllApi().getShopCart(widget.ref),
-          builder: (context, snapshot) {
-            if(!snapshot.hasData){
-              return Center(child:CircularProgressIndicator(color: kgreen,));
-            }
+            future: AllApi().getShopCart(widget.ref),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                    child: CircularProgressIndicator(
+                  color: kgreen,
+                ));
+              }
 
-            List shopList = snapshot.requireData as List;
-            print("shopList in $shopList");
+              List shopList = snapshot.requireData as List;
+              print("shopList in $shopList");
 
-            return shopList.length == 0 ? EmptyShoppingCartScreen(text: "Empty Cart",)  :Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                  elevation: 2,
-                  child: ListView.builder(
-                    itemCount: shopList.length,
-                    itemBuilder: (context,index){
-                      return Column(
-                        children: [
-                          InkWell(
-                            onTap: () async {
-                            var status =  await AllApi().getVendorbyid1(shopList[index]["vendorid"].toString().replaceAll("}", ""));
+              return shopList.isEmpty
+                  ? const EmptyShoppingCartScreen(
+                      text: "Empty Cart",
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                          elevation: 2,
+                          child: ListView.builder(
+                            itemCount: shopList.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      var status = await AllApi()
+                                          .getVendorbyid1(shopList[index]
+                                                  ["vendorid"]
+                                              .toString()
+                                              .replaceAll("}", ""));
 
-                            if(status == false){
-                              Get.snackbar('SHOP CLOSED', 'YOU CAN ORDER AFTER SHOP OPENS',backgroundColor: Colors.red);
-                            }else{
-                              Get.to(
-                                  CartPage(
-                                    shopname: shopList[index]["vendorid"].toString().replaceAll("}", ""),
-                                    uid: widget.ref,
+                                      if (status == false) {
+                                        Get.snackbar('SHOP CLOSED',
+                                            'YOU CAN ORDER AFTER SHOP OPENS',
+                                            backgroundColor: Colors.red);
+                                      } else {
+                                        Get.to(CartPage(
+                                          shopname: shopList[index]["vendorid"]
+                                              .toString()
+                                              .replaceAll("}", ""),
+                                          uid: widget.ref,
 
-                                    // shopaddress: shopaddress,
-                                    // shopnumber: shopnumber,
-                                    // shoplocation:shopGeoFirePoint,
-                                    // shopstatus:shopstatus
-
+                                          // shopaddress: shopaddress,
+                                          // shopnumber: shopnumber,
+                                          // shoplocation:shopGeoFirePoint,
+                                          // shopstatus:shopstatus
+                                        ));
+                                      }
+                                    },
+                                    child: SizedBox(
+                                      height: 100,
+                                      child: Center(
+                                        child: Text(
+                                          "Products Added to \n  ${shopList[index]["shop"]}",
+                                          style: GoogleFonts.arvo(
+                                              color: Colors.blueGrey,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const Divider(
+                                    thickness: 3,
                                   )
+                                ],
                               );
-                            }
-
                             },
-                            child: Container(
-                              height: 100,
-                              child: Center(
-                                child: Text(
-                                  "Products Added to \n  ${shopList[index]["shop"]}",
-                                  style: GoogleFonts.arvo(
-                                      color: Colors.blueGrey,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            thickness: 3,
+
+                            // children: [
+                            //   Column(
+                            //     children: [
+                            //       InkWell(
+                            //         onTap: () {
+                            //           Get.to(CartPage(
+                            //             shopname: "Lifestyle",
+                            //             // shopaddress: shopaddress,
+                            //             // shopnumber: shopnumber,
+                            //             // shoplocation:shopGeoFirePoint,
+                            //             // shopstatus:shopstatus
+                            //           ));
+                            //         },
+                            //         child: Container(
+                            //           height: 100,
+                            //           child: Center(
+                            //             child: Text(
+                            //               "Products Added to \n Restaurant",
+                            //               style: GoogleFonts.arvo(
+                            //                   color: Colors.blueGrey,
+                            //                   fontWeight: FontWeight.bold),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Divider(
+                            //         thickness: 3,
+                            //       )
+                            //     ],
+                            //   ),
+                            //   Column(
+                            //     children: [
+                            //       InkWell(
+                            //         onTap: () {
+                            //           Get.to(CartPage(
+                            //             shopname: "Lifestyle",
+                            //             // shopaddress: shopaddress,
+                            //             // shopnumber: shopnumber,
+                            //             // shoplocation:shopGeoFirePoint,
+                            //             // shopstatus:shopstatus
+                            //           ));
+                            //         },
+                            //         child: Container(
+                            //           height: 100,
+                            //           child: Center(
+                            //             child: Text(
+                            //               "Products Added to \n Lifestyle",
+                            //               style: GoogleFonts.arvo(
+                            //                   color: Colors.blueGrey,
+                            //                   fontWeight: FontWeight.bold),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Divider(
+                            //         thickness: 3,
+                            //       )
+                            //     ],
+                            //   ),
+                            // ],
                           )
-                        ],
-                      );
-                    },
 
-                    // children: [
-                    //   Column(
-                    //     children: [
-                    //       InkWell(
-                    //         onTap: () {
-                    //           Get.to(CartPage(
-                    //             shopname: "Lifestyle",
-                    //             // shopaddress: shopaddress,
-                    //             // shopnumber: shopnumber,
-                    //             // shoplocation:shopGeoFirePoint,
-                    //             // shopstatus:shopstatus
-                    //           ));
-                    //         },
-                    //         child: Container(
-                    //           height: 100,
-                    //           child: Center(
-                    //             child: Text(
-                    //               "Products Added to \n Restaurant",
-                    //               style: GoogleFonts.arvo(
-                    //                   color: Colors.blueGrey,
-                    //                   fontWeight: FontWeight.bold),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Divider(
-                    //         thickness: 3,
-                    //       )
-                    //     ],
-                    //   ),
-                    //   Column(
-                    //     children: [
-                    //       InkWell(
-                    //         onTap: () {
-                    //           Get.to(CartPage(
-                    //             shopname: "Lifestyle",
-                    //             // shopaddress: shopaddress,
-                    //             // shopnumber: shopnumber,
-                    //             // shoplocation:shopGeoFirePoint,
-                    //             // shopstatus:shopstatus
-                    //           ));
-                    //         },
-                    //         child: Container(
-                    //           height: 100,
-                    //           child: Center(
-                    //             child: Text(
-                    //               "Products Added to \n Lifestyle",
-                    //               style: GoogleFonts.arvo(
-                    //                   color: Colors.blueGrey,
-                    //                   fontWeight: FontWeight.bold),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Divider(
-                    //         thickness: 3,
-                    //       )
-                    //     ],
-                    //   ),
-                    // ],
-                  )
-
-                  /* ListView.builder(
+                          /* ListView.builder(
                     itemCount: 2,
                     itemBuilder: (context,index){
                       var shopname = "Lifestyle";
@@ -216,10 +229,9 @@ class _CartShopPageState extends State<CartShopPage> {
                       // );
                     }
                 ),*/
-                  ),
-            );
-          }
-        ),
+                          ),
+                    );
+            }),
       ),
     );
 

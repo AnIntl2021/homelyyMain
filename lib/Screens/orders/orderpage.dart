@@ -29,14 +29,15 @@ class _OrderPageState extends State<OrderPage> {
         Get.offAll(Homepage(
           userRef: widget.ref,
         ));
-      } as Future<bool> Function()?,
+        return Future.value(true);
+      },
       child: Scaffold(
-          appBar: homeAppBar(context, "Orders", widget.ref, "Product"),
+          //appBar: homeAppBar(context, "Orders", widget.ref, "Product"),
           body: FutureBuilder(
               future: AllApi().getOrderTotal(widget.ref),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(
+                  return const Center(
                       child: CircularProgressIndicator(
                     color: kgreen,
                   ));
@@ -45,17 +46,23 @@ class _OrderPageState extends State<OrderPage> {
                 var orderTotalMap = snapshot.requireData as List;
 
                 print("gotOrders $orderTotalMap");
+                if (orderTotalMap.isEmpty) {
+                  return const Center(
+                      child: Text(
+                    "No Order",
+                  ));
+                }
                 return ListView.builder(
                     itemCount: orderTotalMap.length,
                     itemBuilder: (context, index) {
                       var shopUid = orderTotalMap[index]["vid"];
                       return Container(
-                        margin: EdgeInsets.only(top: 10, bottom: 10),
+                        margin: const EdgeInsets.only(top: 10, bottom: 10),
                         child: FutureBuilder(
                             future: AllApi().getVendorbyid(shopUid),
                             builder: (context, snapshot) {
                               if (!snapshot.hasData) {
-                                return Center(
+                                return const Center(
                                     child: CircularProgressIndicator(
                                   color: kgreen,
                                 ));
@@ -128,7 +135,7 @@ class _OrderPageState extends State<OrderPage> {
             ));
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         child: Column(
           children: [
             Row(
@@ -150,11 +157,11 @@ class _OrderPageState extends State<OrderPage> {
                     style: GoogleFonts.basic(
                         fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             deliveryname == ""
-                ? SizedBox(
+                ? const SizedBox(
                     height: 10,
                   )
                 : InkWell(
@@ -175,7 +182,7 @@ class _OrderPageState extends State<OrderPage> {
                 Text("Total: $total"),
               ],
             ),
-            Divider(
+            const Divider(
               thickness: 2,
             )
           ],

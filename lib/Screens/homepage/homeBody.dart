@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -206,7 +204,7 @@ class _BodyState extends State<Body> {
         ]),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(
+            return const Center(
                 child: CircularProgressIndicator(
               color: kgreen,
             ));
@@ -247,7 +245,7 @@ class _BodyState extends State<Body> {
               ]),
               builder: (context, snapshot1) {
                 if (!snapshot1.hasData) {
-                  return Center(
+                  return const Center(
                       child: CircularProgressIndicator(
                     color: kgreen,
                   ));
@@ -280,7 +278,7 @@ class _BodyState extends State<Body> {
                     Row(
                       children: [
                         IconButton(
-                          icon: Icon(FontAwesomeIcons.mapSigns),
+                          icon: const Icon(FontAwesomeIcons.mapSigns),
                           onPressed: () {},
                         ),
                         Expanded(
@@ -288,10 +286,9 @@ class _BodyState extends State<Body> {
                               child: InkWell(
                             onTap: () {
                               Get.to(MapScreen(
-                                  loc: widget.latlng == null
-                                      ? LatLng(
-                                          latlng!.latitude!, latlng.longitude!)
-                                      : widget.latlng,
+                                  loc: widget.latlng ??
+                                      LatLng(
+                                          latlng!.latitude!, latlng.longitude!),
                                   userRef: widget.userref));
                             },
                             child: Column(
@@ -341,18 +338,19 @@ class _BodyState extends State<Body> {
                                   color: kgreen.withOpacity(0.6), width: 3)),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: kgreen, width: 3)),
-                          suffixIcon: Icon(
+                              borderSide:
+                                  const BorderSide(color: kgreen, width: 3)),
+                          suffixIcon: const Icon(
                             Icons.search,
                             color: kgreen,
                           ),
-                          contentPadding: EdgeInsets.all(11.25),
+                          contentPadding: const EdgeInsets.all(11.25),
                           hintText: "Search",
                           hintStyle: TextStyle(
                             color: Colors.black.withOpacity(0.4),
                           ),
                         ),
-                        style: TextStyle(color: kblackcolor),
+                        style: const TextStyle(color: kblackcolor),
                         onChanged: (value) {
                           setState(() {
                             search = value.removeAllWhitespace;
@@ -373,7 +371,7 @@ class _BodyState extends State<Body> {
                     ),
 
                     AnimatedContainer(
-                      duration: Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 200),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -397,8 +395,8 @@ class _BodyState extends State<Body> {
                                         selectedType = 0;
                                       });
                                     },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(8.0),
                                       child: TypeCard(
                                         img: "assets/foodshop.png",
                                         key: Key("typeCard"),
@@ -429,8 +427,8 @@ class _BodyState extends State<Body> {
                                         selectedType = 1;
                                       });
                                     },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(8.0),
                                       child: TypeCard(
                                         img: "assets/lifeshop.png",
                                         key: Key("typeCard"),
@@ -446,11 +444,11 @@ class _BodyState extends State<Body> {
                     ),
 
                     AnimatedContainer(
-                        duration: Duration(milliseconds: 200),
-                        child: Divider()),
+                        duration: const Duration(milliseconds: 200),
+                        child: const Divider()),
 
                     DiscountCard(
-                      key: Key("catRow"),
+                      key: const Key("catRow"),
                       title: 'Slider',
                       snapshot: banners
                       // selectedType == 0 ? [
@@ -465,7 +463,7 @@ class _BodyState extends State<Body> {
                     ),
 
                     Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
+                        margin: const EdgeInsets.symmetric(vertical: 10),
                         height: 190,
                         child: Column(
                           children: [
@@ -478,18 +476,18 @@ class _BodyState extends State<Body> {
                                 fontSize: 18,
                               ),
                             ),
-                            Divider(),
+                            const Divider(),
                             Expanded(
                               child: CatList(
                                 catList: catList,
                                 streamTitle:
                                     selectedType == 0 ? catTitle : "Jeans",
-                                key: Key("catList"),
+                                key: const Key("catList"),
                                 type: selectedType,
                                 uid: usersList!.ref,
-                                latlng: widget.latlng == null
-                                    ? LatLng(latlng!.latitude!, latlng.longitude!)
-                                    : widget.latlng,
+                                latlng: widget.latlng ??
+                                    LatLng(
+                                        latlng!.latitude!, latlng.longitude!),
                               ),
                             ),
                           ],
@@ -498,15 +496,15 @@ class _BodyState extends State<Body> {
                     Container(
                         child: Column(
                       children: [
-                        Divider(),
+                        const Divider(),
                         Container(
-                          margin: EdgeInsets.only(bottom: 30),
+                          margin: const EdgeInsets.only(bottom: 30),
                           child: Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 5,
                               ),
-                              Opacity(
+                              const Opacity(
                                 opacity: 0.6,
                                 child: Image(
                                   image: AssetImage("assets/greentick.png"),
@@ -514,7 +512,7 @@ class _BodyState extends State<Body> {
                                   height: 30,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 5,
                               ),
                               Text(
@@ -530,8 +528,8 @@ class _BodyState extends State<Body> {
                       ],
                     )),
 
-                    promorestomodel.length == 0
-                        ? SizedBox()
+                    promorestomodel.isEmpty
+                        ? const SizedBox()
                         : PopularRestaurantList(
                             type: selectedType.toString(),
                             userGeoPoint: userGeoPoint,
@@ -542,16 +540,16 @@ class _BodyState extends State<Body> {
                                 .removeAllWhitespace,
                           ),
 
-                    restomodel.length == 0
-                        ? closedrestomodel.length != 0
+                    restomodel.isEmpty
+                        ? closedrestomodel.isNotEmpty
                             ? Container(
                                 child: Padding(
                                 padding: const EdgeInsets.only(
                                     bottom: 30.0, left: 30),
                                 child: Row(
                                   children: [
-                                    Icon(FontAwesomeIcons.sadCry),
-                                    SizedBox(
+                                    const Icon(FontAwesomeIcons.sadCry),
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Text(
@@ -570,8 +568,8 @@ class _BodyState extends State<Body> {
                                     bottom: 30.0, left: 30),
                                 child: Row(
                                   children: [
-                                    Icon(FontAwesomeIcons.sadCry),
-                                    SizedBox(
+                                    const Icon(FontAwesomeIcons.sadCry),
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Text(
@@ -596,8 +594,8 @@ class _BodyState extends State<Body> {
                                 .replaceAll("+", "")
                                 .removeAllWhitespace,
                           ),
-                    closedrestomodel.length == 0
-                        ? SizedBox()
+                    closedrestomodel.isEmpty
+                        ? const SizedBox()
                         : PopularRestaurantList(
                             type: selectedType.toString(),
                             userGeoPoint: userGeoPoint,

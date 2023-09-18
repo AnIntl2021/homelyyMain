@@ -34,7 +34,7 @@ Future<void> firebaseMessgaingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-    HttpOverrides.global = MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
   await Firebase.initializeApp();
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessgaingBackgroundHandler);
@@ -49,8 +49,6 @@ void main() async {
     badge: true,
     sound: true,
   );
-
-
 
   runApp(const MyApp());
 }
@@ -71,7 +69,7 @@ class _MyAppState extends State<MyApp> {
     //Return bool
     bool boolValue = prefs.getBool('loggedin') ?? false;
     var userphone = prefs.getString("phone");
-    print("Get Lcocal User ${userphone}");
+    print("Get Lcocal User $userphone");
     print("boolvalue $boolValue");
     return [boolValue, userphone];
   }
@@ -85,14 +83,14 @@ class _MyAppState extends State<MyApp> {
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
     if (initialMessage != null && initialMessage.data['order'] == 'order') {
-      Get.to(MyApp());
+      Get.to(const MyApp());
     }
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.data['type'] == 'home') {
-        Get.to(MyApp());
+        Get.to(const MyApp());
       }
     });
   }
@@ -159,7 +157,7 @@ class _MyAppState extends State<MyApp> {
               imageSize: 180,
               imageSrc: "assets/homelyy.png",
               text: "HOMELYY -EVERYTHING FROM HOME",
-              colors: [Colors.amber],
+              colors: const [Colors.amber],
               textType: TextType1.ScaleAnimatedText,
               textStyle: GoogleFonts.cabin(
                   fontSize: 30, color: kgreen, fontWeight: FontWeight.bold),
@@ -169,7 +167,7 @@ class _MyAppState extends State<MyApp> {
                   ? Homepage(
                       userRef: phone,
                     )
-                  : LoginScreen())),
+                  : const LoginScreen())),
     );
   }
 }

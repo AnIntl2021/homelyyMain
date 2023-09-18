@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //import 'package:geocoder/geocoder.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -71,11 +72,26 @@ Future<LocationData?> getLocation() async {
 }
 
 class _HomepageState extends State<Homepage> {
+  var cartCount = "0";
+  @override
+  void initState() {
+    super.initState();
+    getCount();
+    print("uersref ${widget.userRef}");
+  }
+
+  getCount() async {
+    cartCount = await AllApi().getCartCount(
+      widget.userRef,
+    );
+    setState(() {});
+  }
+
   var currentIndex = 0;
 
-  AppUpdateInfo? _updateInfo;
+  // AppUpdateInfo? _updateInfo;
 
-  bool _flexibleUpdateAvailable = false;
+  // final bool _flexibleUpdateAvailable = false;
 
   Future<void> checkForUpdate() async {
     InAppUpdate.checkForUpdate().then((info) {
@@ -100,14 +116,14 @@ class _HomepageState extends State<Homepage> {
     final List<Widget> viewContainer = [
       Body(
         // latLogn: _locationData,
-        key: Key("Bodyhome"),
+        key: const Key("Bodyhome"),
         fromMap: false,
         userref: widget.userRef!.replaceAll("+", "").removeAllWhitespace,
         latlng: widget.latlng,
       ),
       Vouchers(ref: widget.userRef!.replaceAll("+", "").removeAllWhitespace),
       widget.userRef == 'Guest'
-          ? LoginScreen()
+          ? const LoginScreen()
           : UserProfile(
               id: widget.userRef!.replaceAll("+", "").removeAllWhitespace,
             ),
@@ -126,7 +142,7 @@ class _HomepageState extends State<Homepage> {
                 height: 50,
                 color: Colors.white,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               // Text("Homelyy",style: GoogleFonts.arvo(),),
@@ -135,90 +151,31 @@ class _HomepageState extends State<Homepage> {
           backgroundColor: kgreen,
           elevation: 0,
           actions: <Widget>[
-            widget.userRef == 'Guest'
-                ? Container(
-                    margin: EdgeInsets.only(right: 10),
-                    child: Stack(children: [
-                      IconButton(
-                          icon: Icon(
-                            FontAwesomeIcons.opencart,
-                            color: kdarkgreen,
-                          ),
-                          onPressed: () {
-                            Get.to(LoginScreen());
-                          }),
-                      // Positioned(
-                      //   right: 0,
-                      //   child: Badge(
-                      //     badgeContent: Text(
-                      //       '0',
-                      //       style: GoogleFonts.arvo(color: Colors.white),
-                      //     ),
-                      //     // child: Icon(
-                      //     //   FontAwesomeIcons.opencart,
-                      //     //   color: Colors.white,
-                      //     // ),
-                      //   ),
-                      // ),
-                      Positioned(
-                        right: 0,
-                        child: BadgePositioned(
-                          child: Text(
-                            '0',
-                            style: GoogleFonts.arvo(color: Colors.white),
-                          ),
-                          // child: Icon(
-                          //   FontAwesomeIcons.opencart,
-                          //   color: Colors.white,
-                          // ),
-                        ),
-                      )
-                    ]),
-                  )
-                : FutureBuilder(
-                    future: Future.wait([
-                      AllApi().getCartCount(
-                        widget.userRef,
-                      )
-                    ]),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: kgreen,
-                          ),
-                        );
-                      }
-
-                      var cartCount = (snapshot.requireData as List)[0];
-
-                      return Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: Stack(children: [
-                          IconButton(
-                              icon: Icon(
-                                FontAwesomeIcons.opencart,
-                                color: kdarkgreen,
-                              ),
-                              onPressed: () {
-                                Get.to(CartShopPage(ref: widget.userRef));
-                              }),
-                          Positioned(
-                            right: 0,
-                            child: BadgePositioned(
-                              child: Text(
-                                cartCount,
-                                style: GoogleFonts.arvo(color: Colors.white),
-                              ),
-                              // child: Icon(
-                              //   FontAwesomeIcons.opencart,
-                              //   color: Colors.white,
-                              // ),
-                            ),
-                          )
-                        ]),
-                      );
+            Align(
+              alignment: Alignment.centerLeft,
+              child: badges.Badge(
+                position: badges.BadgePosition.topStart(),
+                badgeAnimation: const badges.BadgeAnimation.slide(
+                  animationDuration: Duration(milliseconds: 300),
+                ),
+                badgeContent: Text(
+                  cartCount.toString(),
+                  style: const TextStyle(color: Colors.white),
+                ),
+                child: IconButton(
+                    icon: const Icon(
+                      FontAwesomeIcons.opencart,
+                      color: kdarkgreen,
+                    ),
+                    onPressed: () {
+                      print(widget.userRef);
+                      print(widget.userRef != 'Guest');
+                      widget.userRef != 'Guest'
+                          ? Get.to(() => CartShopPage(ref: widget.userRef))
+                          : Get.to(() => const LoginScreen());
                     }),
+              ),
+            )
           ],
         ),
 
@@ -234,19 +191,19 @@ class _HomepageState extends State<Homepage> {
 
   Widget buildBNB() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 35),
+      padding: const EdgeInsets.symmetric(horizontal: 35),
       height: 65,
       width: double.infinity,
       // double.infinity means it cove the available width
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
         boxShadow: [
           BoxShadow(
-            offset: Offset(0, -7),
+            offset: const Offset(0, -7),
             blurRadius: 33,
             color: kgreen.withOpacity(0.11),
           ),
@@ -271,7 +228,7 @@ class _HomepageState extends State<Homepage> {
                   });
                 },
               ),
-              Text(
+              const Text(
                 "Home",
                 style: TextStyle(fontSize: 12),
               )
@@ -294,7 +251,7 @@ class _HomepageState extends State<Homepage> {
                     });
                   },
                 ),
-                Text(
+                const Text(
                   "Offers",
                   style: TextStyle(fontSize: 12),
                 )
@@ -316,7 +273,7 @@ class _HomepageState extends State<Homepage> {
                   });
                 },
               ),
-              Text(
+              const Text(
                 "Profile",
                 style: TextStyle(fontSize: 12),
               )
@@ -343,7 +300,7 @@ class _HomepageState extends State<Homepage> {
                       // });
                     });
                   }),
-              Text(
+              const Text(
                 "Rate Us",
                 style: TextStyle(fontSize: 12),
               )

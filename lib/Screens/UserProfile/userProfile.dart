@@ -44,45 +44,36 @@ class _UserProfileState extends State<UserProfile> {
             // ),
 
             buildListTile("MY ORDERS", FontAwesomeIcons.list, () {
-              Get.to(
-                  OrderPage(
-                  ref: widget.id,
-              )
-              );
-            }
-            ),
+              Get.to(OrderPage(
+                ref: widget.id,
+              ));
+            }),
             buildListTile("WALLET", FontAwesomeIcons.wallet, () {
-
-              Get.to(UserWallet(id: widget.id,));
-
-            }
-            ),
+              Get.to(UserWallet(
+                id: widget.id,
+              ));
+            }),
             buildListTile("REFER & EARN", FontAwesomeIcons.share, () async {
-             var value = await AllApi()
-                  .getUser(widget.id!
-                  .replaceAll("+", "")
-                  .removeAllWhitespace);
+              var value = await AllApi()
+                  .getUser(widget.id!.replaceAll("+", "").removeAllWhitespace);
 
-              UserModel users =
-              UserModel().fromJson(jsonDecode(value));
-              if(GetPlatform.isAndroid){
+              UserModel users = UserModel().fromJson(jsonDecode(value));
+              if (GetPlatform.isAndroid) {
                 await FlutterShare.share(
-                    title: 'Download Homelyy App Referal Code: ${users.referid} Get upto 5% Cashback on Every Order',
-                    text: 'Download Homelyy App Referal Code:  ${users.referid} Get upto 5% Cashback on Every Order',
-                    linkUrl: 'https://play.google.com/store/apps/details?id=com.an.homelyy.homelyy',
-                    chooserTitle: 'Example Chooser Title'
-                );
-              }else{
-
-              }
-
+                    title:
+                        'Download Homelyy App Referal Code: ${users.referid} Get upto 5% Cashback on Every Order',
+                    text:
+                        'Download Homelyy App Referal Code:  ${users.referid} Get upto 5% Cashback on Every Order',
+                    linkUrl:
+                        'https://play.google.com/store/apps/details?id=com.an.homelyy.homelyy',
+                    chooserTitle: 'Example Chooser Title');
+              } else {}
             }),
             buildListTile("CONTACT US", FontAwesomeIcons.phone, () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => MyContactUs())
-              );
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const MyContactUs()));
             }),
-            Divider(),
+            const Divider(),
             buildListTile("LOGOUT", FontAwesomeIcons.doorClosed, () async {
               // FirebaseAuth.instance
               //     .signOut()
@@ -92,9 +83,9 @@ class _UserProfileState extends State<UserProfile> {
               //           (route) =>
               //               false, //if you want to disable back feature set to false
               //         ));
-               SharedPreferences pref =  await SharedPreferences.getInstance();
-               pref.clear();
-               Get.offAll(LoginScreen());
+              SharedPreferences pref = await SharedPreferences.getInstance();
+              pref.clear();
+              Get.offAll(const LoginScreen());
             }),
           ],
         ),
@@ -103,9 +94,9 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   ListTile buildListTile(var title, var icon, var press) => ListTile(
-    trailing: Icon(FontAwesomeIcons.arrowRight),
-    title: Text(title),
-    leading: Icon(icon),
-    onTap: press,
-  );
+        trailing: const Icon(FontAwesomeIcons.arrowRight),
+        title: Text(title),
+        leading: Icon(icon),
+        onTap: press,
+      );
 }
