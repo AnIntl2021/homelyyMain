@@ -112,7 +112,8 @@ class _PhoneLoginState extends State<PhoneLogin> {
     return SafeArea(
       child: FirebasePhoneAuthHandler(
         phoneNumber: widget.phoneNumber!,
-        timeOutDuration: const Duration(seconds: 60),
+
+        // timeOutDuration: const Duration(seconds: 60),
         onLoginSuccess: (userCredential, autoVerified) async {
           print(autoVerified
               ? "OTP was fetched automatically"
@@ -150,61 +151,60 @@ class _PhoneLoginState extends State<PhoneLogin> {
             }
           });
         },
-        onLoginFailed: (authException) {
+        onLoginFailed: (authException, i) {
           print("An error occurred again: ${authException.message}");
           Fluttertoast.showToast(
                   msg: "An error occurred again: ${authException.message}")
               .then((value) {
             setState(() {
-              Get.to(LoginScreen());
+              Get.to(const LoginScreen());
             });
           }); // handle error further if needed
         },
-        builder: (conyext, controller) {
+        builder: (context, controller) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Verification Code"),
+              title: const Text("Verification Code"),
               backgroundColor: Colors.black,
               actions: controller.codeSent
                   ? [
                       TextButton(
-                        child: Text(
-                          controller.timerIsActive
-                              ? "${controller.timerCount.inSeconds}s"
-                              : "RESEND",
+                        child: const Text(
+                          // controller.timerIsActive
+                          //     ? "${controller.timerCount.inSeconds}s"
+                          //     : "RESEND",
+                          "Dasd",
                           style: TextStyle(color: Colors.blue, fontSize: 18),
                         ),
-                        onPressed: controller.timerIsActive
-                            ? null
-                            : () async {
-                                await controller.sendOTP();
-                              },
+                        onPressed: () async {
+                          await controller.sendOTP();
+                        },
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                     ]
                   : null,
             ),
             body: controller.codeSent
                 ? verifyingOTP
-                    ? Center(
+                    ? const Center(
                         child: CircularProgressIndicator(
                         color: Colors.green,
                       ))
                     : ListView(
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         children: [
                           Text(
                             "We've sent an SMS with a verification code to ${widget.phoneNumber}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 25,
                             ),
                           ),
-                          SizedBox(height: 10),
-                          Divider(),
+                          const SizedBox(height: 10),
+                          const Divider(),
                           AnimatedContainer(
-                            duration: Duration(seconds: 1),
-                            height: controller.timerIsActive ? null : 0,
-                            child: Column(
+                            duration: const Duration(seconds: 1),
+                            // height: controller.timerIsActive ? null : 0,
+                            child: const Column(
                               children: [
                                 CircularProgressIndicator(),
                                 SizedBox(height: 50),
@@ -222,51 +222,51 @@ class _PhoneLoginState extends State<PhoneLogin> {
                               ],
                             ),
                           ),
-                          Text(
+                          const Text(
                             "Enter Code Manually",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          TextField(
-                            maxLength: 6,
-                            keyboardType: TextInputType.number,
-                            onChanged: (String v) async {
-                              _enteredOTP = v;
-                              if (this._enteredOTP?.length == 6) {
-                                setState(() {
-                                  verifyingOTP = true;
-                                });
+                          // TextField(
+                          //   maxLength: 6,
+                          //   keyboardType: TextInputType.number,
+                          //   onChanged: (String v) async {
+                          //     _enteredOTP = v;
+                          //     if (this._enteredOTP?.length == 6) {
+                          //       setState(() {
+                          //         verifyingOTP = true;
+                          //       });
 
-                                final dynamic res = await controller
-                                    .verifyOTP(otp: _enteredOTP)
-                                    .then((value) {
-                                  Fluttertoast.showToast(
-                                    msg: "Something went wrong $value",
-                                  ).then((value) {
-                                    setState(() {
-                                      verifyingOTP = false;
-                                    });
-                                  });
-                                });
+                          //       final dynamic res = await controller
+                          //           .verifyOTP(otp: _enteredOTP)
+                          //           .then((value) {
+                          //         Fluttertoast.showToast(
+                          //           msg: "Something went wrong $value",
+                          //         ).then((value) {
+                          //           setState(() {
+                          //             verifyingOTP = false;
+                          //           });
+                          //         });
+                          //       });
 
-                                // Incorrect OTP
-                                if (!res) {
-                                  Fluttertoast.showToast(
-                                    msg:
-                                        "Please enter the correct OTP sent to ${widget.phoneNumber}",
-                                  );
-                                  setState(() {
-                                    verifyingOTP = false;
-                                  });
-                                }
-                              }
-                            },
-                          ),
+                          //       // Incorrect OTP
+                          //       if (!res) {
+                          //         Fluttertoast.showToast(
+                          //           msg:
+                          //               "Please enter the correct OTP sent to ${widget.phoneNumber}",
+                          //         );
+                          //         setState(() {
+                          //           verifyingOTP = false;
+                          //         });
+                          //       }
+                          //     }
+                          //   },
+                          // ),
                         ],
                       )
-                : Column(
+                : const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [

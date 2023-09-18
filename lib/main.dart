@@ -1,14 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:homelyy/Screens/UserProfile/UserInfo.dart';
-import 'package:homelyy/component/api.dart';
+import 'package:homelyy/component/http_override.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Screens/homepage/homepage.dart';
@@ -19,8 +18,7 @@ import 'component/splashscreenMY.dart';
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
-    description:
-        'This channel is used for important notifications.', // description
+    'This channel is used for important notifications.', // description
     importance: Importance.max,
     playSound: true,
     // sound: RawResourceAndroidNotificationSound('notification'),
@@ -36,6 +34,7 @@ Future<void> firebaseMessgaingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+    HttpOverrides.global = MyHttpOverrides();
   await Firebase.initializeApp();
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessgaingBackgroundHandler);
@@ -50,6 +49,8 @@ void main() async {
     badge: true,
     sound: true,
   );
+
+
 
   runApp(const MyApp());
 }
@@ -121,8 +122,8 @@ class _MyAppState extends State<MyApp> {
             notification.title,
             notification.body,
             NotificationDetails(
-              android: AndroidNotificationDetails(channel.id, channel.name,
-                  channelDescription: channel.description,
+              android: AndroidNotificationDetails(
+                  channel.id, channel.name, channel.description,
                   icon: 'launcher_icon',
                   // sound: RawResourceAndroidNotificationSound('notification'),
                   // other properties...

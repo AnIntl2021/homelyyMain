@@ -316,7 +316,7 @@ class _ProductListCardState extends State<ProductListCard> {
                                                 // )
                                                 BadgePositioned(
                                                   position:
-                                                      BadgePosition(top: 0),
+                                                      BadgePosition.topEnd(),
                                                   // right: 0,
                                                   child: Text(
                                                     cartCount.toString(),
